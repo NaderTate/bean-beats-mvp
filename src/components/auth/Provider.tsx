@@ -14,30 +14,30 @@ const Provider = ({
   sessionUser,
   coffeeShops,
 }: Readonly<{
-  children: React.ReactNode;
-  userRole: UserRole | undefined;
   sessionUser: User | null;
+  children: React.ReactNode;
   coffeeShops: CoffeeShop[];
+  userRole: UserRole | undefined;
 }>) => {
   const { push } = useRouter();
   const pathname = usePathname();
 
-  if (pathname.includes("/dashboard") && !pathname.includes("/coffee-shop")) {
-    if (!sessionUser || userRole !== "PLATFORM_ADMIN") {
-      push("/signin");
-    }
-  }
-  if (pathname === "/coffee-shop") {
-    push("/coffee-shop/dashboard");
-  }
-  if (pathname.includes("/coffee-shop")) {
-    if (coffeeShops.length === 0) {
-      return <div>You don&apos;t have any coffee shops</div>;
-    }
-    if (!sessionUser || userRole !== "SHOP_ADMIN") {
-      push("/signin");
-    }
-  }
+  // if (pathname.includes("/dashboard") && !pathname.includes("/coffee-shop")) {
+  //   if (!sessionUser || userRole !== "PLATFORM_ADMIN") {
+  //     push("/signin");
+  //   }
+  // }
+  // if (pathname === "/coffee-shop") {
+  //   push("/coffee-shop/dashboard");
+  // }
+  // if (pathname.includes("/coffee-shop")) {
+  //   if (coffeeShops.length === 0) {
+  //     return <div>You don&apos;t have any coffee shops</div>;
+  //   }
+  //   if (!sessionUser || userRole !== "SHOP_ADMIN") {
+  //     push("/signin");
+  //   }
+  // }
 
   const initialOptions: ReactPayPalScriptOptions = {
     vault: true,
