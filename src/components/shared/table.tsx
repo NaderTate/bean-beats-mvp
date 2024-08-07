@@ -7,11 +7,23 @@ import Modal from "./Modal";
 import ConfirmDelete from "./confirm-delete";
 
 import { MdEdit } from "react-icons/md";
-import { FiDelete } from "react-icons/fi";
 import { CiSearch } from "react-icons/ci";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoMdAddCircle } from "react-icons/io";
+import Link from "next/link";
 
+interface TableProps {
+  fields: any;
+  data: any;
+  pages?: number;
+  page?: number;
+  options?: any;
+  editForm?: any;
+  add?: () => void;
+  viewLink?: string;
+  deleteFn?: (id: string) => Promise<void>;
+  edit?: (item: any) => void;
+}
 export default function Table({
   fields,
   data,
@@ -22,7 +34,8 @@ export default function Table({
   add,
   viewLink,
   deleteFn,
-}: any) {
+  edit,
+}: TableProps) {
   const [modifiedData, setModifiedData] = React.useState(data);
   const [openEdit, setOpenEdit] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -83,13 +96,11 @@ export default function Table({
                   {fields?.[key]}
                 </td>
               ))}
-              {viewLink ||
-                editForm ||
-                (deleteFn && (
-                  <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                    Actions
-                  </td>
-                ))}
+              {(viewLink || editForm || deleteFn) && (
+                <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                  Actions
+                </td>
+              )}
             </tr>
           </thead>
 
@@ -114,17 +125,28 @@ export default function Table({
                     )}
                   </td>
                 ))}
+                {viewLink && (
+                  <td className=" px-4 py-2">
+                    <Link href={`${viewLink}/${item?.id}`}>
+                      <FaInfoCircle />
+                    </Link>
+                  </td>
+                )}
+                {deleteFn && (
+                  <td className=" px-4 py-2">
+                    <ConfirmDelete deleteFn={() => deleteFn(item.id)} />
+                  </td>
+                )}
+
                 <td className=" px-4 py-2">
                   <div>
-                    {editForm && (
-                      <Modal
-                        open={openEdit}
-                        setOpen={() => setOpenEdit(!openEdit)}
-                        title="Edit"
-                      >
-                        {React.cloneElement(editForm, { itemToEdit: item })}
-                      </Modal>
-                    )}
+                    <Modal
+                      open={openEdit}
+                      setOpen={() => setOpenEdit(!openEdit)}
+                      title="Edit"
+                    >
+                      {React.cloneElement(editForm, { itemToEdit: item })}
+                    </Modal>
                   </div>
                 </td>
               </tr>

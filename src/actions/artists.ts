@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export const addArtistsToShop = async (data: {
   artistIds: string[];
@@ -30,4 +31,13 @@ export const addArtistsToShop = async (data: {
       },
     });
   }
+};
+
+export const deleteArtist = async (id: string) => {
+  await prisma.artist.delete({
+    where: {
+      id,
+    },
+  });
+  revalidatePath("/dashboard/music");
 };

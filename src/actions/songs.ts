@@ -1,5 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export const getMultipleSongs = async (songIds: string[]) => {
   const songs = await prisma.song.findMany({
@@ -43,4 +44,13 @@ export const addSongsToShop = async (data: {
       },
     });
   }
+};
+
+export const deleteSong = async (id: string) => {
+  await prisma.song.delete({
+    where: {
+      id,
+    },
+  });
+  revalidatePath("/dashboard/music");
 };

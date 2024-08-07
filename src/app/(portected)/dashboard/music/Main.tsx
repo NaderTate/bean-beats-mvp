@@ -1,16 +1,23 @@
 "use client";
+
 import React, { useState } from "react";
-import NCard from "@/components/shared/Cards/numeric-card";
+import { Album, Artist, Song } from "@prisma/client";
+import { useRouter, useSearchParams } from "next/navigation";
+
 import Table from "@/components/shared/table";
+import Modal from "@/components/shared/Modal";
+import SongForm from "@/components/shared/Forms/song";
+import AlbumForm from "@/components/shared/Forms/album";
+import ArtistForm from "@/components/shared/Forms/artist";
+import NCard from "@/components/shared/Cards/numeric-card";
+
+import { deleteSong } from "@/actions/songs";
+import { deleteAlbum } from "@/actions/albums";
+import { deleteArtist } from "@/actions/artists";
+
 import { FaMusic } from "react-icons/fa";
 import { BiSolidAlbum } from "react-icons/bi";
 import { BsFillPeopleFill } from "react-icons/bs";
-import Modal from "@/components/shared/Modal";
-import ArtistForm from "@/components/shared/Forms/artist";
-import { Album, Artist, Song } from "@prisma/client";
-import SongForm from "@/components/shared/Forms/song";
-import AlbumForm from "@/components/shared/Forms/album";
-import { useRouter, useSearchParams } from "next/navigation";
 
 const list = [
   {
@@ -58,8 +65,8 @@ type MainProps = {
 };
 
 enum Selection {
-  albums = "albums",
   songs = "songs",
+  albums = "albums",
   artists = "artists",
 }
 
@@ -82,14 +89,19 @@ export default function Main(props: MainProps) {
     songs: (
       <SongForm
         albums={props.albums}
-        artists={props.artists}
         onSubmit={toggleModal}
+        artists={props.artists}
       />
     ),
     albums: <AlbumForm onSubmit={toggleModal} artists={props.artists} />,
     artists: <ArtistForm onSubmit={toggleModal} />,
   };
 
+  const deleteFn = {
+    songs: deleteSong,
+    albums: deleteAlbum,
+    artists: deleteArtist,
+  };
   return (
     <main className="flex flex-col flex-1 w-full px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
       <section className=" grid col-span-1 gap-4 lg:grid-cols-3 section1">
@@ -109,10 +121,11 @@ export default function Main(props: MainProps) {
       </section>
       <section>
         <Table
+          deleteFn={deleteFn[shownSection]}
           {...tableData}
-          fields={fields[shownSection]}
-          data={props[shownSection]}
           add={toggleModal}
+          data={props[shownSection]}
+          fields={fields[shownSection]}
           editForm={editForms[shownSection]}
         />
       </section>
