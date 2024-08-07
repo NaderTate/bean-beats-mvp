@@ -1,7 +1,18 @@
-import React from 'react'
-
-export default function page() {
+import prisma from "@/lib/prisma";
+import PaymentsTable from "../../coffee-shop/payments/payments-table";
+export default async function page() {
+  const transactions = await prisma.transaction.findMany({
+    select: {
+      id: true,
+      amount: true,
+      createdAt: true,
+      tableNumber: true,
+      _count: { select: { QueueSong: true } },
+    },
+  });
   return (
-    <div>Transactions</div>
-  )
+    <div className="w-full p-5">
+      <PaymentsTable transactions={transactions} />
+    </div>
+  );
 }
