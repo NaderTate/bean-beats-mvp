@@ -22,9 +22,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const sessionUser = await getUser();
-  if (!sessionUser) {
-    redirect("/signin");
-  }
+
   const user = sessionUser
     ? await prisma.user.findUnique({
         where: { id: sessionUser?.id },
