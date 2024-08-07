@@ -59,8 +59,8 @@ const MusicMain = ({
 }: Props) => {
   const searchParams = useSearchParams();
   const { refresh } = useRouter();
-  const section = searchParams.get("section") || "artists";
-  const [currentSection, setCurrentSection] = useState(section);
+  const section = searchParams.get("section");
+  const [currentSection, setCurrentSection] = useState(section ?? "artists");
   const [open, setOpen] = useState(false);
   const toggleModal = () => {
     setTimeout(() => {
@@ -76,9 +76,9 @@ const MusicMain = ({
   return (
     <div>
       <div className="flex justify-center space-x-2">
-        {actionButtons.map((button, i) => (
+        {actionButtons.map((button) => (
           <button
-            key={i}
+            key={button.label}
             onClick={() => setCurrentSection(button.label)}
             className={`capitalize transition-colors ${
               currentSection === button.label

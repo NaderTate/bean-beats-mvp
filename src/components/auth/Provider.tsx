@@ -4,20 +4,21 @@ import {
   PayPalScriptProvider,
   ReactPayPalScriptOptions,
 } from "@paypal/react-paypal-js";
-import { CoffeeShop, UserRole } from "@prisma/client";
 import { User } from "next-auth";
 import { SessionProvider } from "next-auth/react";
+import { CoffeeShop, UserRole } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
+
 const Provider = ({
   children,
   userRole,
   sessionUser,
   coffeeShops,
 }: Readonly<{
-  sessionUser: User | null | undefined;
   children: React.ReactNode;
   coffeeShops: CoffeeShop[];
   userRole: UserRole | undefined;
+  sessionUser: User | null | undefined;
 }>) => {
   const { push } = useRouter();
   const pathname = usePathname();
@@ -53,9 +54,9 @@ const Provider = ({
   };
   return (
     <SessionProvider
-      refetchInterval={15 * 60 * 1000} // 2 minutes
-      refetchOnWindowFocus={false}
       refetchWhenOffline={false}
+      refetchOnWindowFocus={false}
+      refetchInterval={15 * 60 * 1000}
     >
       <PayPalScriptProvider options={initialOptions}>
         {children}
