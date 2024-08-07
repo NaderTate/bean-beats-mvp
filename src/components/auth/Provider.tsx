@@ -24,8 +24,11 @@ const Provider = ({
   const pathname = usePathname();
 
   if (pathname.includes("/dashboard") && !pathname.includes("/coffee-shop")) {
-    if (!sessionUser || userRole !== "PLATFORM_ADMIN") {
+    if (!sessionUser) {
       push("/signin");
+    }
+    if (userRole !== "PLATFORM_ADMIN") {
+      push("/dashboard");
     }
   }
   if (pathname === "/coffee-shop") {
@@ -35,8 +38,11 @@ const Provider = ({
     if (coffeeShops.length === 0) {
       return <div>You don&apos;t have any coffee shops</div>;
     }
-    if (!sessionUser || userRole !== "SHOP_ADMIN") {
+    if (!sessionUser) {
       push("/signin");
+    }
+    if (userRole !== "SHOP_ADMIN") {
+      push("/dashboard");
     }
   }
 
