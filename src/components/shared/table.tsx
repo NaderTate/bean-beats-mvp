@@ -38,8 +38,8 @@ export default function Table({
   const keys = Object.keys(fields);
 
   return (
-    <div>
-      <div className="flex justify-between items-center gap-2 py-4 mb-10">
+    <div className="bg-gray-100 mt-5 rounded-lg p-5 mr-5">
+      <div className="flex justify-between items-center gap-2 py-4 mb-10 ">
         <div className=" mx-auto text-gray-600 border-2 border-gray-300 bg-white px-5 h-10 md:h-14  rounded-lg text-sm flex-1 flex justify-between items-center gap-5">
           <input
             className="focus:outline-none flex-1 h-full"
@@ -64,7 +64,7 @@ export default function Table({
         )}
       </div>
 
-      <div className="border bg-white border-primary/20 shadow-md rounded-xl overflow-x-scroll md:overflow-hidden p-1">
+      <div className="border bg-white border-primary/20 shadow-sm rounded-lg overflow-x-scroll md:overflow-hidden p-1">
         <table className="min-w-full divide-y-2 divide-gray-200 e text-sm ">
           <thead className="ltr:text-left rtl:text-right">
             <tr>

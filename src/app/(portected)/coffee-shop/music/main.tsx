@@ -86,7 +86,7 @@ const MusicMain = ({
               currentSection === button.label
                 ? "bg-white border-primary border text-primary "
                 : "bg-gray-100 text-gray-900 border-gray-300 border"
-            } px-4 py-2 rounded-md`}
+            } px-9 py-3 rounded-md`}
           >
             {button.label}
           </button>

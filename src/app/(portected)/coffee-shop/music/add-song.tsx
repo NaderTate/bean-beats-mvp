@@ -3,6 +3,8 @@ import { addSongsToShop } from "@/actions/songs";
 import { useState } from "react";
 import Spinner from "@/components/shared/spinner";
 import toast from "react-hot-toast";
+import Image from "next/image";
+import { convertSecondsToTime } from "@/utils/conver-seconds-to-time";
 
 type Props = { allSongs: Song[]; onSubmit: () => void; shopId: string };
 
@@ -29,9 +31,9 @@ const AddSong = ({ allSongs, onSubmit, shopId }: Props) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold mb-4">Select Artists</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="bg-white rounded-lg">
+      <h2 className="text-xl font-semibold mb-4">Select Songs</h2>
+      <div className="space-y-5">
         {allSongs.map((song) => (
           <div
             key={song.id}
@@ -45,7 +47,20 @@ const AddSong = ({ allSongs, onSubmit, shopId }: Props) => {
               className="h-5 w-5 text-indigo-600 cursor-pointer"
             />
             <label htmlFor={song.id} className="text-gray-700 cursor-pointer">
-              {song.title}
+              <div className="flex items-center gap-x-3">
+                <Image
+                  src={song.thumbnail}
+                  alt={song.title}
+                  width={50}
+                  height={50}
+                  className="rounded-full aspect-square object-cover"
+                />
+                {song.title}
+                <span className="font-medium">
+                  {" "}
+                  {convertSecondsToTime(song.duration)}
+                </span>
+              </div>
             </label>
           </div>
         ))}
