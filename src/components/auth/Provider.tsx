@@ -1,4 +1,5 @@
 "use client";
+
 import {
   PayPalScriptProvider,
   ReactPayPalScriptOptions,
@@ -6,6 +7,7 @@ import {
 import { UserRole } from "@prisma/client";
 import { User } from "next-auth";
 import { SessionProvider } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
 const Provider = ({
   children,
   userRole,
@@ -15,6 +17,14 @@ const Provider = ({
   userRole: UserRole | undefined;
   sessionUser: User | null;
 }>) => {
+  const { push } = useRouter();
+  const pathname = usePathname();
+
+  if (pathname.includes("/dashboard")) {
+  }
+  if (pathname.includes("/coffee-shop")) {
+  }
+
   const initialOptions: ReactPayPalScriptOptions = {
     vault: true,
     currency: "USD",
