@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {  Song } from "@prisma/client";
+import { Song } from "@prisma/client";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import Songs from "./songs";
@@ -9,8 +9,8 @@ import Albums from "./albums";
 import Artrists from "./artists";
 
 type Props = {
-  shopId: string;
   songs: Song[];
+  shopId: string;
   albums: ExtendedAlbum[];
   artists: { name: string; image: string; id: string }[];
 };
@@ -22,7 +22,7 @@ const MusicMain = ({ shopId, songs, albums, artists }: Props) => {
   const section = searchParams.get("section");
 
   const [currentSesction, setCurrentSection] = useState<Section>(
-    (section as Section) || "songs"
+    (section as Section) || "artists"
   );
 
   const sectionsData = ["Artists", "Songs", "Albums"];
@@ -55,9 +55,11 @@ const MusicMain = ({ shopId, songs, albums, artists }: Props) => {
           </button>
         ))}
       </div>
-      {section === "songs" && <Songs songs={songs} />}
-      {section === "albums" && <Albums albums={albums} />}
-      {section === "artists" && <Artrists artists={artists} shopId={shopId} />}
+      {currentSesction === "songs" && <Songs songs={songs} />}
+      {currentSesction === "albums" && <Albums albums={albums} />}
+      {currentSesction === "artists" && (
+        <Artrists artists={artists} shopId={shopId} />
+      )}
     </div>
   );
 };
