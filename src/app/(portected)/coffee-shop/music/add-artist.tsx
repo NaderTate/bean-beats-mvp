@@ -3,6 +3,7 @@ import { addArtistsToShop } from "@/actions/artists";
 import { useState } from "react";
 import Spinner from "@/components/shared/spinner";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 type Props = { allArtists: Artist[]; onSubmit: () => void; shopId: string };
 
@@ -29,9 +30,9 @@ const AddArtist = ({ allArtists, onSubmit, shopId }: Props) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md">
+    <div className="bg-white rounded-lg">
       <h2 className="text-xl font-semibold mb-4">Select Artists</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-5">
         {allArtists.map((artist) => (
           <div
             key={artist.id}
@@ -45,14 +46,23 @@ const AddArtist = ({ allArtists, onSubmit, shopId }: Props) => {
               className="h-5 w-5 text-indigo-600 cursor-pointer"
             />
             <label htmlFor={artist.id} className="text-gray-700 cursor-pointer">
-              {artist.name}
+              <div className="flex items-center gap-x-3">
+                <Image
+                  src={artist.image}
+                  alt={artist.name}
+                  width={200}
+                  height={200}
+                  className="rounded-full aspect-square object-cover w-14"
+                />
+                <span>{artist.name}</span>
+              </div>
             </label>
           </div>
         ))}
       </div>
       <button
         onClick={handleSubmit}
-        className="mt-5 inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto"
+        className="mt-5 inline-block w-full rounded-lg bg-primary hover:bg-primary-500 transition px-5 py-3 font-medium text-white sm:w-auto"
       >
         {isSubmitting ? <Spinner /> : "Submit"}
       </button>

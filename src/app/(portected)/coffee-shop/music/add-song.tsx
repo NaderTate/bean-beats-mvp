@@ -51,13 +51,12 @@ const AddSong = ({ allSongs, onSubmit, shopId }: Props) => {
                 <Image
                   src={song.thumbnail}
                   alt={song.title}
-                  width={50}
-                  height={50}
-                  className="rounded-full aspect-square object-cover"
+                  width={200}
+                  height={200}
+                  className="rounded-full aspect-square object-cover w-14"
                 />
                 {song.title}
                 <span className="font-medium">
-                  {" "}
                   {convertSecondsToTime(song.duration)}
                 </span>
               </div>
@@ -67,7 +66,7 @@ const AddSong = ({ allSongs, onSubmit, shopId }: Props) => {
       </div>
       <button
         onClick={handleSubmit}
-        className="mt-5 inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto"
+        className="mt-5 inline-block w-full rounded-lg px-5 py-3 font-medium text-white sm:w-auto bg-primary hover:bg-primary-500 transition"
       >
         {isSubmitting ? <Spinner /> : "Submit"}
       </button>
