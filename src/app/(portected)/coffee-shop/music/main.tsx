@@ -59,16 +59,9 @@ const MusicMain = ({
 }: Props) => {
   const { refresh } = useRouter();
   const searchParams = useSearchParams();
-  const section = searchParams.get("section");
 
   const [open, setOpen] = useState(false);
-  const [currentSection, setCurrentSection] = useState(section ?? "artists");
-
-  useEffect(() => {
-    if (section) {
-      setCurrentSection(section);
-    }
-  }, [section]);
+  const [currentSection, setCurrentSection] = useState("artists");
 
   const toggleModal = () => {
     setTimeout(() => {
