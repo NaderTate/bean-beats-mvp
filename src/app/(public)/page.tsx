@@ -1,14 +1,18 @@
 import { getUser } from "@/utils/get-user";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
+import CreatePassword from "./create-password";
 export default async function Home() {
   const sessionUser = await getUser();
   const user = sessionUser
     ? await prisma.user.findUnique({
         where: { id: sessionUser?.id },
-        select: { role: true },
+        select: { role: true, password: true },
       })
     : null;
+  if (user && !user.password) {
+    return <CreatePassword />;
+  }
   if (user?.role === "PLATFORM_ADMIN") {
     redirect("/dashboard");
   }
