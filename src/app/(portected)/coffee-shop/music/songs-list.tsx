@@ -32,16 +32,6 @@ const SongsList = ({ songs, setOpen }: Props) => {
         artistName: "Artist",
         price: "Price",
       }}
-      actions={[
-        {
-          title: "Edit",
-          cb: (id: string) => console.log("Edit", id),
-        },
-        {
-          title: "Delete",
-          cb: (id: string) => console.log("Delete", id),
-        },
-      ]}
     />
   );
 };

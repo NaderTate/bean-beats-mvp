@@ -22,16 +22,6 @@ const SongsList = ({ songs }: Props) => {
           title: "Song Name",
           artistName: "Artist",
         }}
-        actions={[
-          {
-            title: "Edit",
-            cb: (id: string) => console.log("Edit", id),
-          },
-          {
-            title: "Delete",
-            cb: (id: string) => console.log("Delete", id),
-          },
-        ]}
       />
     </div>
   );

@@ -12,16 +12,6 @@ const Main = ({ users }: Props) => {
       <Table
         data={users}
         fields={{ name: "Name", email: "Email", image: "Image" }}
-        actions={[
-          {
-            title: "Edit",
-            cb: (id: string) => console.log("Edit", id),
-          },
-          {
-            title: "Delete",
-            cb: (id: string) => console.log("Delete", id),
-          },
-        ]}
       />
     </div>
   );
