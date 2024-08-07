@@ -1,0 +1,44 @@
+{
+  "name": "bean-beats",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "postinstall": "prisma generate",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^2.4.1",
+    "@paypal/react-paypal-js": "^8.5.0",
+    "@prisma/client": "^5.17.0",
+    "@vercel/blob": "^0.23.4",
+    "bcrypt": "^5.1.1",
+    "chart.js": "^4.4.3",
+    "framer-motion": "^11.3.19",
+    "jsonwebtoken": "^9.0.2",
+    "next": "14.2.5",
+    "next-auth": "^5.0.0-beta.19",
+    "react": "^18",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18",
+    "react-hook-form": "^7.52.1",
+    "react-hot-toast": "^2.4.1",
+    "react-icons": "^5.2.1",
+    "zustand": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.5",
+    "postcss": "^8",
+    "prisma": "^5.17.0",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}

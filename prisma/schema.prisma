@@ -1,0 +1,177 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  PLATFORM_ADMIN
+  SHOP_ADMIN
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  name           String?
+  email          String          @unique
+  emailVerified  DateTime?
+  phoneNumber    String?
+  image          String?
+  password       String?
+  role           UserRole        @default(SHOP_ADMIN)
+  accounts       Account[]
+  sessions       Session[]
+  CoffeeShop     CoffeeShop[]
+  // Optional for WebAuthn support
+  authenticators Authenticator[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Optional for WebAuthn support
+model Authenticator {
+  credentialID         String  @id @map("_id")
+  userId               String  @db.ObjectId
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, credentialID])
+}
+
+model Artist {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  image          String
+  coffeeShops    CoffeeShop[] @relation(fields: [coffeeShopsIds], references: [id])
+  coffeeShopsIds String[]     @db.ObjectId
+  Album          Album[]
+  Song           Song[]
+}
+
+model Album {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  year           Int?
+  image          String
+  artist         Artist       @relation(fields: [artistId], references: [id])
+  artistId       String       @db.ObjectId
+  Song           Song[]
+  coffeeShops    CoffeeShop[] @relation(fields: [coffeeShopsIds], references: [id])
+  coffeeShopsIds String[]     @db.ObjectId
+}
+
+model Song {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  artist          Artist?       @relation(fields: [artistId], references: [id])
+  album           Album?        @relation(fields: [albumId], references: [id])
+  duration        Float
+  fileURL         String
+  price           Float
+  artistId        String?       @db.ObjectId
+  albumId         String?       @db.ObjectId
+  QueueSong       QueueSong[]
+  Transactions    Transaction[] @relation(fields: [transactionsIds], references: [id])
+  transactionsIds String[]      @db.ObjectId
+  thumbnail       String
+  CoffeeShops     CoffeeShop[]  @relation(fields: [coffeeShopsIds], references: [id])
+  coffeeShopsIds  String[]      @db.ObjectId
+}
+
+model QueueSong {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  song          Song        @relation(fields: [songId], references: [id])
+  songId        String      @db.ObjectId
+  CoffeeShop    CoffeeShop? @relation(name: "CoffeeShopQueueSongs", fields: [coffeeShopId], references: [id])
+  coffeeShopId  String?     @db.ObjectId
+  transactionId String      @db.ObjectId
+  Transaction   Transaction @relation(fields: [transactionId], references: [id])
+}
+
+model CoffeeShop {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  address      String
+  admin        User          @relation(fields: [adminId], references: [id])
+  songs        Song[]        @relation(fields: [songIds], references: [id])
+  songIds      String[]      @db.ObjectId
+  workingHours Json
+  revenueShare Int
+  playingQueue QueueSong[]   @relation(name: "CoffeeShopQueueSongs")
+  adminId      String        @db.ObjectId
+  Transactions Transaction[]
+  Artists      Artist[]      @relation(fields: [artistsIds], references: [id])
+  artistsIds   String[]      @db.ObjectId
+  Albums       Album[]       @relation(fields: [albumsIds], references: [id])
+  albumsIds    String[]      @db.ObjectId
+}
+
+model Transaction {
+  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  status      TransactionStatus
+  amount      Float
+  shop        CoffeeShop        @relation(fields: [shopId], references: [id])
+  shopId      String            @db.ObjectId
+  songs       Song[]            @relation(fields: [songsIds], references: [id])
+  songsIds    String[]          @db.ObjectId
+  tableNumber Int
+  createdAt   DateTime          @default(now())
+  QueueSong   QueueSong[]
+}
