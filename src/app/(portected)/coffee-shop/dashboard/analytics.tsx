@@ -6,7 +6,7 @@ type Props = {
 
 const Analytics = ({ data }: Props) => {
   return (
-    <div className="grid grid-cols-3 justify-between gap-5">
+    <div className="ml-10 grid grid-cols-1 md:grid-cols-3 justify-between gap-20">
       {data.map((item, index) => (
         <div
           key={index}
