@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { upload } from "@vercel/blob/client";
 import { Album, Artist, Song } from "@prisma/client";
@@ -9,26 +9,21 @@ import Spinner from "../spinner";
 import Link from "next/link";
 
 type Props = {
-  itemToEdit?: Song;
-  artists: Artist[];
   albums: Album[];
+  artists: Artist[];
+  itemToEdit?: Song;
   onSubmit: () => void;
 };
 
 type Inputs = {
-  artistId: string;
-  albumId: string;
-  title: string;
-  duration: number;
-  price: number;
-  thumbnail: string;
   file: string;
+  title: string;
+  price: number;
+  albumId: string;
+  duration: number;
+  artistId: string;
+  thumbnail: string;
 };
-
-function convertMillisecondsToMinutes(milliseconds: number) {
-  const minutes = milliseconds / (60 * 1000);
-  return minutes;
-}
 
 const SongForm = ({
   itemToEdit: song,

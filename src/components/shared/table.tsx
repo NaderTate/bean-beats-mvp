@@ -1,11 +1,16 @@
 "use client";
-import React, { useState, useEffect, cloneElement } from "react";
+
 import Image from "next/image";
+import React, { useState, useEffect, cloneElement } from "react";
+
+import Modal from "./Modal";
+import ConfirmDelete from "./confirm-delete";
+
 import { MdEdit } from "react-icons/md";
 import { FiDelete } from "react-icons/fi";
 import { CiSearch } from "react-icons/ci";
+import { FaInfoCircle } from "react-icons/fa";
 import { IoMdAddCircle } from "react-icons/io";
-import Modal from "./Modal";
 
 export default function Table({
   fields,
@@ -15,6 +20,8 @@ export default function Table({
   options,
   editForm,
   add,
+  viewLink,
+  deleteFn,
 }: any) {
   const [modifiedData, setModifiedData] = React.useState(data);
   const [openEdit, setOpenEdit] = useState(false);
@@ -38,9 +45,9 @@ export default function Table({
   const keys = Object.keys(fields);
 
   return (
-    <div className="mt-5 rounded-lg p-5 mr-5">
+    <div className="mt-5 rounded-lg">
       <div className="flex justify-between items-center gap-2 py-4">
-        <div className=" mx-auto text-gray-600 border-2 border-gray-300 bg-white px-5 h-10 md:h-14  rounded-lg text-sm flex-1 flex justify-between items-center gap-5">
+        <div className="mx-auto text-gray-600 border-2 border-gray-300  px-5 h-10 md:h-14  rounded-lg text-sm flex-1 flex justify-between items-center gap-5">
           <input
             type="search"
             name="search"
@@ -66,8 +73,8 @@ export default function Table({
 
       <div className="border bg-white border-primary/20 shadow-sm rounded-lg overflow-x-scroll md:overflow-hidden">
         <table className="min-w-full divide-y-2 divide-gray-200 text-sm ">
-          <thead className="bg-gray-100 ltr:text-left rtl:text-right">
-            <tr>
+          <thead className="bg-gray-100 ltr:text-left rtl:text-right w-full">
+            <tr className="bg-gray-100">
               {keys.map((key) => (
                 <td
                   key={key + "tabel-fields"}
@@ -76,9 +83,13 @@ export default function Table({
                   {fields?.[key]}
                 </td>
               ))}
-              <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                Actions
-              </td>
+              {viewLink ||
+                editForm ||
+                (deleteFn && (
+                  <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                    Actions
+                  </td>
+                ))}
             </tr>
           </thead>
 

@@ -1,16 +1,23 @@
 "use client";
+
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 import {
   FcNext,
   FcMusic,
+  FcBarChart,
   FcMoneyTransfer,
   FcConferenceCall,
 } from "react-icons/fc";
 
 const links = [
+  {
+    title: "Dashboard",
+    icon: FcBarChart,
+    href: "/dashboard",
+  },
   {
     title: "Users",
     icon: FcConferenceCall,

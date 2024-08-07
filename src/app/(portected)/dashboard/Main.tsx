@@ -113,7 +113,7 @@ const songs = [
 const Main = () => {
   return (
     <main className="flex flex-col flex-1 w-full px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
-      <section className=" grid col-span-1 gap-4  lg:grid-cols-3 pt-10 section1">
+      <section className=" grid col-span-1 gap-4  lg:grid-cols-3 section1">
         {list.map((item) => (
           <NCard key={item.title + "section1"} item={item} />
         ))}

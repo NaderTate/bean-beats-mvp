@@ -11,7 +11,7 @@ export default async function page() {
     },
   });
   return (
-    <div className="w-full p-5">
+    <div className="w-full px-5">
       <PaymentsTable transactions={transactions} />
     </div>
   );
