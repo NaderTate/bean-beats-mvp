@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import Albums from "./albums";
@@ -57,22 +57,32 @@ const MusicMain = ({
   allSongs,
   shopId,
 }: Props) => {
-  const searchParams = useSearchParams();
   const { refresh } = useRouter();
+  const searchParams = useSearchParams();
   const section = searchParams.get("section");
-  const [currentSection, setCurrentSection] = useState(section ?? "artists");
+
   const [open, setOpen] = useState(false);
+  const [currentSection, setCurrentSection] = useState(section ?? "artists");
+
+  useEffect(() => {
+    if (section) {
+      setCurrentSection(section);
+    }
+  }, [section]);
+
   const toggleModal = () => {
     setTimeout(() => {
       refresh();
     }, 1000);
     setOpen(!open);
   };
+
   const actionButtons: Array<{ label: string }> = [
     { label: "artists" },
     { label: "albums" },
     { label: "songs" },
   ];
+
   return (
     <div>
       <div className="flex justify-center space-x-2">
