@@ -47,7 +47,7 @@ const Navbar = () => {
   return (
     <nav
       style={{ top: visible ? "0" : "-100px", transition: "top 0.6s" }}
-      className="flex items-center justify-between text-gray-600 right-0 fixed w-full shadow-lg dark:shadow-slate-800 z-10 bg-white/90 dark:bg-gray-900 h-16"
+      className="flex items-center justify-between text-gray-600 right-0 fixed w-full shadow-sm z-10 bg-white/90 dark:bg-gray-900 h-16"
     >
       <div className="py-2 sm:py-1 px-2 sm:p-8 flex items-center gap-x-5">
         <Link href="/" className="flex items-end justify-center ">

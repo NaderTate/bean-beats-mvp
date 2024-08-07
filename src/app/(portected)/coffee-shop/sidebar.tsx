@@ -49,7 +49,7 @@ export default function Sidebar() {
         <div>
           <div className="pt-20 border-t border-gray-100">
             <div className="px-2">
-              <ul className="space-y-1 sm:space-y-5 border-t border-gray-100 pt-4">
+              <ul className="space-y-1 sm:space-y-5 pt-4">
                 {links.map((link) => (
                   <li key={link.href + "dashboardLink"}>
                     <Link

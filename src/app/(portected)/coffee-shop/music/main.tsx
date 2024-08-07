@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Album, Artist, Song } from "@prisma/client";
 
 import Albums from "./albums";
+import AddSong from "./add-song";
+import AddAlbum from "./add-album";
 import SongsList from "./songs-list";
+import AddArtist from "./add-artist";
 import ArtistsList from "./artists-list";
 import Modal from "@/components/shared/Modal";
-import { Album, Artist, Song } from "@prisma/client";
-import AddAlbum from "./add-album";
-import AddSong from "./add-song";
-import AddArtist from "./add-artist";
 
 type Props = {
   songs: {
@@ -50,15 +50,14 @@ type Props = {
 
 const MusicMain = ({
   songs,
+  shopId,
   albums,
   artists,
+  allSongs,
   allAlbums,
   allArtists,
-  allSongs,
-  shopId,
 }: Props) => {
   const { refresh } = useRouter();
-  const searchParams = useSearchParams();
 
   const [open, setOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState("artists");

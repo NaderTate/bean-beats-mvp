@@ -10,7 +10,7 @@ const Analytics = ({ data }: Props) => {
       {data.map((item, index) => (
         <div
           key={index}
-          className="items-center flex gap-5 p-4 rounded-lg shadow-md"
+          className="items-center flex gap-5 p-4 rounded-lg shadow-sm"
         >
           <item.icon className={item.iconColor} size={35} />
           <div>
