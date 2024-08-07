@@ -1,16 +1,16 @@
-import Dashboard from '@/components/shared/dashboard-nav'
+import Dashboard from "@/components/shared/dashboard-nav";
 
 const Layout = ({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) => {
   return (
-    <div className="flex min-h-screen overflow-x-hidden bg-gray-100">
+    <div className="flex min-h-screen overflow-x-hidden">
       <Dashboard />
       {children}
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

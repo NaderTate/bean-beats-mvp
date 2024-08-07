@@ -4,14 +4,10 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import {
-  FcSettings,
-  FcConferenceCall,
-  FcCapacitor,
-  FcGenealogy,
-  FcDataProtection,
   FcNext,
   FcMusic,
   FcMoneyTransfer,
+  FcConferenceCall,
 } from "react-icons/fc";
 
 const links = [
@@ -50,20 +46,7 @@ export default function Dashboard() {
         <div>
           <div className="border-t border-gray-100">
             <div className="px-2">
-              <div className="py-4">
-                <Link
-                  href="/dashboard"
-                  className={`t group relative flex justify-center rounded  px-2 py-1.5 text-blue-700 ${
-                    pathname === "/dashboard" && "bg-blue-100/60"
-                  }`}
-                >
-                  <FcSettings className="h-5 w-5 opacity-75" />
-                  <span className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white -translate-x-20 opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
-                    General
-                  </span>
-                </Link>
-              </div>
-              <ul className="space-y-1 sm:space-y-5 border-t border-gray-100 pt-4">
+              <ul className="space-y-1 sm:space-y-5  border-gray-100 pt-4">
                 {links.map((link) => (
                   <li key={link.href + "dashboardLink"}>
                     <Link
