@@ -19,3 +19,17 @@ export const updateUserData = async (data: {
   revalidatePath("/coffee-shop/settings");
   return user;
 };
+
+export const updateUserPassword = async (data: {
+  userId: string;
+  password: string;
+}) => {
+  const user = await prisma.user.update({
+    where: { id: data.userId },
+    data: {
+      password: data.password,
+    },
+  });
+  revalidatePath("/coffee-shop/settings");
+  return user;
+};

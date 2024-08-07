@@ -7,11 +7,11 @@ export default async function Home() {
   const user = sessionUser
     ? await prisma.user.findUnique({
         where: { id: sessionUser?.id },
-        select: { role: true, password: true },
+        select: { role: true, password: true, id: true },
       })
     : null;
   if (user && !user.password) {
-    return <CreatePassword />;
+    return <CreatePassword userId={user.id} />;
   }
   if (user?.role === "PLATFORM_ADMIN") {
     redirect("/dashboard");

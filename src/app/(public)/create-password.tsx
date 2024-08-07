@@ -1,8 +1,23 @@
-import React from "react";
+"use client";
 
-type Props = {};
+import { useState } from "react";
 
-const CreatePassword = (props: Props) => {
+import Spinner from "@/components/shared/spinner";
+import { updateUserPassword } from "@/actions/users";
+
+type Props = { userId: string };
+
+const CreatePassword = ({ userId }: Props) => {
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    await updateUserPassword({ userId, password });
+    setIsLoading(false);
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
@@ -18,19 +33,23 @@ const CreatePassword = (props: Props) => {
               Password
             </label>
             <input
-              type="password"
-              id="password"
-              name="password"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              placeholder="Enter your password"
               required
+              id="password"
+              type="password"
+              name="password"
+              value={password}
+              placeholder="Enter your password"
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
           <button
             type="submit"
-            className="transition w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            onClick={handleSubmit}
+            disabled={isLoading || !password}
+            className="transition w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex justify-center"
           >
-            Submit
+            {isLoading ? <Spinner /> : "Create Password"}
           </button>
         </form>
       </div>
