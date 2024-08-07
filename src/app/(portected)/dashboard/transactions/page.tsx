@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import PaymentsTable from "../../coffee-shop/payments/payments-table";
+
 export default async function page() {
   const transactions = await prisma.transaction.findMany({
     select: {
@@ -12,7 +13,10 @@ export default async function page() {
   });
   return (
     <div className="w-full px-5">
-      <PaymentsTable transactions={transactions} />
+      <PaymentsTable
+        transactions={transactions}
+        viewLink="/dashboard/transactions"
+      />
     </div>
   );
 }

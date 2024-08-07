@@ -36,13 +36,13 @@ const ConfirmDelete = ({ deleteFn }: ConfirmDeleteProps) => {
         <div className="flex justify-between">
           <button
             onClick={handleDelete}
-            className="mt-5 inline-block w-full rounded-lg px-5 py-3 font-medium text-white sm:w-auto bg-primary hover:bg-primary-500 transition"
+            className="inline-block rounded-lg px-5 py-3 font-medium text-white bg-primary hover:bg-primary-500 transition"
           >
             {isLoading ? <Spinner /> : "Delete"}
           </button>
           <button
             onClick={toggleModal}
-            className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md"
+            className="bg-gray-300 text-gray-700 px-5 py-3 rounded-lg"
           >
             Cancel
           </button>

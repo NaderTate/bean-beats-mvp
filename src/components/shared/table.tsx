@@ -22,7 +22,7 @@ interface TableProps {
   add?: () => void;
   viewLink?: string;
   deleteFn?: (id: string) => Promise<void>;
-  edit?: (item: any) => void;
+  viewModal?: any;
 }
 export default function Table({
   fields,
@@ -34,7 +34,7 @@ export default function Table({
   add,
   viewLink,
   deleteFn,
-  edit,
+  viewModal,
 }: TableProps) {
   const [modifiedData, setModifiedData] = React.useState(data);
   const [openEdit, setOpenEdit] = useState(false);
@@ -96,7 +96,7 @@ export default function Table({
                   {fields?.[key]}
                 </td>
               ))}
-              {(viewLink || editForm || deleteFn) && (
+              {(viewLink || editForm || deleteFn || viewModal) && (
                 <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
                   Actions
                 </td>
@@ -115,40 +115,67 @@ export default function Table({
                     {key === "image" ? (
                       <Image
                         alt={key}
-                        width={40}
-                        height={40}
+                        width={200}
+                        height={200}
                         src={item?.[key] || "/images/unkown.jpeg"}
-                        className="aspect-square object-cover rounded-full border border-gray-200 overflow-hidden"
+                        className="aspect-square w-12 object-cover rounded-full border border-gray-200 overflow-hidden"
                       />
                     ) : (
                       item?.[key]
                     )}
                   </td>
                 ))}
-                {viewLink && (
-                  <td className=" px-4 py-2">
-                    <Link href={`${viewLink}/${item?.id}`}>
-                      <FaInfoCircle />
-                    </Link>
-                  </td>
-                )}
-                {deleteFn && (
-                  <td className=" px-4 py-2">
-                    <ConfirmDelete deleteFn={() => deleteFn(item.id)} />
-                  </td>
-                )}
+                {(viewLink || editForm || viewModal) && (
+                  <td className="flex items-center gap-x-5 px-4 py-2 mt-4">
+                    {viewLink && (
+                      <Link href={`${viewLink}/${item?.id}`} prefetch>
+                        <FaInfoCircle className="text-primary" size={20} />
+                      </Link>
+                    )}
+                    {deleteFn && (
+                      <ConfirmDelete deleteFn={() => deleteFn(item.id)} />
+                    )}
+                    {editForm && (
+                      <>
+                        <MdEdit
+                          size={20}
+                          onClick={() => setOpenEdit(!openEdit)}
+                          className="text-primary cursor-pointer"
+                        />
 
-                <td className=" px-4 py-2">
-                  <div>
-                    <Modal
-                      open={openEdit}
-                      setOpen={() => setOpenEdit(!openEdit)}
-                      title="Edit"
-                    >
-                      {React.cloneElement(editForm, { itemToEdit: item })}
-                    </Modal>
-                  </div>
-                </td>
+                        <Modal
+                          title="Edit"
+                          open={openEdit}
+                          setOpen={() => setOpenEdit(!openEdit)}
+                        >
+                          {cloneElement(editForm, {
+                            key: item.id,
+                            itemToEdit: item,
+                          })}
+                        </Modal>
+                      </>
+                    )}
+                    {viewModal && (
+                      <>
+                        <MdEdit
+                          size={20}
+                          onClick={() => setOpenEdit(!openEdit)}
+                          className="text-primary cursor-pointer"
+                        />
+                        <Modal
+                          title="View"
+                          open={openEdit}
+                          setOpen={() => setOpenEdit(!openEdit)}
+                        >
+                          {cloneElement(viewModal, {
+                            key: item.id,
+                            data: item,
+                          })}
+                        </Modal>
+                      </>
+                    )}
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

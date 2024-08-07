@@ -13,12 +13,14 @@ type Props = {
     amount: number;
     tableNumber: number;
   }[];
+  viewLink?: string;
 };
 
-const PaymentsTable = ({ transactions }: Props) => {
+const PaymentsTable = ({ transactions, viewLink }: Props) => {
   return (
-    <div>
+    <div className="w-full">
       <Table
+        viewLink={viewLink}
         data={transactions.map((transaction) => ({
           ...transaction,
           Songs: transaction._count.QueueSong,
@@ -29,16 +31,6 @@ const PaymentsTable = ({ transactions }: Props) => {
           Date: "Date",
           amount: "Total Cost",
         }}
-        actions={[
-          {
-            title: "Edit",
-            cb: (id: string) => console.log("Edit", id),
-          },
-          {
-            title: "Delete",
-            cb: (id: string) => console.log("Delete", id),
-          },
-        ]}
       />
     </div>
   );

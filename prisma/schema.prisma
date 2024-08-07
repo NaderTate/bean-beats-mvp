@@ -136,13 +136,13 @@ model Song {
 }
 
 model QueueSong {
-  id            String      @id @default(auto()) @map("_id") @db.ObjectId
-  song          Song        @relation(fields: [songId], references: [id])
-  songId        String      @db.ObjectId
-  CoffeeShop    CoffeeShop? @relation(name: "CoffeeShopQueueSongs", fields: [coffeeShopId], references: [id])
-  coffeeShopId  String?     @db.ObjectId
-  transactionId String      @db.ObjectId
-  Transaction   Transaction @relation(fields: [transactionId], references: [id])
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  song          Song         @relation(fields: [songId], references: [id])
+  songId        String       @db.ObjectId
+  CoffeeShop    CoffeeShop?  @relation(name: "CoffeeShopQueueSongs", fields: [coffeeShopId], references: [id])
+  coffeeShopId  String?      @db.ObjectId
+  transactionId String?      @db.ObjectId
+  Transaction   Transaction? @relation(fields: [transactionId], references: [id])
 }
 
 model CoffeeShop {

@@ -4,12 +4,13 @@ import { useForm } from "react-hook-form";
 import { upload } from "@vercel/blob/client";
 
 import Spinner from "../spinner";
-import { Artist } from "@prisma/client";
+import { Album, Artist } from "@prisma/client";
 import Select from "../Select";
 
 interface AlbumFormProps {
   onSubmit: () => void;
   artists: Artist[];
+  itemToEdit?: Album;
 }
 
 type Inputs = {
@@ -18,12 +19,22 @@ type Inputs = {
   artistId: string;
 };
 
-export default function AlbumForm({ onSubmit, artists }: AlbumFormProps) {
+export default function AlbumForm({
+  onSubmit,
+  artists,
+  itemToEdit: album,
+}: AlbumFormProps) {
   const {
     register,
     handleSubmit,
     formState: { isLoading, isSubmitting },
-  } = useForm<Inputs>();
+  } = useForm<Inputs>({
+    defaultValues: {
+      name: album?.name,
+      artistId: album?.artistId,
+      year: album?.year || new Date().getFullYear(),
+    },
+  });
   const inputFileRef = useRef<HTMLInputElement>(null);
 
   const artistOptions = artists.map((artist) => ({
@@ -112,7 +123,7 @@ export default function AlbumForm({ onSubmit, artists }: AlbumFormProps) {
       <div className="mt-4">
         <button
           type="submit"
-          className="inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto"
+          className="inline-block w-full rounded-lg bg-primary hover:bg-primary-500 transition px-5 py-3 font-medium text-white sm:w-auto"
         >
           {isSubmitting || isLoading ? <Spinner /> : "Submit"}
         </button>

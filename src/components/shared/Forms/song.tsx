@@ -26,8 +26,8 @@ type Inputs = {
 };
 
 const SongForm = ({
-  itemToEdit: song,
   albums,
+  itemToEdit: song,
   artists: artists,
   onSubmit,
 }: Props) => {
@@ -209,7 +209,7 @@ const SongForm = ({
       <div className="mt-4">
         <button
           type="submit"
-          className="inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto"
+          className="inline-block w-full rounded-lg bg-primary hover:bg-primary-500 transition px-5 py-3 font-medium text-white sm:w-auto"
         >
           {isSubmitting || isLoading ? <Spinner /> : "Submit"}
         </button>
