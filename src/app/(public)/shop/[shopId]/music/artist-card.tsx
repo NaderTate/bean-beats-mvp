@@ -15,7 +15,7 @@ const ArtistCard = ({ artist, shopId }: Props) => {
           height={150}
           alt={artist.name}
           src={artist.image}
-          className=" object-top rounded-full object-cover mx-auto"
+          className=" object-top aspect-square rounded-full object-cover mx-auto"
         />
       </Link>
       <h3 className="text-gray-500 mt-5 text-center">{artist.name}</h3>
