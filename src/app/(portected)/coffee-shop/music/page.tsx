@@ -47,24 +47,10 @@ const MusicPage: NextPage = async ({}: MusicPageProps) => {
       })
     : null;
 
-  const allAlbums =
-    (coffeeShop &&
-      (await prisma.album.findMany({
-        where: { NOT: { coffeeShopsIds: { hasSome: [coffeeShop?.id] } } },
-      }))) ||
-    [];
-  const allArtists =
-    (coffeeShop &&
-      (await prisma.artist.findMany({
-        where: { NOT: { coffeeShopsIds: { hasSome: [coffeeShop?.id] } } },
-      }))) ||
-    [];
-  const allSongs =
-    (coffeeShop &&
-      (await prisma.song.findMany({
-        where: { NOT: { coffeeShopsIds: { hasSome: [coffeeShop?.id] } } },
-      }))) ||
-    [];
+  const allAlbums = (coffeeShop && (await prisma.album.findMany({}))) || [];
+  const allArtists = (coffeeShop && (await prisma.artist.findMany({}))) || [];
+  const allSongs = (coffeeShop && (await prisma.song.findMany({}))) || [];
+  console.log(allSongs.length);
   return (
     <>
       {coffeeShop && (
