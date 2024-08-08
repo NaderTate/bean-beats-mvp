@@ -1,12 +1,13 @@
 import { NextPage } from "next";
 import ArtistMain from "./main";
+import { Album, Song } from "@prisma/client";
 
-type ArtistPageProps = {};
+type ArtistPageProps = { songs: Song[]; albums: Album[] };
 
-const ArtistPage: NextPage = async ({}: ArtistPageProps) => {
+const ArtistPage = async ({ songs, albums }: ArtistPageProps) => {
   return (
     <>
-      <ArtistMain />
+      <ArtistMain songs={songs} albums={albums} />
     </>
   );
 };

@@ -94,7 +94,11 @@ const Navbar = () => {
                     />
                     <DropDown user={session.user as any} />
                   </div>
-                  <Drawer user={session.user as any} />
+                  <Drawer
+                    user={session.user as any}
+                    navItems={[]}
+                    shopId={shopId}
+                  />
                 </>
               ) : (
                 <SignIn />

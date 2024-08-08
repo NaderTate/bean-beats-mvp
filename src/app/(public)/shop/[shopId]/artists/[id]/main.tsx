@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import Songs from "../../music/songs";
+import Albums from "../../music/albums";
+import { Album, Song } from "@prisma/client";
 
-type Props = {};
+type Props = { songs: Song[]; albums: Album[] };
 
-const ArtistMain = (props: Props) => {
+const ArtistMain = ({ songs, albums }: Props) => {
   type sections = "songs" | "albums";
   const [section, setSection] = useState<sections>("songs");
   const buttons: Array<{
@@ -31,6 +33,7 @@ const ArtistMain = (props: Props) => {
         </button>
       ))}
       {section === "songs" && <Songs songs={[]} />}
+      {section === "albums" && <Albums albums={[]} />}
     </div>
   );
 };
