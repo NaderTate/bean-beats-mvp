@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -26,27 +28,21 @@ type Inputs = {
   thumbnail: string;
 };
 
-const SongForm = ({
-  albums,
-  itemToEdit: song,
-  artists: artists,
-  onSubmit,
-}: Props) => {
+const SongForm = ({ albums, itemToEdit: song, artists: artists, onSubmit }: Props) => {
   const id = song?.id;
   const isEditSession = !!id;
 
-  const { register, handleSubmit, formState, watch, setValue } =
-    useForm<Inputs>({
-      defaultValues: {
-        artistId: song?.artistId || "",
-        albumId: song?.albumId || "",
-        title: song?.title,
-        duration: song?.duration,
-        price: song?.price,
-      },
-    });
+  const { register, handleSubmit, formState, watch, setValue } = useForm<Inputs>({
+    defaultValues: {
+      artistId: song?.artistId || "",
+      albumId: song?.albumId || "",
+      title: song?.title,
+      duration: song?.duration,
+      price: song?.price,
+    },
+  });
 
-  const { isLoading, isSubmitting } = formState;
+  const { errors, isLoading, isSubmitting } = formState;
 
   const file: any = watch("file")?.[0];
 
@@ -91,18 +87,7 @@ const SongForm = ({
             thumbnail: newThumbnailBlob.url,
           },
         })
-      : // await fetch(`/api/songs/${id}`, {
-        //     method: "PUT",
-        //     headers: {
-        //       "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify({
-        //       ...otherData,
-        //       fileURL: newSongBlob.url,
-        //       thumbnail: newThumbnailBlob.url,
-        //     }),
-        //   })
-        await fetch("/api/songs", {
+      : await fetch("/api/songs", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -117,19 +102,21 @@ const SongForm = ({
     onSubmit();
   };
 
-  const albumOptions = albums.map((album) => ({
+  const albumOptions = albums.map(album => ({
     value: album.id,
     title: album.name,
   }));
 
-  const artistOptions = artists.map((artist) => ({
+  const artistOptions = artists.map(artist => ({
     value: artist.id,
     title: artist.name,
   }));
 
+  console.log(errors);
   return (
     <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
       <Select
+        errMessage={errors.artistId?.message}
         id="artist"
         label="Artist"
         options={artistOptions}
@@ -139,6 +126,7 @@ const SongForm = ({
       />
 
       <Select
+        errMessage={errors.albumId?.message}
         id="album"
         label="Album"
         options={albumOptions}
@@ -148,6 +136,7 @@ const SongForm = ({
       />
 
       <Input
+        errMessage={errors.title?.message}
         id="title"
         label="Title"
         placeholder="Title"
@@ -156,16 +145,6 @@ const SongForm = ({
           required: "This field is required",
         })}
       />
-
-      {/* <Input
-        id="duration"
-        type="number"
-        label="Duration"
-        placeholder="Duration"
-        {...register("duration", {
-          valueAsNumber: true,
-        })}
-      /> */}
 
       <Input
         id="price"
@@ -182,10 +161,7 @@ const SongForm = ({
       />
 
       <div>
-        <label
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          htmlFor="file_input"
-        >
+        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="file_input">
           Upload Song
         </label>
 
@@ -195,29 +171,17 @@ const SongForm = ({
           type="file"
           {...(register("file"), { required: true })}
         />
-        <p
-          className="mt-1 text-sm text-gray-500 dark:text-gray-300"
-          id="file_input_help"
-        >
-          {isEditSession
-            ? "Leave empty to keep the same file "
-            : "Upload a song file "}
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
+          {isEditSession ? "Leave empty to keep the same file " : "Upload a song file "}
           {song?.fileURL && (
-            <Link
-              className="text-blue-500 hover:underline"
-              href={song?.fileURL}
-              target="_blank"
-            >
+            <Link className="text-blue-500 hover:underline" href={song?.fileURL} target="_blank">
               ( Open Song )
             </Link>
           )}
         </p>
       </div>
       <div>
-        <label
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          htmlFor="file_input"
-        >
+        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="file_input">
           Upload song poster
         </label>
         <input
@@ -226,19 +190,10 @@ const SongForm = ({
           type="file"
           {...(register("thumbnail"), { required: true })}
         />
-        <p
-          className="mt-1 text-sm text-gray-500 dark:text-gray-300"
-          id="file_input_help"
-        >
-          {isEditSession
-            ? "Leave empty to keep the same image "
-            : "Upload a song thumbnail "}
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
+          {isEditSession ? "Leave empty to keep the same image " : "Upload a song thumbnail "}
           {song?.thumbnail && (
-            <Link
-              className="text-blue-500 hover:underline"
-              href={song?.thumbnail}
-              target="_blank"
-            >
+            <Link className="text-blue-500 hover:underline" href={song?.thumbnail} target="_blank">
               ( View thumbnail )
             </Link>
           )}

@@ -8,14 +8,13 @@ type Option = {
 interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
   options: Option[];
   label: string;
+  errMessage?: string;
 }
 
-const Select = forwardRef<HTMLSelectElement, Props>(({ options, label, ...props }, ref) => {
+const Select = forwardRef<HTMLSelectElement, Props>(({ options, label, errMessage, ...props }, ref) => {
   return (
     <div>
-      <label className="sr-only" htmlFor={props.id || props.name}>
-        {label}
-      </label>
+      <label htmlFor={props.id || props.name}>{label}</label>
       <select
         ref={ref}
         title={label}
@@ -29,6 +28,7 @@ const Select = forwardRef<HTMLSelectElement, Props>(({ options, label, ...props 
           </option>
         ))}
       </select>
+      {errMessage && <span className="text-red-500">{errMessage}</span>}
     </div>
   );
 });
