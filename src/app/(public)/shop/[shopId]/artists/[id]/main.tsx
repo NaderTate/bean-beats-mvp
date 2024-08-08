@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Songs from 
+import Songs from "../../music/songs";
 
-type Props = {
-  
-};
+type Props = {};
 
 const ArtistMain = (props: Props) => {
   type sections = "songs" | "albums";
@@ -32,6 +30,7 @@ const ArtistMain = (props: Props) => {
           {button.name}
         </button>
       ))}
+      {section === "songs" && <Songs songs={[]} />}
     </div>
   );
 };
