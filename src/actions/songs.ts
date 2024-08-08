@@ -1,5 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export const getMultipleSongs = async (songIds: string[]) => {
@@ -51,6 +52,25 @@ export const deleteSong = async (id: string) => {
     where: {
       id,
     },
+  });
+  revalidatePath("/dashboard/music");
+};
+
+export const updateSong = async (options: {
+  id: string;
+  data: Prisma.Without<
+    Prisma.SongUpdateInput,
+    Prisma.SongUncheckedUpdateInput
+  > &
+    Prisma.SongUncheckedUpdateInput;
+}) => {
+  const { id, data } = options;
+  console.log({ data });
+  await prisma.song.update({
+    where: {
+      id,
+    },
+    data,
   });
   revalidatePath("/dashboard/music");
 };

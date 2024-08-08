@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { upload } from "@vercel/blob/client";
@@ -6,7 +7,7 @@ import { Album, Artist, Song } from "@prisma/client";
 import Input from "../Input";
 import Select from "../Select";
 import Spinner from "../spinner";
-import Link from "next/link";
+import { updateSong } from "@/actions/songs";
 
 type Props = {
   albums: Album[];
@@ -64,26 +65,54 @@ const SongForm = ({
     const songFile = file[0];
     const thumbnailImage = thumbnail[0];
 
-    const newSongBlob = await upload(songFile.name, songFile, {
-      access: "public",
-      handleUploadUrl: "/api/upload",
-    });
-    const newThumbnailBlob = await upload(thumbnailImage.name, thumbnailImage, {
-      access: "public",
-      handleUploadUrl: "/api/upload",
-    });
+    const newSongBlob = songFile
+      ? await upload(songFile.name, songFile, {
+          access: "public",
+          handleUploadUrl: "/api/upload",
+        })
+      : { url: song?.fileURL };
+    const newThumbnailBlob = thumbnailImage
+      ? await upload(thumbnailImage.name, thumbnailImage, {
+          access: "public",
+          handleUploadUrl: "/api/upload",
+        })
+      : { url: song?.thumbnail };
 
-    await fetch("/api/songs", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...otherData,
-        fileURL: newSongBlob.url,
-        thumbnail: newThumbnailBlob.url,
-      }),
-    });
+    id
+      ? await updateSong({
+          id,
+          data: {
+            artistId: otherData.artistId,
+            albumId: otherData.albumId,
+            title: otherData.title,
+            duration: otherData.duration,
+            price: otherData.price,
+            fileURL: newSongBlob.url,
+            thumbnail: newThumbnailBlob.url,
+          },
+        })
+      : // await fetch(`/api/songs/${id}`, {
+        //     method: "PUT",
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify({
+        //       ...otherData,
+        //       fileURL: newSongBlob.url,
+        //       thumbnail: newThumbnailBlob.url,
+        //     }),
+        //   })
+        await fetch("/api/songs", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...otherData,
+            fileURL: newSongBlob.url,
+            thumbnail: newThumbnailBlob.url,
+          }),
+        });
 
     onSubmit();
   };
@@ -104,21 +133,28 @@ const SongForm = ({
         id="artist"
         label="Artist"
         options={artistOptions}
-        {...register("artistId")}
+        {...register("artistId", {
+          required: "This field is required",
+        })}
       />
 
       <Select
         id="album"
         label="Album"
         options={albumOptions}
-        {...register("albumId")}
+        {...register("albumId", {
+          required: "This field is required",
+        })}
       />
 
       <Input
         id="title"
         label="Title"
         placeholder="Title"
-        {...register("title")}
+        {...(register("title"),
+        {
+          required: "This field is required",
+        })}
       />
 
       {/* <Input
@@ -140,6 +176,8 @@ const SongForm = ({
         placeholder="Price"
         {...register("price", {
           valueAsNumber: true,
+
+          required: "This field is required",
         })}
       />
 
@@ -150,11 +188,12 @@ const SongForm = ({
         >
           Upload Song
         </label>
+
         <input
           className="block p-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
           id="file_input"
           type="file"
-          {...register("file")}
+          {...(register("file"), { required: true })}
         />
         <p
           className="mt-1 text-sm text-gray-500 dark:text-gray-300"
@@ -185,7 +224,7 @@ const SongForm = ({
           className="block p-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
           id="file_input"
           type="file"
-          {...register("thumbnail")}
+          {...(register("thumbnail"), { required: true })}
         />
         <p
           className="mt-1 text-sm text-gray-500 dark:text-gray-300"

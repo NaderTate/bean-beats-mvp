@@ -37,7 +37,7 @@ export default function Table({
   viewModal,
 }: TableProps) {
   const [modifiedData, setModifiedData] = React.useState(data);
-  const [openEdit, setOpenEdit] = useState(false);
+  const [openEdit, setOpenEdit] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -139,14 +139,16 @@ export default function Table({
                       <>
                         <MdEdit
                           size={20}
-                          onClick={() => setOpenEdit(!openEdit)}
+                          onClick={() =>
+                            setOpenEdit(openEdit === index ? null : index)
+                          }
                           className="text-primary cursor-pointer"
                         />
 
                         <Modal
                           title="Edit"
-                          open={openEdit}
-                          setOpen={() => setOpenEdit(!openEdit)}
+                          open={openEdit === index}
+                          setOpen={() => setOpenEdit(null)}
                         >
                           {cloneElement(editForm, {
                             key: item.id,
@@ -159,13 +161,15 @@ export default function Table({
                       <>
                         <MdEdit
                           size={20}
-                          onClick={() => setOpenEdit(!openEdit)}
+                          onClick={() =>
+                            setOpenEdit(openEdit === index ? null : index)
+                          }
                           className="text-primary cursor-pointer"
                         />
                         <Modal
                           title="View"
-                          open={openEdit}
-                          setOpen={() => setOpenEdit(!openEdit)}
+                          open={openEdit === index}
+                          setOpen={() => setOpenEdit(null)}
                         >
                           {cloneElement(viewModal, {
                             key: item.id,
