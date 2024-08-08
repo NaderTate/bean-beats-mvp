@@ -82,7 +82,7 @@ export default function Main(props: MainProps) {
   const toggleModal = () => {
     router.refresh();
     router.refresh();
-    setOpen(!open);
+    setOpen((prev) => !prev);
   };
 
   const editForms = {
@@ -121,11 +121,11 @@ export default function Main(props: MainProps) {
       </section>
       <section>
         <Table
-          deleteFn={deleteFn[shownSection]}
           {...tableData}
           add={toggleModal}
           data={props[shownSection]}
           fields={fields[shownSection]}
+          deleteFn={deleteFn[shownSection]}
           editForm={editForms[shownSection]}
         />
       </section>

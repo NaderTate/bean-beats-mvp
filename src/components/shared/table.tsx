@@ -1,16 +1,12 @@
-"use client";
-
-import Image from "next/image";
 import React, { useState, useEffect, cloneElement } from "react";
-
 import Modal from "./Modal";
 import ConfirmDelete from "./confirm-delete";
-
 import { MdEdit } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoMdAddCircle } from "react-icons/io";
 import Link from "next/link";
+import Image from "next/image";
 
 interface TableProps {
   fields: any;
@@ -24,6 +20,7 @@ interface TableProps {
   deleteFn?: (id: string) => Promise<void>;
   viewModal?: any;
 }
+
 export default function Table({
   fields,
   data,
@@ -36,13 +33,14 @@ export default function Table({
   deleteFn,
   viewModal,
 }: TableProps) {
-  const [modifiedData, setModifiedData] = React.useState(data);
+  const [modifiedData, setModifiedData] = useState(data);
   const [openEdit, setOpenEdit] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     setModifiedData(data);
   }, [data]);
+
   useEffect(() => {
     if (searchTerm === "") {
       setModifiedData(data);
@@ -55,7 +53,12 @@ export default function Table({
       setModifiedData(filteredData);
     }
   }, [data, fields, searchTerm]);
+
   const keys = Object.keys(fields);
+
+  const handleModalClose = () => {
+    setOpenEdit(null);
+  };
 
   return (
     <div className="mt-5 rounded-lg">
@@ -153,6 +156,7 @@ export default function Table({
                           {cloneElement(editForm, {
                             key: item.id,
                             itemToEdit: item,
+                            onSubmit: handleModalClose,
                           })}
                         </Modal>
                       </>
@@ -174,6 +178,7 @@ export default function Table({
                           {cloneElement(viewModal, {
                             key: item.id,
                             data: item,
+                            onSubmit: handleModalClose,
                           })}
                         </Modal>
                       </>
