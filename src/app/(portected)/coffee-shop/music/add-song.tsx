@@ -66,7 +66,12 @@ const AddSong = ({ allSongs, onSubmit, shopId }: Props) => {
       </div>
       <button
         onClick={handleSubmit}
-        className="mt-5 inline-block w-full rounded-lg px-5 py-3 font-medium text-white sm:w-auto bg-primary hover:bg-primary-500 transition"
+        disabled={selectedSongsIds.length === 0 || isSubmitting}
+        className={`mt-5 inline-block w-full rounded-lg px-5 py-3 font-medium text-white sm:w-auto ${
+          selectedSongsIds.length === 0
+            ? "bg-gray-800"
+            : "hover:bg-primary-500 bg-primary "
+        } transition`}
       >
         {isSubmitting ? <Spinner /> : "Submit"}
       </button>

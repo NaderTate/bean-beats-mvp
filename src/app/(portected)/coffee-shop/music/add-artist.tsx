@@ -61,8 +61,13 @@ const AddArtist = ({ allArtists, onSubmit, shopId }: Props) => {
         ))}
       </div>
       <button
+        disabled={selectedArtistsIds.length === 0 || isSubmitting}
         onClick={handleSubmit}
-        className="mt-5 inline-block w-full rounded-lg bg-primary hover:bg-primary-500 transition px-5 py-3 font-medium text-white sm:w-auto"
+        className={`mt-5 inline-block w-full rounded-lg ${
+          selectedArtistsIds.length === 0
+            ? "bg-gray-300 text-gray-600"
+            : "bg-primary hover:bg-primary"
+        } transition px-5 py-3 font-medium text-white sm:w-auto`}
       >
         {isSubmitting ? <Spinner /> : "Submit"}
       </button>

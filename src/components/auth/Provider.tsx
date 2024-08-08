@@ -35,9 +35,9 @@ const Provider = ({
     push("/coffee-shop/dashboard");
   }
   if (pathname.includes("/coffee-shop") && sessionUser) {
-    if (coffeeShops.length === 0) {
-      return <div>You don&apos;t have any coffee shops</div>;
-    }
+    // if (coffeeShops.length === 0) {
+    //   return <div>You don&apos;t have any coffee shops</div>;
+    // }
     if (!sessionUser) {
       push("/signin");
     }

@@ -120,8 +120,8 @@ model Album {
 model Song {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
   title           String
-  artist          Artist?       @relation(fields: [artistId], references: [id])
-  album           Album?        @relation(fields: [albumId], references: [id])
+  artist          Artist?       @relation(fields: [artistId], references: [id] , onDelete: Cascade)
+  album           Album?        @relation(fields: [albumId], references: [id] , onDelete: Cascade)
   duration        Float
   fileURL         String
   price           Float

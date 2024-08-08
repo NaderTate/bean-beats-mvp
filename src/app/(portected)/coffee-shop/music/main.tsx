@@ -94,7 +94,12 @@ const MusicMain = ({
       </div>
       <div>
         {currentSection === "artists" && (
-          <ArtistsList artists={artists} setOpen={toggleModal} />
+          <ArtistsList
+            artists={artists}
+            setOpen={() => {
+              setOpen(true);
+            }}
+          />
         )}
         {currentSection === "albums" && (
           <Albums albums={albums} setOpen={toggleModal} />

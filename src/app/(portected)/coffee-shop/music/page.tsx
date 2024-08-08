@@ -8,9 +8,7 @@ type MusicPageProps = {};
 
 const MusicPage: NextPage = async ({}: MusicPageProps) => {
   const user = await getUser();
-  const allAlbums = await prisma.album.findMany();
-  const allArtists = await prisma.artist.findMany();
-  const allSongs = await prisma.song.findMany();
+
   const coffeeShop = user
     ? await prisma.coffeeShop.findFirst({
         where: { adminId: user?.id },
@@ -48,6 +46,25 @@ const MusicPage: NextPage = async ({}: MusicPageProps) => {
         },
       })
     : null;
+
+  const allAlbums =
+    (coffeeShop &&
+      (await prisma.album.findMany({
+        where: { NOT: { coffeeShopsIds: { hasSome: [coffeeShop?.id] } } },
+      }))) ||
+    [];
+  const allArtists =
+    (coffeeShop &&
+      (await prisma.artist.findMany({
+        where: { NOT: { coffeeShopsIds: { hasSome: [coffeeShop?.id] } } },
+      }))) ||
+    [];
+  const allSongs =
+    (coffeeShop &&
+      (await prisma.song.findMany({
+        where: { NOT: { coffeeShopsIds: { hasSome: [coffeeShop?.id] } } },
+      }))) ||
+    [];
   return (
     <>
       {coffeeShop && (

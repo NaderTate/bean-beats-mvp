@@ -64,8 +64,13 @@ const AddAlbum = ({ allAlbums, shopId, onSubmit }: Props) => {
         ))}
       </div>
       <button
+        disabled={selectedAlbumIds.length === 0 || isSubmitting}
         onClick={handleSubmit}
-        className="mt-5 inline-block w-full rounded-lg bg-primary hover:bg-primary-500 transition px-5 py-3 font-medium text-white sm:w-auto"
+        className={`mt-5 inline-block w-full rounded-lg ${
+          selectedAlbumIds.length === 0 || isSubmitting
+            ? "bg-gray-800"
+            : "bg-primary hover:bg-primary/80"
+        } transition px-5 py-3 font-medium text-white sm:w-auto`}
       >
         {isSubmitting ? <Spinner /> : "Submit"}
       </button>

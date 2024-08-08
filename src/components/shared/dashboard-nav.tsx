@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   FcNext,
@@ -40,6 +40,8 @@ const links = [
 export default function Dashboard() {
   const pathname = usePathname();
   const [isOpened, setIsOpened] = useState(true);
+  const { push } = useRouter();
+
   return (
     <>
       <div
@@ -73,7 +75,10 @@ export default function Dashboard() {
                 ))}
                 <li>
                   <button
-                    onClick={() => signOut()}
+                    onClick={() => {
+                      signOut({ callbackUrl: "/signin" });
+                      push("/signin");
+                    }}
                     className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                   >
                     <HiOutlineLogout className="h-5 w-5 opacity-75 text-primary" />
