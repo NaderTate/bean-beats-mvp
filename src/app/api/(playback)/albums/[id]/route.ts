@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 // GET /api/album/:id
 export async function GET(
@@ -49,7 +50,7 @@ export async function PUT(
         image,
       },
     });
-
+    revalidatePath("/dashboard/music");
     return NextResponse.json(album);
   } catch (error) {
     return NextResponse.json(

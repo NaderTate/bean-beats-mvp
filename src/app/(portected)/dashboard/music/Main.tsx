@@ -81,7 +81,9 @@ export default function Main(props: MainProps) {
 
   const toggleModal = () => {
     router.refresh();
-    router.refresh();
+    setTimeout(() => {
+      router.refresh();
+    }, 1000);
     setOpen((prev) => !prev);
   };
 
@@ -102,6 +104,7 @@ export default function Main(props: MainProps) {
     albums: deleteAlbum,
     artists: deleteArtist,
   };
+
   return (
     <main className="flex flex-col flex-1 w-full px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
       <section className=" grid col-span-1 gap-4 lg:grid-cols-3 section1">

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { upload } from "@vercel/blob/client";
 import Spinner from "../spinner";
 import { Artist } from "@prisma/client";
+import { updateArtist } from "@/actions/artists";
 
 type Inputs = {
   name: string;
@@ -16,6 +17,7 @@ export default function ArtistForm({
   onSubmit: () => void;
   itemToEdit?: Artist;
 }) {
+  const id = artist?.id;
   const {
     register,
     handleSubmit,
@@ -25,6 +27,7 @@ export default function ArtistForm({
       name: artist?.name,
     },
   });
+
   const inputFileRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -34,19 +37,28 @@ export default function ArtistForm({
           return alert("No file selected");
         }
 
-        const file = inputFileRef.current.files[0];
-        const newBlob = await upload(file.name, file, {
-          access: "public",
-          handleUploadUrl: "/api/upload",
-        });
-
-        await fetch("/api/artists", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...data, image: newBlob.url }),
-        });
+        const file = inputFileRef.current.files?.[0];
+        const newBlob = file
+          ? await upload(file.name, file, {
+              access: "public",
+              handleUploadUrl: "/api/upload",
+            })
+          : { url: artist?.image };
+        id
+          ? await updateArtist({
+              id,
+              data: {
+                ...data,
+                image: newBlob.url,
+              },
+            })
+          : await fetch("/api/artists", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ ...data, image: newBlob.url }),
+            });
         onSubmit();
       })}
       className="space-y-4"

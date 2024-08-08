@@ -6,6 +6,8 @@ import { upload } from "@vercel/blob/client";
 import Spinner from "../spinner";
 import { Album, Artist } from "@prisma/client";
 import Select from "../Select";
+import { updateAlbum } from "@/actions/albums";
+import Link from "next/link";
 
 interface AlbumFormProps {
   onSubmit: () => void;
@@ -24,6 +26,7 @@ export default function AlbumForm({
   artists,
   itemToEdit: album,
 }: AlbumFormProps) {
+  const id = album?.id;
   const {
     register,
     handleSubmit,
@@ -49,22 +52,33 @@ export default function AlbumForm({
         }
 
         const file = inputFileRef.current.files[0];
-        const newBlob = await upload(file.name, file, {
-          access: "public",
-          handleUploadUrl: "/api/upload",
-        });
+        const newBlob = file
+          ? await upload(file.name, file, {
+              access: "public",
+              handleUploadUrl: "/api/upload",
+            })
+          : { url: album?.image };
 
-        await fetch("/api/albums", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...data,
-            year: Number(data.year),
-            image: newBlob.url,
-          }),
-        });
+        id
+          ? await updateAlbum({
+              id,
+              data: {
+                ...data,
+                year: Number(data.year),
+                image: newBlob.url,
+              },
+            })
+          : await fetch("/api/albums", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                ...data,
+                year: Number(data.year),
+                image: newBlob.url,
+              }),
+            });
         onSubmit();
       })}
       className="space-y-4"
@@ -116,7 +130,18 @@ export default function AlbumForm({
           className="mt-1 text-sm text-gray-500 dark:text-gray-300"
           id="file_input_help"
         >
-          SVG, PNG, JPG or GIF (MAX. 800x400px).
+          {!!id
+            ? "Leave empty to keep the same image "
+            : "Upload a song thumbnail "}
+          {album?.image && (
+            <Link
+              className="text-blue-500 hover:underline"
+              href={album?.image}
+              target="_blank"
+            >
+              ( View thumbnail )
+            </Link>
+          )}
         </p>
       </div>
 

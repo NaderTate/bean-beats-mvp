@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export const addAlbumsToShop = async (data: {
@@ -42,6 +43,24 @@ export const deleteAlbum = async (id: string) => {
     where: {
       id,
     },
+  });
+  revalidatePath("/dashboard/music");
+};
+
+export const updateAlbum = async (options: {
+  id: string;
+  data: Prisma.Without<
+    Prisma.AlbumUpdateInput,
+    Prisma.AlbumUncheckedUpdateInput
+  > &
+    Prisma.AlbumUncheckedUpdateInput;
+}) => {
+  const { id, data } = options;
+  await prisma.album.update({
+    where: {
+      id,
+    },
+    data,
   });
   revalidatePath("/dashboard/music");
 };
