@@ -137,7 +137,7 @@ model Song {
 
 model QueueSong {
   id            String       @id @default(auto()) @map("_id") @db.ObjectId
-  song          Song         @relation(fields: [songId], references: [id])
+  song          Song         @relation(fields: [songId], references: [id], onDelete: Cascade)
   songId        String       @db.ObjectId
   CoffeeShop    CoffeeShop?  @relation(name: "CoffeeShopQueueSongs", fields: [coffeeShopId], references: [id])
   coffeeShopId  String?      @db.ObjectId
