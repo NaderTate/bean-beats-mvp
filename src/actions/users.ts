@@ -1,5 +1,6 @@
 "use server";
 
+import bcrypt from "bcrypt";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -24,10 +25,12 @@ export const updateUserPassword = async (data: {
   userId: string;
   password: string;
 }) => {
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+
   const user = await prisma.user.update({
     where: { id: data.userId },
     data: {
-      password: data.password,
+      password: hashedPassword,
     },
   });
   revalidatePath("/coffee-shop/settings");

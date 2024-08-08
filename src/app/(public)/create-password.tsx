@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import bcrypt from "bcrypt";
 import Spinner from "@/components/shared/spinner";
 import { updateUserPassword } from "@/actions/users";
 
@@ -15,9 +14,8 @@ const CreatePassword = ({ userId }: Props) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    const hashedPassword = await bcrypt.hash(password, 10);
 
-    await updateUserPassword({ userId, password: hashedPassword });
+    await updateUserPassword({ userId, password });
     setIsLoading(false);
   };
 
