@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import { Song } from "@prisma/client";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import Spinner from "@/components/shared/spinner";
 import { getMultipleSongs } from "@/actions/songs";
 
 import { PayPalBtn } from "./paypal-btn";
@@ -29,24 +30,33 @@ type PaymentMainProps = { shopId: string };
 
 export const PaymentMain = ({ shopId }: PaymentMainProps) => {
   const [songs, setSongs] = useState<
-    (Song & { artist: { name: string } | null })[]
-  >([]);
-  const [step, setStep] = useState(1);
+    (Song & { artist: { name: string } | null })[] | null
+  >(null);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
   useEffect(() => {
     const songsIds = localStorage.getItem("songs")
       ? JSON.parse(localStorage.getItem("songs") || "[]")
       : [];
 
-    console.log(songsIds);
     getMultipleSongs(songsIds).then((songs) => {
       setSongs(songs);
+      const total = songs.reduce((acc, song) => acc + song.price, 0);
+      setTotalAmount(total);
     });
   }, []);
-  const [open, setOpen] = useState(false);
   const { push } = useRouter();
-  const totalAmount = songs.reduce((acc, song) => acc + song.price, 0);
+  if (!songs) {
+    return (
+      <div className="flex justify-center items-center">
+        <Spinner />
+      </div>
+    );
+  }
+
   if (songs.length === 0) {
-    return <div>No songs selected</div>;
+    return (
+      <div className="flex justify-center items-center">No songs selected</div>
+    );
   }
   return (
     <div className=" w-2/5 m-auto">
@@ -92,14 +102,15 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
         </div>
       </div>
       <PayPalBtn
-        amount={20}
         action="order"
+        amount={totalAmount}
         onPaymentSuccess={async () => {
           await createTransaction({
             shopId,
             songsIds: songs.map((song) => song.id),
             tableNumber: 20,
           });
+          localStorage.removeItem("songs");
           push(`/shop/${shopId}/payment/success`);
         }}
       />

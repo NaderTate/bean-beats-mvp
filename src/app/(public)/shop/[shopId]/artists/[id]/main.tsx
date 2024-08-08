@@ -5,7 +5,7 @@ import Songs from "../../music/songs";
 import Albums from "../../music/albums";
 import { Album, Song } from "@prisma/client";
 
-type Props = { songs: Song[]; albums: Album[] };
+type Props = { songs: Song[]; albums: ExtendedAlbum[] };
 
 const ArtistMain = ({ songs, albums }: Props) => {
   type sections = "songs" | "albums";
@@ -32,8 +32,8 @@ const ArtistMain = ({ songs, albums }: Props) => {
           {button.name}
         </button>
       ))}
-      {section === "songs" && <Songs songs={[]} />}
-      {section === "albums" && <Albums albums={[]} />}
+      {section === "songs" && <Songs songs={songs} />}
+      {section === "albums" && <Albums albums={albums} />}
     </div>
   );
 };
