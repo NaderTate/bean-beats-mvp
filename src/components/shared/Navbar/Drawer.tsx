@@ -6,13 +6,17 @@ import { BiMenuAltRight } from "react-icons/bi";
 
 export default function Drawer({
   user,
+  navItems,
+  shopId,
 }: Readonly<{
   user: {
     name: string;
     email: string;
     image: string;
     role: string;
-  };
+  } | null;
+  navItems: { link: string; name: string }[];
+  shopId: string;
 }>) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -45,31 +49,17 @@ export default function Drawer({
         <div className="flex flex-col justify-between h-full">
           <div className="px-4 py-10">
             <ul className="mt-6 space-y-1">
-              <li>
-                <a
-                  href="#"
-                  className="block rounded-lg hover:bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700"
-                >
-                  Profile
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  Wish List
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  Cart
-                </a>
-              </li>
+              {navItems.map((item) => (
+                <li key={item.link}>
+                  <Link
+                    onClick={() => setIsOpen(false)}
+                    href={`${shopId ? `/shop/${shopId}` : ""}${item.link}`}
+                    className="block px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
               <li>
                 <details className="group [&_summary::-webkit-details-marker]:hidden">
                   <summary className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
@@ -90,16 +80,6 @@ export default function Drawer({
                     </span>
                   </summary>
                   <ul className="mt-2 space-y-1 px-4">
-                    {user.role === "admin" && (
-                      <li>
-                        <Link
-                          href="/dashboard"
-                          className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                        >
-                          Dashboard
-                        </Link>
-                      </li>
-                    )}
                     <li>
                       <button
                         type="button"
@@ -119,28 +99,30 @@ export default function Drawer({
               </li>
             </ul>
           </div>
-          <div className="sticky inset-x-0 bottom-0 border-t border-gray-100">
-            <a
-              href="#"
-              className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50"
-            >
-              <img
-                alt="Man"
-                onError={(e: any) => {
-                  e.target.onerror = null;
-                  e.target.src = "/images/unkown.jpeg";
-                }}
-                src={user.image}
-                className="h-10 w-10 rounded-full object-cover"
-              />
-              <div>
-                <p className="text-xs">
-                  <strong className="block font-medium">{user.name}</strong>
-                  <span> {user.email}</span>
-                </p>
-              </div>
-            </a>
-          </div>
+          {user && (
+            <div className="sticky inset-x-0 bottom-0 border-t border-gray-100">
+              <a
+                href="#"
+                className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50"
+              >
+                <img
+                  alt="Man"
+                  onError={(e: any) => {
+                    e.target.onerror = null;
+                    e.target.src = "/images/unkown.jpeg";
+                  }}
+                  src={user.image}
+                  className="h-10 w-10 rounded-full object-cover"
+                />
+                <div>
+                  <p className="text-xs">
+                    <strong className="block font-medium">{user.name}</strong>
+                    <span> {user.email}</span>
+                  </p>
+                </div>
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>
