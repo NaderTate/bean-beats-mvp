@@ -35,7 +35,7 @@ export default function AlbumForm({
     defaultValues: {
       name: album?.name,
       artistId: album?.artistId,
-      year: album?.year || 0,
+      year: album?.year || new Date().getFullYear(),
     },
   });
   const inputFileRef = useRef<HTMLInputElement>(null);
