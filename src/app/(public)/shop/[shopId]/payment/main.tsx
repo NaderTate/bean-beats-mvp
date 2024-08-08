@@ -59,7 +59,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
     );
   }
   return (
-    <div className=" w-2/5 m-auto">
+    <div className=" lg:w-2/5 m-auto">
       {songs.map((song) => (
         <div
           key={song.id}

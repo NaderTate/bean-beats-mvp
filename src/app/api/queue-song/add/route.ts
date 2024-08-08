@@ -18,11 +18,13 @@ export async function POST(request: Request) {
             id: coffeeShopId,
           },
         },
-        Transaction: {
-          connect: {
-            id: transactionId,
-          },
-        },
+        Transaction: transactionId
+          ? {
+              connect: {
+                id: transactionId,
+              },
+            }
+          : undefined,
       },
     });
     if (queueSong) {
