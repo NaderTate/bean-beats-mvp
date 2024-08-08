@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { FcNext } from "react-icons/fc";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { FaCreditCard, FaGear, FaMusic } from "react-icons/fa6";
+
 const links = [
   {
     title: "Dashboard",
