@@ -66,9 +66,24 @@ const Navbar = () => {
       className="flex items-center justify-between text-gray-600 right-0 fixed w-full shadow-lg dark:shadow-slate-800 z-10 bg-white/90 dark:bg-gray-900 h-16"
     >
       <div className="py-2 sm:py-1 px-2 sm:p-8 flex items-center gap-x-5">
-        <Link href="/" className="flex items-end justify-center ">
-          <Image className="hidden  sm:block w-14" src="/images/only-logo.png" width={150} height={150} alt="logo" />
-          <Image className="p-1 h-12" src="/images/logo-title.png" width={150} height={50} alt="logo" />
+        <Link
+          href={`/shop/${shopId}`}
+          className="flex items-end justify-center "
+        >
+          <Image
+            className="hidden  sm:block w-14"
+            src="/images/only-logo.png"
+            width={150}
+            height={150}
+            alt="logo"
+          />
+          <Image
+            className="p-1 h-12"
+            src="/images/logo-title.png"
+            width={150}
+            height={50}
+            alt="logo"
+          />
         </Link>
         {navItems.map((item, index) => (
           <Link
@@ -84,7 +99,10 @@ const Navbar = () => {
       </div>
       <div className="inline-flex">
         <div className="relative p-3 m-3">
-          <Link href={`/shop/${shopId}/payment`} className="flex items-center gap-2">
+          <Link
+            href={`/shop/${shopId}/payment`}
+            className="flex items-center gap-2"
+          >
             <FiShoppingCart size={20} />
             <span className="text-sm absolute right-0 bottom-0 bg-gray-200 rounded-full aspect-square w-4 h-4 flex items-center justify-center font-semibold">
               {songs.length}
@@ -106,7 +124,9 @@ const Navbar = () => {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       alt="Profile"
-                      src={session.user?.image as string | "/images/unkown.jpeg"}
+                      src={
+                        session.user?.image as string | "/images/unkown.jpeg"
+                      }
                       className="h-10 w-10 md:h-12 md:w-12 rounded-full object-cover"
                       onError={(e: any) => {
                         e.target.onerror = null;
