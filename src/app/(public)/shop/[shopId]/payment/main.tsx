@@ -9,6 +9,7 @@ import { getMultipleSongs } from "@/actions/songs";
 
 import { PayPalBtn } from "./paypal-btn";
 import { createTransaction } from "@/actions/transactions";
+import { useSongsCart } from "@/store/songs-cart";
 
 function getDayOfWeek() {
   const daysOfWeek = [
@@ -33,6 +34,10 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
     (Song & { artist: { name: string } | null })[] | null
   >(null);
   const [totalAmount, setTotalAmount] = useState<number>(0);
+  const { setSongs: setLocalSongs } = useSongsCart();
+
+  const { push } = useRouter();
+
   useEffect(() => {
     const songsIds = localStorage.getItem("songs")
       ? JSON.parse(localStorage.getItem("songs") || "[]")
@@ -44,7 +49,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
       setTotalAmount(total);
     });
   }, []);
-  const { push } = useRouter();
+
   if (!songs) {
     return (
       <div className="flex justify-center items-center">
@@ -111,6 +116,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
             tableNumber: 20,
           });
           localStorage.removeItem("songs");
+          setLocalSongs([]);
           push(`/shop/${shopId}/payment/success`);
         }}
       />

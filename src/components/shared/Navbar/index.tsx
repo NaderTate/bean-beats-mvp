@@ -5,11 +5,11 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import SignIn from "@/components/auth/sign-in";
 import { motion, AnimatePresence } from "framer-motion";
 
 import Drawer from "./Drawer";
 import DropDown from "./DropDown";
+import SignIn from "@/components/auth/sign-in";
 
 import { FiShoppingCart } from "react-icons/fi";
 import { useSongsCart } from "@/store/songs-cart";
