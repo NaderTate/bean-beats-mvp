@@ -1,13 +1,20 @@
-import { NextPage } from "next";
 import ArtistMain from "./main";
-import { Album, Song } from "@prisma/client";
+import prisma from "@/lib/prisma";
+type ArtistPageProps = { params: { id: string } };
 
-type ArtistPageProps = { songs: Song[]; albums: Album[] };
-
-const ArtistPage = async ({ songs, albums }: ArtistPageProps) => {
+const ArtistPage = async ({ params: { id } }: ArtistPageProps) => {
+  const artist = await prisma.artist.findUnique({
+    where: { id },
+    include: { Song: true, Album: true },
+  });
+  if (!artist) {
+    return {
+      notFound: true,
+    };
+  }
   return (
     <>
-      <ArtistMain songs={songs} albums={albums} />
+      <ArtistMain albums={artist.Album} songs={artist.Song} />
     </>
   );
 };
