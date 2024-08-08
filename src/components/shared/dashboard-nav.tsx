@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
 import {
@@ -11,6 +12,7 @@ import {
   FcMoneyTransfer,
   FcConferenceCall,
 } from "react-icons/fc";
+import { HiOutlineLogout } from "react-icons/hi";
 
 const links = [
   {
@@ -53,7 +55,7 @@ export default function Dashboard() {
         <div>
           <div className="border-t border-gray-100">
             <div className="px-2">
-              <ul className="space-y-1 sm:space-y-5  border-gray-100 pt-4">
+              <ul className="space-y-1 sm:space-y-5  border-gray-100 pt-4 flex flex-col items-center">
                 {links.map((link) => (
                   <li key={link.href + "dashboardLink"}>
                     <Link
@@ -69,6 +71,17 @@ export default function Dashboard() {
                     </Link>
                   </li>
                 ))}
+                <li>
+                  <button
+                    onClick={() => signOut()}
+                    className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                  >
+                    <HiOutlineLogout className="h-5 w-5 opacity-75 text-primary" />
+                    <span className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white -translate-x-20 opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
+                      Logout
+                    </span>
+                  </button>
+                </li>
               </ul>
             </div>
           </div>

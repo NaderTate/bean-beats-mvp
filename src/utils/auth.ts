@@ -57,33 +57,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return token;
     },
     // create a shop for the user if he doesn't have one
-    signIn: async (user) => {
-      if (user) {
-        const email = user?.user?.email || user?.email;
-        const userWithShop = await prisma.user.findUnique({
-          where: { email: email as string },
-        });
+    // signIn: async (user) => {
+    //   if (user) {
+    //     const email = user?.user?.email || user?.email;
+    //     const userWithShop = await prisma.user.findUnique({
+    //       where: { email: email as string },
+    //     });
 
-        const shop = await prisma.coffeeShop.findFirst({
-          where: { adminId: userWithShop?.id },
-        });
+    //     const shop = await prisma.coffeeShop.findFirst({
+    //       where: { adminId: userWithShop?.id },
+    //     });
 
-        if (!shop) {
-          await prisma.coffeeShop.create({
-            data: {
-              name: "My Shop",
-              adminId: userWithShop?.id as string,
-              address: "My Address",
-              revenueShare: 0.1,
-              workingHours: {
-                sunday: { open: 0, close: 0 },
-              },
-            },
-          });
-        }
-      }
-      return true;
-    },
+    //     if (!shop) {
+    //       await prisma.coffeeShop.create({
+    //         data: {
+    //           name: "My Shop",
+    //           adminId: userWithShop?.id as string,
+    //           address: "My Address",
+    //           revenueShare: 0.1,
+    //           workingHours: {
+    //             sunday: { open: 0, close: 0 },
+    //           },
+    //         },
+    //       });
+    //     }
+    //   }
+    //   return true;
+    // },
   },
   jwt: {
     maxAge: 30 * 24 * 60 * 60,
