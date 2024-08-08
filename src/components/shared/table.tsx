@@ -78,7 +78,7 @@ export default function Table({
         </div>
         {add && (
           <button
-            onClick={() => add()}
+            onClick={add}
             className=" bg-primary hover:bg-primary/80 transition text-white rounded-lg py-2 px-4  md:px-10 md:py-4 flex items-center gap-2"
           >
             <IoMdAddCircle className="text-xl" size={25} />

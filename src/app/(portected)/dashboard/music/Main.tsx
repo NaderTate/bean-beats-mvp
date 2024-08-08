@@ -125,7 +125,9 @@ export default function Main(props: MainProps) {
       <section>
         <Table
           {...tableData}
-          add={toggleModal}
+          add={() => {
+            setOpen(true);
+          }}
           data={props[shownSection]}
           fields={fields[shownSection]}
           deleteFn={deleteFn[shownSection]}
