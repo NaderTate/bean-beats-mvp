@@ -22,7 +22,7 @@ const ConfirmDelete = ({ deleteFn }: ConfirmDeleteProps) => {
   };
 
   return (
-    <>
+    <div>
       <MdDeleteForever
         size={20}
         onClick={toggleModal}
@@ -48,7 +48,7 @@ const ConfirmDelete = ({ deleteFn }: ConfirmDeleteProps) => {
           </button>
         </div>
       </Modal>
-    </>
+    </div>
   );
 };
 

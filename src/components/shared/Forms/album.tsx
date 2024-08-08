@@ -125,6 +125,7 @@ export default function AlbumForm({
           id="file_input"
           ref={inputFileRef}
           type="file"
+          accept="image/*"
         />
         <p
           className="mt-1 text-sm text-gray-500 dark:text-gray-300"

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Songs from "../../music/songs";
 import Albums from "../../music/albums";
-import { Album, Song } from "@prisma/client";
+import { Song } from "@prisma/client";
 
 type Props = { songs: Song[]; albums: ExtendedAlbum[] };
 

@@ -36,3 +36,8 @@ export const updateUserPassword = async (data: {
   revalidatePath("/coffee-shop/settings");
   return user;
 };
+
+export const deleteUser = async (userId: string) => {
+  await prisma.user.delete({ where: { id: userId } });
+  revalidatePath("/coffee-shop/settings");
+};

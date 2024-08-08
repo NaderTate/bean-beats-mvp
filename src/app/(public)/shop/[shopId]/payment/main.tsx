@@ -10,6 +10,7 @@ import { getMultipleSongs } from "@/actions/songs";
 import { PayPalBtn } from "./paypal-btn";
 import { createTransaction } from "@/actions/transactions";
 import { useSongsCart } from "@/store/songs-cart";
+import Link from "next/link";
 
 function getDayOfWeek() {
   const daysOfWeek = [
@@ -60,7 +61,16 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
 
   if (songs.length === 0) {
     return (
-      <div className="flex justify-center items-center">No songs selected</div>
+      <div className="flex justify-center items-center min-h-[80vh]">
+        <div className="bg-gray-100 py-5 px-10 rounded-lg flex flex-col items-center border-gray-300 border">
+          <h1 className="text-2xl font-medium">No songs selected</h1>
+          <Link href={`/shop/${shopId}/music`}>
+            <button className="bg-primary text-white rounded-lg px-5 py-2 mt-5">
+              Browse Songs
+            </button>
+          </Link>
+        </div>
+      </div>
     );
   }
   return (
