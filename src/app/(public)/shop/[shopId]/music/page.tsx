@@ -7,7 +7,12 @@ async function page({ params: { shopId } }: Props) {
   const shop = await prisma.coffeeShop.findUnique({
     where: { id: shopId },
     select: {
-      songs: true,
+      SongCoffeeShop: {
+        select: {
+          song: true,
+          price: true,
+        },
+      },
       Albums: {
         include: {
           artist: { select: { name: true } },
@@ -26,7 +31,14 @@ async function page({ params: { shopId } }: Props) {
     );
   }
 
-  return <MusicMain shopId={shopId} songs={shop.songs} albums={shop.Albums} artists={shop.Artists} />;
+  return (
+    <MusicMain
+      shopId={shopId}
+      albums={shop.Albums}
+      artists={shop.Artists}
+      songs={shop.SongCoffeeShop}
+    />
+  );
 }
 
 export default page;

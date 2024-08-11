@@ -1,5 +1,4 @@
 import prisma from "@/lib/prisma";
-import { MdArrowBackIosNew } from "react-icons/md";
 import MainArtist from "./main";
 
 type ArtistPageProps = { params: { artistId: string; shopId: string } };
@@ -9,9 +8,10 @@ const ArtistPage = async ({
 }: ArtistPageProps) => {
   const songs = await prisma.song.findMany({
     where: {
-      coffeeShopsIds: { has: shopId },
+      SongCoffeeShop: { some: { coffeeShopId: shopId } },
       artistId,
     },
+    include: { SongCoffeeShop: true },
   });
 
   const albums = await prisma.album.findMany({
@@ -24,7 +24,13 @@ const ArtistPage = async ({
 
   return (
     <div className="mt-24 px-14">
-      <MainArtist songs={songs} albums={albums} />
+      <MainArtist
+        songs={songs.map((song, i) => ({
+          song,
+          price: song.SongCoffeeShop[i].price,
+        }))}
+        albums={albums}
+      />
     </div>
   );
 };

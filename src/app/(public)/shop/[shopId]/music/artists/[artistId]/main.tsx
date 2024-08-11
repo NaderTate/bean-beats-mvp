@@ -7,7 +7,10 @@ import Albums from "../../albums";
 import Songs from "../../songs";
 
 type Props = {
-  songs: Song[];
+  songs: {
+    song: Song;
+    price: number;
+  }[];
   albums: ExtendedAlbum[];
 };
 

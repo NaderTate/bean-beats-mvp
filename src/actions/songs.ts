@@ -3,15 +3,21 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
-export const getMultipleSongs = async (songIds: string[]) => {
-  const songs = await prisma.song.findMany({
+export const getMultipleSongs = async (options: {
+  songsIds: string[];
+  shopId: string;
+}) => {
+  const songs = await prisma.songCoffeeShop.findMany({
     where: {
-      id: {
-        in: songIds,
+      coffeeShopId: options.shopId,
+      songId: {
+        in: options.songsIds,
       },
     },
-    include: {
-      artist: { select: { name: true } },
+    select: {
+      id: true,
+      price: true,
+      song: { include: { artist: true } },
     },
   });
   return songs;

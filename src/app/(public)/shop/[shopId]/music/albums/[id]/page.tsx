@@ -12,7 +12,11 @@ const AlbumPage = async ({ params: { id, shopId } }: AlbumPageProps) => {
     include: {
       Song: {
         where: {
-          coffeeShopsIds: { has: shopId },
+          SongCoffeeShop: {
+            some: {
+              coffeeShopId: shopId,
+            },
+          },
         },
       },
     },

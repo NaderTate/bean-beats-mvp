@@ -5,10 +5,9 @@ import { Song } from "@prisma/client";
 import { FiMinusCircle } from "react-icons/fi";
 import { MdAddCircleOutline } from "react-icons/md";
 import { useSongsCart } from "@/store/songs-cart";
-import { set } from "react-hook-form";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 
-type Props = { song: Song };
+type Props = { song: Song & { price: number } };
 
 const SongCard = ({ song }: Props) => {
   const storedSongs = localStorage.getItem("songs");
@@ -39,7 +38,12 @@ const SongCard = ({ song }: Props) => {
     <div className="flex justify-between shadow-lg rounded-md p-5">
       <div className="flex flex-row gap-4">
         <div className="w-32 h-32 relative">
-          <Image fill alt={song.title} src={song.thumbnail} className=" object-top object-cover rounded-lg" />
+          <Image
+            fill
+            alt={song.title}
+            src={song.thumbnail}
+            className=" object-top object-cover rounded-lg"
+          />
         </div>
         <div>
           <h3 className="text-primary">{song.title}</h3>
@@ -47,11 +51,20 @@ const SongCard = ({ song }: Props) => {
           <span>{song.price}</span>
         </div>
       </div>
-      <button onClick={isSongInCart ? () => handleRemoveSong(song.id) : () => handleAddSong(song.id)}>
+      <button
+        onClick={
+          isSongInCart
+            ? () => handleRemoveSong(song.id)
+            : () => handleAddSong(song.id)
+        }
+      >
         {isSongInCart ? (
           <FiMinusCircle size={25} className="text-primary cursor-pointer" />
         ) : (
-          <MdAddCircleOutline size={24} className="text-primary cursor-pointer" />
+          <MdAddCircleOutline
+            size={24}
+            className="text-primary cursor-pointer"
+          />
         )}
       </button>
     </div>

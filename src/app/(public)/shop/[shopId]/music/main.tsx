@@ -9,7 +9,10 @@ import Albums from "./albums";
 import Artrists from "./artists";
 
 type Props = {
-  songs: Song[];
+  songs: {
+    song: Song;
+    price: number;
+  }[];
   shopId: string;
   albums: ExtendedAlbum[];
   artists: { name: string; image: string; id: string }[];

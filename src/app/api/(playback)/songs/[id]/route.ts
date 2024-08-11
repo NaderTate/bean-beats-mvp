@@ -56,7 +56,6 @@ export async function PUT(
         artistId,
         albumId,
         duration,
-        price,
         fileURL,
       },
     });

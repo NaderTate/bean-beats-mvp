@@ -11,11 +11,16 @@ export const createTransaction = async ({
   tableNumber: number;
 }) => {
   try {
-    const songs = await prisma.song.findMany({
+    const songs = await prisma.songCoffeeShop.findMany({
       where: {
-        id: {
+        coffeeShopId: shopId,
+        songId: {
           in: songsIds,
         },
+      },
+      select: {
+        id: true,
+        price: true,
       },
     });
     console.log({ songsIds });

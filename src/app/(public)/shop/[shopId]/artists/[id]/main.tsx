@@ -5,7 +5,13 @@ import Songs from "../../music/songs";
 import Albums from "../../music/albums";
 import { Song } from "@prisma/client";
 
-type Props = { songs: Song[]; albums: ExtendedAlbum[] };
+type Props = {
+  songs: {
+    song: Song;
+    price: number;
+  }[];
+  albums: ExtendedAlbum[];
+};
 
 const ArtistMain = ({ songs, albums }: Props) => {
   type sections = "songs" | "albums";

@@ -32,7 +32,19 @@ type PaymentMainProps = { shopId: string };
 
 export const PaymentMain = ({ shopId }: PaymentMainProps) => {
   const [songs, setSongs] = useState<
-    (Song & { artist: { name: string } | null })[] | null
+    | {
+        song: {
+          artist: {
+            id: string;
+            name: string;
+            image: string;
+            coffeeShopsIds: string[];
+          } | null;
+        } & Song;
+        id: string;
+        price: number;
+      }[]
+    | null
   >(null);
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const { setSongs: setLocalSongs } = useSongsCart();
@@ -81,15 +93,15 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
           className="inline-flex w-full gap-3 bg-slate-50 p-5 rounded-lg border"
         >
           <Image
-            src={song.thumbnail}
-            alt={song.title}
+            src={song.song.thumbnail}
+            alt={song.song.title}
             width={100}
             height={100}
             className="w-28 h-28 object-cover object-top rounded-lg"
           />
           <div className="flex flex-col gap-1">
-            <h3 className="text-primary font-semibold">{song.title}</h3>
-            <p className="text-gray-500">{song.artist?.name}</p>
+            <h3 className="text-primary font-semibold">{song.song.title}</h3>
+            <p className="text-gray-500">{song.song.artist?.name}</p>
             <span className="text-gray-500">Price: {song.price}</span>
           </div>
         </div>

@@ -7,7 +7,7 @@ const ArtistPage = async ({ params: { id } }: ArtistPageProps) => {
   const artist = await prisma.artist.findUnique({
     where: { id },
     include: {
-      Song: true,
+      Song: { include: { SongCoffeeShop: true } },
       Album: {
         include: {
           artist: { select: { name: true } },
@@ -18,14 +18,22 @@ const ArtistPage = async ({ params: { id } }: ArtistPageProps) => {
   });
 
   if (!artist) {
-    return {
-      notFound: true,
-    };
+    return (
+      <div>
+        <h1>Artist not found</h1>
+      </div>
+    );
   }
 
   return (
     <>
-      <ArtistMain albums={artist.Album} songs={artist.Song} />
+      <ArtistMain
+        albums={artist.Album}
+        songs={artist.Song.map((song, i) => ({
+          song,
+          price: song.SongCoffeeShop[i].price,
+        }))}
+      />
     </>
   );
 };
