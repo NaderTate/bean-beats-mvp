@@ -100,7 +100,7 @@ model Artist {
   name           String
   image          String
   coffeeShops    CoffeeShop[] @relation(fields: [coffeeShopsIds], references: [id])
-  coffeeShopsIds String[]     @db.ObjectId
+  coffeeShopsIds String[]     @default([]) @db.ObjectId
   Album          Album[]
   Song           Song[]
 }
@@ -114,25 +114,51 @@ model Album {
   artistId       String       @db.ObjectId
   Song           Song[]
   coffeeShops    CoffeeShop[] @relation(fields: [coffeeShopsIds], references: [id])
-  coffeeShopsIds String[]     @db.ObjectId
+  coffeeShopsIds String[]     @default([]) @db.ObjectId
 }
 
 model Song {
-  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
   title           String
-  artist          Artist?       @relation(fields: [artistId], references: [id] , onDelete: Cascade)
-  album           Album?        @relation(fields: [albumId], references: [id] , onDelete: Cascade)
+  artist          Artist?          @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  album           Album?           @relation(fields: [albumId], references: [id], onDelete: Cascade)
   duration        Float
   fileURL         String
-  price           Float
-  artistId        String?       @db.ObjectId
-  albumId         String?       @db.ObjectId
-  QueueSong       QueueSong[]
-  Transactions    Transaction[] @relation(fields: [transactionsIds], references: [id])
-  transactionsIds String[]      @db.ObjectId
   thumbnail       String
-  CoffeeShops     CoffeeShop[]  @relation(fields: [coffeeShopsIds], references: [id])
-  coffeeShopsIds  String[]      @db.ObjectId
+  artistId        String?          @db.ObjectId
+  albumId         String?          @db.ObjectId
+  QueueSong       QueueSong[]
+  Transactions    Transaction[]    @relation(fields: [transactionsIds], references: [id])
+  transactionsIds String[]         @default([]) @db.ObjectId
+  SongCoffeeShop  SongCoffeeShop[]
+}
+
+model CoffeeShop {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  address        String
+  admin          User             @relation(fields: [adminId], references: [id])
+  workingHours   Json
+  revenueShare   Int
+  playingQueue   QueueSong[]      @relation(name: "CoffeeShopQueueSongs")
+  adminId        String           @db.ObjectId
+  Transactions   Transaction[]
+  Artists        Artist[]         @relation(fields: [artistsIds], references: [id])
+  artistsIds     String[]         @default([]) @db.ObjectId
+  Albums         Album[]          @relation(fields: [albumsIds], references: [id])
+  albumsIds      String[]         @default([]) @db.ObjectId
+  SongCoffeeShop SongCoffeeShop[]
+}
+
+model SongCoffeeShop {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  price        Float
+  song         Song       @relation(fields: [songId], references: [id], onDelete: Cascade)
+  songId       String     @db.ObjectId
+  coffeeShopId String     @db.ObjectId
+  CoffeeShop   CoffeeShop @relation(fields: [coffeeShopId], references: [id])
+
+  @@unique([songId, coffeeShopId]) // Ensure a unique combination of song and coffee shop
 }
 
 model QueueSong {
@@ -143,24 +169,6 @@ model QueueSong {
   coffeeShopId  String?      @db.ObjectId
   transactionId String?      @db.ObjectId
   Transaction   Transaction? @relation(fields: [transactionId], references: [id])
-}
-
-model CoffeeShop {
-  id           String        @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  address      String
-  admin        User          @relation(fields: [adminId], references: [id])
-  songs        Song[]        @relation(fields: [songIds], references: [id])
-  songIds      String[]      @db.ObjectId
-  workingHours Json
-  revenueShare Int
-  playingQueue QueueSong[]   @relation(name: "CoffeeShopQueueSongs")
-  adminId      String        @db.ObjectId
-  Transactions Transaction[]
-  Artists      Artist[]      @relation(fields: [artistsIds], references: [id])
-  artistsIds   String[]      @db.ObjectId
-  Albums       Album[]       @relation(fields: [albumsIds], references: [id])
-  albumsIds    String[]      @db.ObjectId
 }
 
 model Transaction {

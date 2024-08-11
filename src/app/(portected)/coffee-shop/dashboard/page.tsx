@@ -43,6 +43,7 @@ const DashboardPage: NextPage = async ({}: DashboardPageProps) => {
   const coffeeShop = user
     ? await prisma.coffeeShop.findFirst({
         where: { adminId: user?.id },
+        include: { _count: { select: { SongCoffeeShop: true } } },
       })
     : null;
 
@@ -68,7 +69,7 @@ const DashboardPage: NextPage = async ({}: DashboardPageProps) => {
           },
           {
             label: "Songs",
-            value: coffeeShop?.songIds.length || 0,
+            value: coffeeShop?._count.SongCoffeeShop || 0,
             icon: FaMusic,
             iconColor: "text-cyan-500",
           },

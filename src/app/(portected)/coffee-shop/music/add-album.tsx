@@ -62,18 +62,20 @@ const AddAlbum = ({ allAlbums, shopId, onSubmit }: Props) => {
             </label>
           </div>
         ))}
+      </div>{" "}
+      <div className="flex-shrink-0 absolute bottom-0 w-[95%] bg-white p-4 shadow-lg">
+        <button
+          disabled={selectedAlbumIds.length === 0 || isSubmitting}
+          onClick={handleSubmit}
+          className={`mt-5 inline-block w-full rounded-lg ${
+            selectedAlbumIds.length === 0 || isSubmitting
+              ? "bg-gray-600 cursor-not-allowed"
+              : "bg-primary hover:bg-primary/80"
+          } transition px-5 py-3 font-medium text-white sm:w-auto`}
+        >
+          {isSubmitting ? <Spinner /> : "Submit"}
+        </button>
       </div>
-      <button
-        disabled={selectedAlbumIds.length === 0 || isSubmitting}
-        onClick={handleSubmit}
-        className={`mt-5 inline-block w-full rounded-lg ${
-          selectedAlbumIds.length === 0 || isSubmitting
-            ? "bg-gray-800"
-            : "bg-primary hover:bg-primary/80"
-        } transition px-5 py-3 font-medium text-white sm:w-auto`}
-      >
-        {isSubmitting ? <Spinner /> : "Submit"}
-      </button>
     </div>
   );
 };

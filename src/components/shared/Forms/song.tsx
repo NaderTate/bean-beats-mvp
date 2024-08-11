@@ -22,7 +22,6 @@ type Props = {
 type Inputs = {
   file: string;
   title: string;
-  price: number;
   albumId: string;
   duration: number;
   artistId: string;
@@ -52,7 +51,6 @@ const SongForm = ({
       albumId: song?.albumId || undefined,
       title: song?.title,
       duration: song?.duration,
-      price: song?.price,
     },
   });
 
@@ -95,7 +93,6 @@ const SongForm = ({
           albumId: otherData.albumId,
           title: otherData.title,
           duration: otherData.duration,
-          price: otherData.price,
           fileURL: newSongBlob.url,
           thumbnail: newThumbnailBlob.url,
         },
@@ -159,20 +156,6 @@ const SongForm = ({
         placeholder="Title"
         errMessage={errors.title?.message}
         {...register("title", {
-          required: "This field is required",
-        })}
-      />
-
-      <Input
-        id="price"
-        label="Price"
-        min={0}
-        type="number"
-        step={0.01}
-        placeholder="Price"
-        {...register("price", {
-          valueAsNumber: true,
-
           required: "This field is required",
         })}
       />

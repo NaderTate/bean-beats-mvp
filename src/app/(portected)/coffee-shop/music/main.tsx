@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Album, Artist, Song } from "@prisma/client";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import Albums from "./albums";
 import AddSong from "./add-song";
@@ -14,14 +14,17 @@ import Modal from "@/components/shared/Modal";
 
 type Props = {
   songs: {
+    song: {
+      artist: {
+        name: string;
+        image: string;
+      } | null;
+      id: string;
+      title: string;
+      thumbnail: string;
+    };
     id: string;
-    artist: {
-      name: string;
-      image: string;
-    } | null;
-    title: string;
     price: number;
-    thumbnail: string;
   }[];
   artists: {
     id: string;
@@ -57,10 +60,12 @@ const MusicMain = ({
   allAlbums,
   allArtists,
 }: Props) => {
-  const { refresh } = useRouter();
+  const { refresh, push } = useRouter();
 
   const [open, setOpen] = useState(false);
-  const [currentSection, setCurrentSection] = useState("artists");
+  const searchParams = useSearchParams();
+  const section = searchParams.get("section");
+  const [currentSection, setCurrentSection] = useState(section || "artists");
 
   const toggleModal = () => {
     setTimeout(() => {
@@ -81,7 +86,10 @@ const MusicMain = ({
         {actionButtons.map((button) => (
           <button
             key={button.label}
-            onClick={() => setCurrentSection(button.label)}
+            onClick={() => {
+              setCurrentSection(button.label);
+              push(`/coffee-shop/music?section=${button.label}`);
+            }}
             className={`capitalize transition-colors ${
               currentSection === button.label
                 ? "bg-white border-primary border text-primary "
@@ -102,10 +110,20 @@ const MusicMain = ({
           />
         )}
         {currentSection === "albums" && (
-          <Albums albums={albums} setOpen={toggleModal} />
+          <Albums
+            albums={albums}
+            setOpen={() => {
+              setOpen(true);
+            }}
+          />
         )}
         {currentSection === "songs" && (
-          <SongsList songs={songs} setOpen={toggleModal} />
+          <SongsList
+            songs={songs}
+            setOpen={() => {
+              setOpen(true);
+            }}
+          />
         )}
       </div>
       <Modal

@@ -8,8 +8,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   console.log("song body", body);
 
-  const { title, artistId, albumId, duration, price, fileURL, thumbnail } =
-    body;
+  const { title, artistId, albumId, duration, fileURL, thumbnail } = body;
 
   try {
     const song = await prisma.song.create({
@@ -18,7 +17,6 @@ export async function POST(request: Request): Promise<NextResponse> {
         artistId,
         albumId,
         duration,
-        price,
         fileURL,
         thumbnail,
       },
@@ -48,7 +46,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       where: {
         artistId: artistId || undefined,
         albumId: albumId || undefined,
-        coffeeShopsIds: coffeeShopId ? { has: coffeeShopId } : undefined,
+        SongCoffeeShop: {
+          some: {
+            coffeeShopId: coffeeShopId || undefined,
+          },
+        },
       },
       include: {
         artist: {

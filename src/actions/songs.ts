@@ -18,33 +18,19 @@ export const getMultipleSongs = async (songIds: string[]) => {
 };
 
 export const addSongsToShop = async (data: {
-  songIds: string[];
+  songsData: {
+    songId: string;
+    price: number;
+  }[];
   shopId: string;
 }) => {
-  const songs = await prisma.song.findMany({
-    where: {
-      id: {
-        in: data.songIds,
-      },
-    },
+  await prisma.songCoffeeShop.createMany({
+    data: data.songsData.map((song, i) => ({
+      songId: data.songsData[i].songId,
+      coffeeShopId: data.shopId,
+      price: data.songsData[i].price,
+    })),
   });
-  const shop = await prisma.coffeeShop.findUnique({
-    where: {
-      id: data.shopId,
-    },
-  });
-  if (shop) {
-    await prisma.coffeeShop.update({
-      where: {
-        id: data.shopId,
-      },
-      data: {
-        songs: {
-          connect: songs.map((song) => ({ id: song.id })),
-        },
-      },
-    });
-  }
 };
 
 export const deleteSong = async (id: string) => {
@@ -73,4 +59,13 @@ export const updateSong = async (options: {
     data,
   });
   revalidatePath("/dashboard/music");
+};
+
+export const deleteCoffeeShopSong = async (id: string) => {
+  await prisma.songCoffeeShop.delete({
+    where: {
+      id,
+    },
+  });
+  revalidatePath("/coffee-shop/music");
 };

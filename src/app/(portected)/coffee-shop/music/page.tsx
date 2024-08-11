@@ -14,13 +14,18 @@ const MusicPage: NextPage = async ({}: MusicPageProps) => {
         where: { adminId: user?.id },
         select: {
           id: true,
-          songs: {
+          SongCoffeeShop: {
             select: {
               id: true,
-              title: true,
               price: true,
-              thumbnail: true,
-              artist: { select: { name: true, image: true } },
+              song: {
+                select: {
+                  id: true,
+                  title: true,
+                  thumbnail: true,
+                  artist: { select: { name: true, image: true } },
+                },
+              },
             },
             orderBy: { id: "desc" },
           },
@@ -47,10 +52,43 @@ const MusicPage: NextPage = async ({}: MusicPageProps) => {
       })
     : null;
 
-  const allAlbums = (coffeeShop && (await prisma.album.findMany({}))) || [];
-  const allArtists = (coffeeShop && (await prisma.artist.findMany({}))) || [];
-  const allSongs = (coffeeShop && (await prisma.song.findMany({}))) || [];
-  console.log(allSongs.length);
+  const allAlbums =
+    (coffeeShop &&
+      (await prisma.album.findMany({
+        where: {
+          NOT: {
+            id: {
+              in: coffeeShop.Albums.map((album) => album.id),
+            },
+          },
+        },
+      }))) ||
+    [];
+  const allArtists =
+    (coffeeShop &&
+      (await prisma.artist.findMany({
+        where: {
+          NOT: {
+            id: {
+              in: coffeeShop.Artists.map((artist) => artist.id),
+            },
+          },
+        },
+      }))) ||
+    [];
+  const allSongs =
+    (coffeeShop &&
+      (await prisma.song.findMany({
+        where: {
+          NOT: {
+            id: {
+              in: coffeeShop.SongCoffeeShop.map((song) => song.song.id),
+            },
+          },
+        },
+      }))) ||
+    [];
+
   return (
     <>
       {coffeeShop && (
@@ -59,7 +97,7 @@ const MusicPage: NextPage = async ({}: MusicPageProps) => {
           allSongs={allSongs}
           allAlbums={allAlbums}
           allArtists={allArtists}
-          songs={coffeeShop?.songs}
+          songs={coffeeShop?.SongCoffeeShop}
           albums={coffeeShop?.Albums}
           artists={coffeeShop?.Artists}
         />

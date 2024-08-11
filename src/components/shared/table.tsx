@@ -1,12 +1,14 @@
+import Link from "next/link";
+import Image from "next/image";
 import React, { useState, useEffect, cloneElement } from "react";
+
 import Modal from "./Modal";
 import ConfirmDelete from "./confirm-delete";
+
 import { MdEdit } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoMdAddCircle } from "react-icons/io";
-import Link from "next/link";
-import Image from "next/image";
 
 interface TableProps {
   fields: any;
@@ -128,7 +130,7 @@ export default function Table({
                     )}
                   </td>
                 ))}
-                {(viewLink || editForm || viewModal) && (
+                {(viewLink || editForm || viewModal || deleteFn) && (
                   <td className="flex items-center gap-x-5 px-4 py-2 mt-4">
                     {viewLink && (
                       <Link href={`${viewLink}/${item?.id}`} prefetch>
