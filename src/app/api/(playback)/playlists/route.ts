@@ -55,3 +55,21 @@ export async function POST(request: Request): Promise<NextResponse> {
     );
   }
 }
+
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  try {
+    const searchParameters = request.nextUrl.searchParams;
+    const shopId = searchParameters.get("shopId");
+    const playlists = await prisma.playlist.findMany({
+      where: {
+        shopId: shopId ?? undefined,
+      },
+    });
+    return NextResponse.json(playlists);
+  } catch (error) {
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 400 }
+    );
+  }
+}
