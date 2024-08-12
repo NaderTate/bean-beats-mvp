@@ -12,6 +12,11 @@ enum UserRole {
   SHOP_ADMIN
 }
 
+enum PlaylistType {
+  PUBLIC
+  PRIVATE
+}
+
 enum TransactionStatus {
   PENDING
   COMPLETED
@@ -131,6 +136,10 @@ model Song {
   Transactions    Transaction[]    @relation(fields: [transactionsIds], references: [id])
   transactionsIds String[]         @default([]) @db.ObjectId
   SongCoffeeShop  SongCoffeeShop[]
+  genres          Genre[]          @relation(fields: [genresIds], references: [id])
+  genresIds       String[]         @default([]) @db.ObjectId
+  playlists       Playlist[]       @relation(fields: [playlistsIds], references: [id])
+  playlistsIds    String[]         @default([]) @db.ObjectId
 }
 
 model CoffeeShop {
@@ -148,6 +157,21 @@ model CoffeeShop {
   Albums         Album[]          @relation(fields: [albumsIds], references: [id])
   albumsIds      String[]         @default([]) @db.ObjectId
   SongCoffeeShop SongCoffeeShop[]
+}
+
+model Genre {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  songs Song[] @relation(fields: [songsIds], references: [id])
+  songsIds String[] @default([]) @db.ObjectId
+}
+
+model Playlist {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  type  PlaylistType @default(PUBLIC)
+  name  String
+  songs Song[] @relation(fields: [songsIds], references: [id])
+  songsIds String[] @default([]) @db.ObjectId
 }
 
 model SongCoffeeShop {
