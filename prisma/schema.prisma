@@ -157,21 +157,24 @@ model CoffeeShop {
   Albums         Album[]          @relation(fields: [albumsIds], references: [id])
   albumsIds      String[]         @default([]) @db.ObjectId
   SongCoffeeShop SongCoffeeShop[]
+  Playlist       Playlist[]
 }
 
 model Genre {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  name  String
-  songs Song[] @relation(fields: [songsIds], references: [id])
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  songs    Song[]   @relation(fields: [songsIds], references: [id])
   songsIds String[] @default([]) @db.ObjectId
 }
 
 model Playlist {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  type  PlaylistType @default(PUBLIC)
-  name  String
-  songs Song[] @relation(fields: [songsIds], references: [id])
-  songsIds String[] @default([]) @db.ObjectId
+  id       String       @id @default(auto()) @map("_id") @db.ObjectId
+  type     PlaylistType @default(PUBLIC)
+  name     String
+  songs    Song[]       @relation(fields: [songsIds], references: [id])
+  songsIds String[]     @default([]) @db.ObjectId
+  shop     CoffeeShop?  @relation(fields: [shopId], references: [id])
+  shopId   String?      @db.ObjectId
 }
 
 model SongCoffeeShop {
