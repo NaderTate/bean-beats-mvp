@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import Main from "@/app/(portected)/coffee-shop/payments/[paymentId]/main";
+import Main from "@/app/[lang]/(portected)/coffee-shop/payments/[paymentId]/main";
 type TransactionPageProps = { params: { transactionId: string } };
 
 const TransactionPage = async ({

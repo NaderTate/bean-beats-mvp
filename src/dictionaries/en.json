@@ -1,0 +1,25 @@
+{
+  "navbar": {
+    "home": "Home",
+    "aboutUs": "About Us",
+    "contactUs": "Contact Us",
+    "maintenance": "Maintenance",
+    "ourProjects": "Our Projects"
+  },
+  "footer": {
+    "aleenRealEstate": "Aleen Real Estate",
+    "latestProjects": "Latest Projects",
+    "rightsReserved": "All Rights Reserved",
+    "termsAndConditions": "Terms & Conditions",
+    "privacyPolicy": "Privacy Policy",
+    "test": "test"
+  },
+  "Aleen description": "Aleen Real Estate is a major real estate company in providing residential and commercial products with innovative ideas that are safe for humanity life and the environment. By following the international standards of construction and design that achieve the well-being of housing and the stability of the place.",
+  "Home": "Home",
+  "About Us": "About Us",
+  "Contact Us": "Contact Us",
+  "Maintenance": "Maintenance",
+  "Our Projects": "Our Projects",
+  "Maintenance description": "Dear customers, we apologize for the problem. Please fill out the form and the maintenance team will contact you.",
+  "aleen about us": "Aleen Real Estate is one of the brands of Maskan Aleen Real Estate Company, which aspires to achieve leadership in the field of real estate development by providing innovative residential products and distinguished services in addition to ensuring the highest levels of satisfaction from our customers by ensuring high quality in products and services and modern designs that have been studied to suit the target segments."
+}
