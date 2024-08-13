@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { signOut } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 
 import {
   FcNext,
@@ -39,8 +39,11 @@ const links = [
 
 export default function Dashboard() {
   const pathname = usePathname();
+  const lang = pathname.split("/")[1];
+
   const [isOpened, setIsOpened] = useState(true);
   const { push } = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   return (
     <>
@@ -50,7 +53,7 @@ export default function Dashboard() {
         }`}
       ></div>
       <div
-        className={` fixed top-0 left-0 flex h-screen flex-col justify-between border-e bg-white transition-all duration-300 ${
+        className={` fixed top-0 start-0 flex h-screen flex-col justify-between border-e bg-white transition-all duration-300 ${
           isOpened ? "w-16" : "w-0 opacity-0 -translate-x-28"
         }`}
       >
@@ -61,7 +64,7 @@ export default function Dashboard() {
                 {links.map((link) => (
                   <li key={link.href + "dashboardLink"}>
                     <Link
-                      href={link.href}
+                      href={`/${lang}${link.href}`}
                       className={`group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700 ${
                         pathname === link.href && "bg-blue-100/60"
                       }`}
@@ -73,6 +76,26 @@ export default function Dashboard() {
                     </Link>
                   </li>
                 ))}
+                {/* switch lang button */}
+                <div className="mt-4">
+                  <button
+                    onClick={() => {
+                      startTransition(() => {
+                        const newPath = pathname.replace(
+                          lang,
+                          lang === "en" ? "ar" : "en"
+                        );
+                        push(newPath, { scroll: false });
+                      });
+                    }}
+                    className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                  >
+                    {lang === "en" ? "AR" : "EN"}
+                    <span className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white -translate-x-20 opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
+                      {lang === "en" ? "عربي" : "English"}
+                    </span>
+                  </button>
+                </div>
                 <li>
                   <button
                     onClick={() => {

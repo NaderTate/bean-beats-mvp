@@ -2,8 +2,6 @@ import Main from "./Main";
 import prisma from "@/lib/prisma";
 
 const GetSongsArtistsAlbums = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 100000));
-
   const songs = await prisma.song.findMany();
   const albums = await prisma.album.findMany();
   const artists = await prisma.artist.findMany();

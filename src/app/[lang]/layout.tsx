@@ -1,8 +1,9 @@
-import "./globals.css";
+import "@/app/globals.css";
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { redirect } from "next/navigation";
+import { getMessages } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 
 import SessionProvider from "@/components/auth/Provider";
 
@@ -18,10 +19,13 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
+  params: { lang },
 }: Readonly<{
   children: React.ReactNode;
+  params: { lang: string };
 }>) {
   const sessionUser = await getUser();
+  const messages = await getMessages();
 
   const user = sessionUser
     ? await prisma.user.findUnique({
@@ -35,16 +39,18 @@ export default async function RootLayout({
         where: { adminId: sessionUser?.id },
       })
     : [];
-
+  console.log({ lang });
   return (
-    <html lang="en">
+    <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"}>
       <body className={inter.className}>
         <SessionProvider
           userRole={user?.role}
           sessionUser={sessionUser}
           coffeeShops={coffeeShops}
         >
-          {children}
+          <NextIntlClientProvider messages={messages}>
+            {children}
+          </NextIntlClientProvider>
         </SessionProvider>
       </body>
     </html>

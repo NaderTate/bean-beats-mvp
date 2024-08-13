@@ -1,27 +1,41 @@
-'use client'
-import React from 'react'
-import { AiOutlineStock } from 'react-icons/ai'
-import { motion, AnimatePresence } from 'framer-motion'
+"use client";
+import React from "react";
+import { AiOutlineStock } from "react-icons/ai";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 type Item = {
-  title: string
-  value?: string
-  Icon?: React.FC
-  percent?: string
-}
+  title: string;
+  value?: string;
+  Icon?: React.FC;
+  percent?: string;
+};
 
-export default function NCard({ item, selected, cb }: { item: Item; selected?: boolean; cb?: () => void }) {
+export default function NCard({
+  item,
+  selected,
+  cb,
+}: {
+  item: Item;
+  selected?: boolean;
+  cb?: () => void;
+}) {
+  const t = useTranslations();
+
   return (
     <article
       onClick={() => cb?.()}
       className={`rounded-xl border bg-gray-50 border-orange-950/10 shadow-md cursor-pointer justify-between flex flex-col transition hover:bg-primary/15 ${
-        selected ? 'border-orange-950/10' : ''
-      }`}>
+        selected ? "border-orange-950/10" : ""
+      }`}
+    >
       <div className="flex items-center gap-4 p-3 ">
         <div className="w-full flex justify-between">
           <div>
             {item.Icon && <item.Icon />}
-            <h3 className="line-clamp-1 text-lg text-gray-700">{item.title}</h3>
+            <h3 className="line-clamp-1 text-lg text-gray-700">
+              {t(item.title)}
+            </h3>
           </div>
           <div className="flex flex-col items-end">
             <div className="sm:flex sm:items-center sm:gap-2">
@@ -38,18 +52,19 @@ export default function NCard({ item, selected, cb }: { item: Item; selected?: b
         </div>
       </div>
 
-      <AnimatePresence mode='wait'>
+      <AnimatePresence mode="wait">
         <motion.div
-          key={selected ? 'selected' : 'not-selected'}
+          key={selected ? "selected" : "not-selected"}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="flex justify-end ">
+          className="flex justify-end "
+        >
           <span className="-mb-[2px] -me-[2px] inline-flex items-center gap-1 rounded-ee-xl rounded-ss-xl bg-orange-800 px-3 py-1.5 text-white text-sm">
-            {selected && 'selected'}
+            {selected && "selected"}
           </span>
         </motion.div>
       </AnimatePresence>
     </article>
-  )
+  );
 }
