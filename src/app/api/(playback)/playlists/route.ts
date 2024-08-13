@@ -1,7 +1,7 @@
-import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { PlaylistType } from "@prisma/client";
+import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(request: Request): Promise<NextResponse> {
   const body = await request.json();

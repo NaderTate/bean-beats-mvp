@@ -5,8 +5,7 @@ import { revalidatePath } from "next/cache";
 export async function POST(request: Request): Promise<NextResponse> {
   const body = await request.json();
 
-  const { songsIds, playlistId }: { songsIds: string[]; playlistId: string } =
-    body;
+  const { songsIds, genreId }: { songsIds: string[]; genreId: string } = body;
 
   if (!songsIds) {
     return NextResponse.json(
@@ -15,17 +14,14 @@ export async function POST(request: Request): Promise<NextResponse> {
     );
   }
 
-  if (!playlistId) {
-    return NextResponse.json(
-      { error: "playlistId is required" },
-      { status: 400 }
-    );
+  if (!genreId) {
+    return NextResponse.json({ error: "genreId is required" }, { status: 400 });
   }
 
   try {
-    const playlist = await prisma.playlist.update({
+    const genre = await prisma.genre.update({
       where: {
-        id: playlistId,
+        id: genreId,
       },
       data: {
         songs: {
@@ -33,12 +29,13 @@ export async function POST(request: Request): Promise<NextResponse> {
         },
       },
     });
+
     setTimeout(() => {
       revalidatePath("/dashboard/music");
     }, 1000);
     return NextResponse.json({
       added: true,
-      playlist,
+      genre,
     });
   } catch (error) {
     return NextResponse.json(
