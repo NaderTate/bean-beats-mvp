@@ -48,7 +48,6 @@ const fields = {
   },
   playlists: {
     name: "Name",
-    image: "Image",
   },
   genres: {
     name: "Name",
