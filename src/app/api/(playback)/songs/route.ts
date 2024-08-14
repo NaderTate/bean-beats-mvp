@@ -8,7 +8,8 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   console.log("song body", body);
 
-  const { title, artistId, albumId, duration, fileURL, thumbnail } = body;
+  const { title, artistId, albumId, duration, fileURL, thumbnail, genresIds } =
+    body;
 
   try {
     const song = await prisma.song.create({
@@ -19,6 +20,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         duration,
         fileURL,
         thumbnail,
+        genresIds,
       },
     });
     revalidatePath("/dashboard/music");

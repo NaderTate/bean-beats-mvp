@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useTransition } from "react";
 import { signOut } from "next-auth/react";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   FcNext,
@@ -13,6 +13,7 @@ import {
   FcConferenceCall,
 } from "react-icons/fc";
 import { HiOutlineLogout } from "react-icons/hi";
+import useGetLang from "@/hooks/use-get-lang";
 
 const links = [
   {
@@ -38,11 +39,11 @@ const links = [
 ];
 
 export default function Dashboard() {
+  const { push } = useRouter();
   const pathname = usePathname();
-  const lang = pathname.split("/")[1];
+  const { lang } = useGetLang();
 
   const [isOpened, setIsOpened] = useState(true);
-  const { push } = useRouter();
   const [isPending, startTransition] = useTransition();
 
   return (
@@ -76,7 +77,6 @@ export default function Dashboard() {
                     </Link>
                   </li>
                 ))}
-                {/* switch lang button */}
                 <div className="mt-4">
                   <button
                     onClick={() => {

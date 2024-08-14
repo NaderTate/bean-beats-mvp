@@ -39,7 +39,7 @@ export default async function RootLayout({
         where: { adminId: sessionUser?.id },
       })
     : [];
-  console.log({ lang });
+
   return (
     <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"}>
       <body className={inter.className}>

@@ -117,7 +117,7 @@ export default function Table({
                     key={key + "field"}
                     className="whitespace-nowrap px-4 py-2 text-gray-700"
                   >
-                    {key === "image" ? (
+                    {key === "image" || key === "thumbnail" ? (
                       <Image
                         alt={key}
                         width={200}

@@ -1,20 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { upload } from "@vercel/blob/client";
 import { useForm, Controller } from "react-hook-form";
-import { Album, Artist, Song } from "@prisma/client";
+import { Album, Artist, Genre, Song } from "@prisma/client";
 
 import Input from "../Input";
 import Select from "../Select";
 import Spinner from "../spinner";
 
 import { updateSong } from "@/actions/songs";
+import SelectGenres from "../select-genres";
 
 type Props = {
   albums: Album[];
   artists: Artist[];
+  genres: Genre[];
   itemToEdit?: Song;
   onSubmit: () => void;
 };
@@ -30,33 +32,37 @@ type Inputs = {
 
 const SongForm = ({
   albums,
-  itemToEdit: song,
-  artists: artists,
+  genres,
   onSubmit,
+  artists: artists,
+  itemToEdit: song,
 }: Props) => {
   const id = song?.id;
   const isEditSession = !!id;
 
   const {
-    register,
-    handleSubmit,
-    formState,
     watch,
     setValue,
+    register,
+    formState,
+    handleSubmit,
 
     control,
   } = useForm<Inputs>({
     defaultValues: {
-      artistId: song?.artistId || undefined,
-      albumId: song?.albumId || undefined,
       title: song?.title,
       duration: song?.duration,
+      albumId: song?.albumId || undefined,
+      artistId: song?.artistId || undefined,
     },
   });
 
   const { errors, isLoading, isSubmitting } = formState;
 
   const file: any = watch("file")?.[0];
+  const [selectedGenres, setSelectedGenres] = useState<string[]>(
+    song ? song.genresIds : []
+  );
 
   useEffect(() => {
     if (file) {
@@ -66,6 +72,7 @@ const SongForm = ({
       });
     }
   }, [file, setValue]);
+
   const submitHandler = async (data: any) => {
     const { file, thumbnail, ...otherData } = data;
 
@@ -78,6 +85,7 @@ const SongForm = ({
           handleUploadUrl: "/api/upload",
         })
       : { url: song?.fileURL };
+
     const newThumbnailBlob = thumbnailImage
       ? await upload(thumbnailImage.name, thumbnailImage, {
           access: "public",
@@ -89,12 +97,13 @@ const SongForm = ({
       await updateSong({
         id,
         data: {
-          artistId: otherData.artistId,
-          albumId: otherData.albumId,
           title: otherData.title,
-          duration: otherData.duration,
           fileURL: newSongBlob.url,
+          albumId: otherData.albumId,
+          artistId: otherData.artistId,
+          duration: otherData.duration,
           thumbnail: newThumbnailBlob.url,
+          genresIds: selectedGenres,
         },
       });
     } else {
@@ -107,6 +116,7 @@ const SongForm = ({
           ...otherData,
           fileURL: newSongBlob.url,
           thumbnail: newThumbnailBlob.url,
+          genresIds: selectedGenres,
         }),
       });
     }
@@ -159,7 +169,12 @@ const SongForm = ({
           required: "This field is required",
         })}
       />
-
+      <h2 className="mb-4">Genres</h2>
+      <SelectGenres
+        selectedGenreIds={song ? song.genresIds : []}
+        genres={genres}
+        handleCheckboxChange={setSelectedGenres}
+      />
       <div>
         <label
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"

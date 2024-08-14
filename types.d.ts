@@ -13,3 +13,5 @@ type ExtendedAlbum = {
   artistId: string | null;
   coffeeShopsIds: string[];
 };
+
+type Lang = "en" | "ar";

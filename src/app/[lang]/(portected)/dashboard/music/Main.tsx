@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Album, Artist, Song } from "@prisma/client";
+import { Album, Artist, Genre, Playlist, Song } from "@prisma/client";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import Table from "@/components/shared/table";
@@ -15,27 +15,17 @@ import { deleteSong } from "@/actions/songs";
 import { deleteAlbum } from "@/actions/albums";
 import { deleteArtist } from "@/actions/artists";
 
+import { FcList } from "react-icons/fc";
 import { FaMusic } from "react-icons/fa";
+import { FcMindMap } from "react-icons/fc";
 import { BiSolidAlbum } from "react-icons/bi";
 import { BsFillPeopleFill } from "react-icons/bs";
+import { deletePlaylist } from "@/actions/playlists";
 
-const list = [
-  {
-    title: "Songs",
-    value: "1,600",
-    Icon: () => <FaMusic className="text-4xl text-yellow-500" />,
-  },
-  {
-    title: "Albums",
-    value: "200",
-    Icon: () => <BiSolidAlbum className="text-4xl text-blue-500" />,
-  },
-  {
-    title: "Artists",
-    value: "100",
-    Icon: () => <BsFillPeopleFill className="text-4xl text-green-500" />,
-  },
-];
+import useGetLang from "@/hooks/use-get-lang";
+import PlaylistForm from "@/components/shared/Forms/playlist";
+import { deleteGenre } from "@/actions/gneres";
+import GenreForm from "@/components/shared/Forms/genre";
 
 const tableData = {
   page: 2,
@@ -45,7 +35,7 @@ const tableData = {
 const fields = {
   songs: {
     title: "Title",
-    price: "Price",
+    thumbnail: "Image",
   },
   artists: {
     name: "Name",
@@ -56,33 +46,67 @@ const fields = {
     name: "Name",
     image: "Image",
   },
+  playlists: {
+    name: "Name",
+    image: "Image",
+  },
+  genres: {
+    name: "Name",
+    image: "Image",
+  },
 };
 
 type MainProps = {
   artists: Artist[];
   albums: Album[];
   songs: Song[];
+  playlists: Playlist[];
+  genres: Genre[];
 };
 
-enum Selection {
-  songs = "songs",
-  albums = "albums",
-  artists = "artists",
-}
-
 export default function Main(props: MainProps) {
-  const router = useRouter();
+  const list = [
+    {
+      title: "Songs",
+      value: props.songs.length,
+      Icon: () => <FaMusic className="text-4xl text-yellow-500" />,
+    },
+    {
+      title: "Albums",
+      value: props.albums.length,
+      Icon: () => <BiSolidAlbum className="text-4xl text-blue-500" />,
+    },
+    {
+      title: "Artists",
+      value: props.artists.length,
+      Icon: () => <BsFillPeopleFill className="text-4xl text-green-500" />,
+    },
+    {
+      Icon: () => <FcList className="text-4xl text-blue-500" />,
+      title: "Playlists",
+      value: 12,
+    },
+    {
+      Icon: () => <FcMindMap className="text-4xl text-blue-500" />,
+      title: "Genres",
+      value: props.genres.length,
+    },
+  ];
+
+  type Selection = "songs" | "albums" | "artists" | "playlists" | "genres";
+  const { push, refresh } = useRouter();
   const searchParams = useSearchParams();
-  const section = searchParams.get("section");
-  const [shownSection, setShownSection] = useState<
-    "albums" | "songs" | "artists"
-  >((section as Selection) || "albums");
+  const section = searchParams.get("section") as Selection;
+  const [shownSection, setShownSection] = useState<Selection>(
+    section || "songs"
+  );
   const [open, setOpen] = useState(false);
+  const { lang } = useGetLang();
 
   const toggleModal = () => {
-    router.refresh();
+    refresh();
     setTimeout(() => {
-      router.refresh();
+      refresh();
     }, 1000);
     setOpen((prev) => !prev);
   };
@@ -90,6 +114,7 @@ export default function Main(props: MainProps) {
   const editForms = {
     songs: (
       <SongForm
+        genres={props.genres}
         albums={props.albums}
         onSubmit={toggleModal}
         artists={props.artists}
@@ -97,25 +122,29 @@ export default function Main(props: MainProps) {
     ),
     albums: <AlbumForm onSubmit={toggleModal} artists={props.artists} />,
     artists: <ArtistForm onSubmit={toggleModal} />,
+    playlists: <PlaylistForm onSubmit={toggleModal} allSongs={props.songs} />,
+    genres: <GenreForm onSubmit={toggleModal} />,
   };
 
   const deleteFn = {
     songs: deleteSong,
     albums: deleteAlbum,
     artists: deleteArtist,
+    playlists: deletePlaylist,
+    genres: deleteGenre,
   };
 
   return (
     <main className="flex flex-col flex-1 w-full px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
-      <section className=" grid col-span-1 gap-4 lg:grid-cols-3 section1">
+      <section className=" grid col-span-1 gap-4 lg:grid-cols-5">
         {list.map((item) => (
           <NCard
             key={item.title + "section1"}
             item={item}
             selected={shownSection === item.title.toLowerCase()}
             cb={() => {
-              router.push(
-                `/dashboard/music?section=${item.title.toLocaleLowerCase()}`
+              push(
+                `/${lang}/dashboard/music?section=${item.title.toLocaleLowerCase()}`
               );
               setShownSection(item.title.toLocaleLowerCase() as Selection);
             }}
@@ -142,7 +171,11 @@ export default function Main(props: MainProps) {
             ? "Add Album"
             : shownSection === "songs"
             ? "Add Song"
-            : "Add Artist"
+            : shownSection === "artists"
+            ? "Add Artist"
+            : shownSection === "playlists"
+            ? "Add Playlist"
+            : "Add Genre"
         }
       >
         {shownSection === "albums" && (
@@ -151,11 +184,16 @@ export default function Main(props: MainProps) {
         {shownSection === "songs" && (
           <SongForm
             albums={props.albums}
-            artists={props.artists}
+            genres={props.genres}
             onSubmit={toggleModal}
+            artists={props.artists}
           />
         )}
         {shownSection === "artists" && <ArtistForm onSubmit={toggleModal} />}
+        {shownSection === "playlists" && (
+          <PlaylistForm onSubmit={toggleModal} allSongs={props.songs} />
+        )}
+        {shownSection === "genres" && <GenreForm onSubmit={toggleModal} />}
       </Modal>
     </main>
   );

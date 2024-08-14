@@ -57,13 +57,24 @@ export const updateSong = async (options: {
     Prisma.SongUncheckedUpdateInput;
 }) => {
   const { id, data } = options;
-  console.log({ data });
-  await prisma.song.update({
+  const genresIds = data.genresIds;
+  const removeSongGenres = prisma.song.update({
+    where: {
+      id,
+    },
+    data: {
+      genres: {
+        set: [],
+      },
+    },
+  });
+  const updateSong = prisma.song.update({
     where: {
       id,
     },
     data,
   });
+  await prisma.$transaction([removeSongGenres, updateSong]);
   revalidatePath("/dashboard/music");
 };
 

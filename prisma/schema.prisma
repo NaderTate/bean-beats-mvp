@@ -163,6 +163,7 @@ model CoffeeShop {
 model Genre {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId
   name     String
+  image    String
   songs    Song[]   @relation(fields: [songsIds], references: [id])
   songsIds String[] @default([]) @db.ObjectId
 }

@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 
 type Item = {
   title: string;
-  value?: string;
+  value?: number;
   Icon?: React.FC;
   percent?: string;
 };

@@ -2,36 +2,34 @@
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { upload } from "@vercel/blob/client";
-import { Artist } from "@prisma/client";
-
 import Spinner from "../spinner";
 
-import { updateArtist } from "@/actions/artists";
+import { createGenre, updateGenre } from "@/actions/gneres";
+import { Genre } from "@prisma/client";
+import Link from "next/link";
 
 type Inputs = {
   name: string;
 };
 
-export default function ArtistForm({
-  onSubmit,
-  itemToEdit: artist,
-}: {
+interface GenreFormProps {
   onSubmit: () => void;
-  itemToEdit?: Artist;
-}) {
-  const id = artist?.id;
+  itemToEdit?: Genre;
+}
+
+function GenreForm({ onSubmit, itemToEdit: genre }: GenreFormProps) {
+  const id = genre?.id;
+
   const {
     register,
     handleSubmit,
     formState: { isLoading, isSubmitting },
   } = useForm<Inputs>({
     defaultValues: {
-      name: artist?.name,
+      name: genre?.name,
     },
   });
-
   const inputFileRef = useRef<HTMLInputElement>(null);
-
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
@@ -39,27 +37,32 @@ export default function ArtistForm({
           return alert("No file selected");
         }
 
-        const file = inputFileRef.current.files?.[0];
+        const file = inputFileRef.current.files[0];
         const newBlob = file
           ? await upload(file.name, file, {
               access: "public",
               handleUploadUrl: "/api/upload",
             })
-          : { url: artist?.image };
+          : { url: genre?.image };
+
         id
-          ? await updateArtist({
+          ? await updateGenre({
               id,
               data: {
                 ...data,
-                image: newBlob.url,
+
+                image:
+                  newBlob.url ||
+                  "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
               },
             })
-          : await fetch("/api/artists", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
+          : await createGenre({
+              data: {
+                ...data,
+                image:
+                  newBlob.url ||
+                  "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
               },
-              body: JSON.stringify({ ...data, image: newBlob.url }),
             });
         onSubmit();
       })}
@@ -70,11 +73,11 @@ export default function ArtistForm({
           Name
         </label>
         <input
-          className="w-full rounded-lg border-gray-200 p-3 text-sm focus:outline-none focus:border-primary/50 border  dark:border-gray-600 dark:placeholder-gray-400 dark:bg-gray-700 dark:text-gray-400"
-          placeholder="Name"
-          type="text"
           id="name"
+          type="text"
+          placeholder="Name"
           {...register("name")}
+          className="w-full rounded-lg border-gray-200 p-3 text-sm focus:outline-none focus:border-primary/50 border  dark:border-gray-600 dark:placeholder-gray-400 dark:bg-gray-700 dark:text-gray-400"
         />
       </div>
 
@@ -96,7 +99,18 @@ export default function ArtistForm({
           className="mt-1 text-sm text-gray-500 dark:text-gray-300"
           id="file_input_help"
         >
-          SVG, PNG, JPG or GIF (MAX. 800x400px).
+          {!!id
+            ? "Leave empty to keep the same image "
+            : "Upload a song thumbnail "}
+          {genre?.image && (
+            <Link
+              className="text-blue-500 hover:underline"
+              href={genre?.image}
+              target="_blank"
+            >
+              ( View image )
+            </Link>
+          )}
         </p>
       </div>
 
@@ -111,3 +125,5 @@ export default function ArtistForm({
     </form>
   );
 }
+
+export default GenreForm;

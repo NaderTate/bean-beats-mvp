@@ -2,7 +2,11 @@ import { getUser } from "@/utils/get-user";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import CreatePassword from "./create-password";
-export default async function Home() {
+
+interface HomePageProps {
+  params: { lang: string };
+}
+export default async function Home({ params: { lang } }: HomePageProps) {
   const sessionUser = await getUser();
   const user = sessionUser
     ? await prisma.user.findUnique({
@@ -14,7 +18,7 @@ export default async function Home() {
     return <CreatePassword userId={user.id} />;
   }
   if (user?.role === "PLATFORM_ADMIN") {
-    redirect("/dashboard");
+    redirect(`/${lang}/dashboard`);
   }
   if (user?.role === "SHOP_ADMIN") {
     const userShops = await prisma.coffeeShop.findMany({
