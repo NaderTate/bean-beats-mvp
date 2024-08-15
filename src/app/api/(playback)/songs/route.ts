@@ -48,11 +48,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       where: {
         artistId: artistId || undefined,
         albumId: albumId || undefined,
-        SongCoffeeShop: {
-          some: {
-            coffeeShopId: coffeeShopId || undefined,
-          },
-        },
+        SongCoffeeShop: coffeeShopId
+          ? {
+              some: {
+                coffeeShopId,
+              },
+            }
+          : undefined,
       },
       include: {
         artist: {
