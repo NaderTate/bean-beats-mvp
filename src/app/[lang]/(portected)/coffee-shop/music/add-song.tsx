@@ -13,7 +13,6 @@ type Props = { allSongs: Song[]; onSubmit: () => void; shopId: string };
 type SelectedSong = { songId: string; price: number };
 
 const AddSong = ({ allSongs, onSubmit, shopId }: Props) => {
-  console.log({ allSongs });
   const [selectedSongs, setSelectedSongs] = useState<SelectedSong[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 

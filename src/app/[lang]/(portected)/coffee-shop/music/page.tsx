@@ -55,39 +55,42 @@ const MusicPage: NextPage = async ({}: MusicPageProps) => {
   const allAlbums =
     (coffeeShop &&
       (await prisma.album.findMany({
-        where: {
-          NOT: {
-            id: {
-              in: coffeeShop.Albums.map((album) => album.id),
-            },
-          },
-        },
+        // where: {
+        //   NOT: {
+        //     id: {
+        //       in: coffeeShop.Albums.map((album) => album.id),
+        //     },
+        //   },
+        // },
       }))) ||
     [];
+
   const allArtists =
     (coffeeShop &&
       (await prisma.artist.findMany({
-        where: {
-          NOT: {
-            id: {
-              in: coffeeShop.Artists.map((artist) => artist.id),
-            },
-          },
-        },
+        // where: {
+        //   NOT: {
+        //     id: {
+        //       in: coffeeShop.Artists.map((artist) => artist.id),
+        //     },
+        //   },
+        // },
       }))) ||
     [];
+
   const allSongs =
     (coffeeShop &&
       (await prisma.song.findMany({
-        where: {
-          NOT: {
-            id: {
-              in: coffeeShop.SongCoffeeShop.map((song) => song.song.id),
-            },
-          },
-        },
+        // where: {
+        //   NOT: {
+        //     id: {
+        //       in: coffeeShop.SongCoffeeShop.map((song) => song.song.id),
+        //     },
+        //   },
+        // },
       }))) ||
     [];
+
   const playlists =
     (coffeeShop &&
       (await prisma.playlist.findMany({

@@ -16,7 +16,6 @@ export async function POST(request: Request): Promise<NextResponse> {
     body;
 
   // if type of type is not PlaylistType, return error
-
   try {
     if (!Object.values(PlaylistType).includes(type)) {
       return NextResponse.json(

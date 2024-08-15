@@ -164,22 +164,44 @@ const MusicMain = ({
         {currentSection === "albums" && (
           <AddAlbum
             shopId={shopId}
-            allAlbums={allAlbums}
+            allAlbums={
+              // filter albums that are not already in the shop
+              allAlbums.filter(
+                (album) =>
+                  !albums.find((shopAlbum) => shopAlbum.id === album.id)
+              )
+            }
             onSubmit={toggleModal}
           />
         )}
         {currentSection === "songs" && (
-          <AddSong allSongs={allSongs} onSubmit={toggleModal} shopId={shopId} />
+          <AddSong
+            allSongs={
+              // filter songs that are not already in the shop
+              allSongs.filter(
+                (song) =>
+                  !songs.find((shopSong) => shopSong.song.id === song.id)
+              )
+            }
+            onSubmit={toggleModal}
+            shopId={shopId}
+          />
         )}
         {currentSection === "artists" && (
           <AddArtist
             shopId={shopId}
             onSubmit={toggleModal}
-            allArtists={allArtists}
+            allArtists={
+              // filter artists that are not already in the shop
+              allArtists.filter(
+                (artist) =>
+                  !artists.find((shopArtist) => shopArtist.id === artist.id)
+              )
+            }
           />
         )}
         {currentSection === "playlists" && (
-          <AddPlaylist onSubmit={toggleModal} />
+          <AddPlaylist onSubmit={toggleModal} allSongs={allSongs} />
         )}
       </Modal>
     </div>
