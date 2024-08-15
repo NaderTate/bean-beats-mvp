@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Artist, Song } from "@prisma/client";
+import { Song } from "@prisma/client";
 
 import Spinner from "@/components/shared/spinner";
 
@@ -13,6 +13,7 @@ type Props = { allSongs: Song[]; onSubmit: () => void; shopId: string };
 type SelectedSong = { songId: string; price: number };
 
 const AddSong = ({ allSongs, onSubmit, shopId }: Props) => {
+  console.log({ allSongs });
   const [selectedSongs, setSelectedSongs] = useState<SelectedSong[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -44,9 +45,9 @@ const AddSong = ({ allSongs, onSubmit, shopId }: Props) => {
   };
 
   return (
-    <div className="bg-white rounded-lg flex flex-col h-full">
+    <div className="bg-white rounded-lg flex flex-col">
       <h2 className="text-xl font-semibold mb-4">Select Songs</h2>
-      <div className="flex-1 overflow-y-auto space-y-5">
+      <div className="mb-16 space-y-5">
         {allSongs.map((song) => (
           <div
             key={song.id}

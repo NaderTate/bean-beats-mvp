@@ -30,6 +30,7 @@ const SongsList = ({ songs, setOpen }: Props) => {
         number: i + 1,
         price: song.price,
         title: song.song.title,
+        thumbnail: song.song.thumbnail,
         artistName: song.song.artist?.name,
         artistImage: song.song.artist?.image,
       }))}
@@ -38,6 +39,7 @@ const SongsList = ({ songs, setOpen }: Props) => {
         title: "Song Name",
         artistName: "Artist",
         price: "Price",
+        thumbnail: "Image",
       }}
     />
   );

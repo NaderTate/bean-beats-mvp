@@ -21,7 +21,7 @@ const Layout = async ({
     <div className="flex">
       <Navbar />
       <Sidebar />
-      <div className="pl-5 mt-20 w-full">{children}</div>
+      <div className="mt-20 w-full">{children}</div>
     </div>
   );
 };

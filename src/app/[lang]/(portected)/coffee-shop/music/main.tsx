@@ -11,6 +11,9 @@ import SongsList from "./songs-list";
 import AddArtist from "./add-artist";
 import ArtistsList from "./artists-list";
 import Modal from "@/components/shared/Modal";
+import useGetLang from "@/hooks/use-get-lang";
+import Playlists from "./playlists";
+import AddPlaylist from "./add-playlist";
 
 type Props = {
   songs: {
@@ -45,6 +48,13 @@ type Props = {
     image: string;
     id: string;
   }[];
+  playlists: {
+    id: string;
+    name: string;
+    _count: {
+      songs: number;
+    };
+  }[];
   allAlbums: Album[];
   allArtists: Artist[];
   allSongs: Song[];
@@ -56,6 +66,7 @@ const MusicMain = ({
   shopId,
   albums,
   artists,
+  playlists,
   allSongs,
   allAlbums,
   allArtists,
@@ -63,6 +74,7 @@ const MusicMain = ({
   const { refresh, push } = useRouter();
 
   const [open, setOpen] = useState(false);
+  const { lang } = useGetLang();
   const searchParams = useSearchParams();
   const section = searchParams.get("section");
   const [currentSection, setCurrentSection] = useState(section || "artists");
@@ -78,17 +90,18 @@ const MusicMain = ({
     { label: "artists" },
     { label: "albums" },
     { label: "songs" },
+    { label: "playlists" },
   ];
 
   return (
-    <div>
-      <div className="flex justify-center space-x-2">
+    <div className="p-5">
+      <div className="flex justify-center gap-x-2">
         {actionButtons.map((button) => (
           <button
             key={button.label}
             onClick={() => {
               setCurrentSection(button.label);
-              push(`/coffee-shop/music?section=${button.label}`);
+              push(`/${lang}/coffee-shop/music?section=${button.label}`);
             }}
             className={`capitalize transition-colors ${
               currentSection === button.label
@@ -111,6 +124,7 @@ const MusicMain = ({
         )}
         {currentSection === "albums" && (
           <Albums
+            shopId={shopId}
             albums={albums}
             setOpen={() => {
               setOpen(true);
@@ -125,6 +139,14 @@ const MusicMain = ({
             }}
           />
         )}
+        {currentSection === "playlists" && (
+          <Playlists
+            playlists={playlists}
+            setOpen={() => {
+              setOpen(true);
+            }}
+          />
+        )}
       </div>
       <Modal
         open={open}
@@ -134,7 +156,9 @@ const MusicMain = ({
             ? "Add Album"
             : currentSection === "songs"
             ? "Add Song"
-            : "Add Artist"
+            : currentSection === "artists"
+            ? "Add Artist"
+            : "Add Playlist"
         }
       >
         {currentSection === "albums" && (
@@ -153,6 +177,9 @@ const MusicMain = ({
             onSubmit={toggleModal}
             allArtists={allArtists}
           />
+        )}
+        {currentSection === "playlists" && (
+          <AddPlaylist onSubmit={toggleModal} />
         )}
       </Modal>
     </div>

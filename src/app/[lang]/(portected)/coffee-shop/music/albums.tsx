@@ -1,5 +1,6 @@
 "use client";
 
+import { reomveAlbumFromShop } from "@/actions/albums";
 import Table from "@/components/shared/table";
 
 type Props = {
@@ -15,12 +16,14 @@ type Props = {
     id: string;
   }[];
   setOpen: () => void;
+  shopId: string;
 };
 
-const Albums = ({ albums, setOpen }: Props) => {
+const Albums = ({ albums, setOpen, shopId }: Props) => {
   return (
     <Table
       add={setOpen}
+      deleteFn={reomveAlbumFromShop}
       data={albums.map((album, i) => ({
         ...album,
         number: i + 1,
@@ -29,6 +32,7 @@ const Albums = ({ albums, setOpen }: Props) => {
       fields={{
         number: "#",
         name: "Name",
+        image: "Image",
         songsCount: "No. of songs",
       }}
     />

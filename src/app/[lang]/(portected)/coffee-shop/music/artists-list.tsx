@@ -27,6 +27,7 @@ const ArtistsList = ({ artists, setOpen }: Props) => {
         number: "#",
         name: "Artist",
         songsCount: "No. of songs",
+        image: "Image",
       }}
     />
   );

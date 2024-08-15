@@ -16,22 +16,25 @@ export async function POST(request: Request): Promise<NextResponse> {
     body;
 
   // if type of type is not PlaylistType, return error
-  if (!Object.values(PlaylistType).includes(type)) {
-    return NextResponse.json(
-      { error: "Invalid playlist type" },
-      { status: 400 }
-    );
-  }
-
-  if (!name) {
-    return NextResponse.json({ error: "Name is required" }, { status: 400 });
-  }
-
-  if (!shopId) {
-    return NextResponse.json({ error: "Shop ID is required" }, { status: 400 });
-  }
 
   try {
+    if (!Object.values(PlaylistType).includes(type)) {
+      return NextResponse.json(
+        { error: "Invalid playlist type" },
+        { status: 400 }
+      );
+    }
+
+    if (!name) {
+      return NextResponse.json({ error: "Name is required" }, { status: 400 });
+    }
+
+    if (!shopId) {
+      return NextResponse.json(
+        { error: "Shop ID is required" },
+        { status: 400 }
+      );
+    }
     const playlist = await prisma.playlist.create({
       data: {
         name,

@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { getUser } from "@/utils/get-user";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
@@ -61,6 +62,34 @@ export const updateAlbum = async (options: {
       id,
     },
     data,
+  });
+  revalidatePath("/dashboard/music");
+};
+
+export const reomveAlbumFromShop = async (albumId: string) => {
+  const user = await getUser();
+  if (!user) {
+    throw new Error("User not found");
+  }
+  const shop = await prisma.coffeeShop.findFirst({
+    where: {
+      adminId: user.id,
+    },
+  });
+  if (!shop) {
+    throw new Error("Shop not found");
+  }
+  await prisma.coffeeShop.update({
+    where: {
+      id: shop.id,
+    },
+    data: {
+      Albums: {
+        disconnect: {
+          id: albumId,
+        },
+      },
+    },
   });
   revalidatePath("/dashboard/music");
 };

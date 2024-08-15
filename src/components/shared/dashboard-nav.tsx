@@ -13,6 +13,7 @@ import {
   FcConferenceCall,
 } from "react-icons/fc";
 import { HiOutlineLogout } from "react-icons/hi";
+
 import useGetLang from "@/hooks/use-get-lang";
 
 const links = [
@@ -40,8 +41,8 @@ const links = [
 
 export default function Dashboard() {
   const { push } = useRouter();
-  const pathname = usePathname();
   const { lang } = useGetLang();
+  const pathname = usePathname();
 
   const [isOpened, setIsOpened] = useState(true);
   const [isPending, startTransition] = useTransition();
