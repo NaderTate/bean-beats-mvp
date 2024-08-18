@@ -54,3 +54,19 @@ export const deletePlaylist = async (id: string) => {
   });
   revalidatePath("/dashboard/music");
 };
+
+export const addPlaylistsToShop = async (options: {
+  playlistsIds: string[];
+  shopId: string;
+}) => {
+  await prisma.coffeeShop.update({
+    where: {
+      id: options.shopId,
+    },
+    data: {
+      Playlist: {
+        connect: options.playlistsIds.map((id) => ({ id })),
+      },
+    },
+  });
+};

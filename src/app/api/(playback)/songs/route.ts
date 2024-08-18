@@ -20,7 +20,9 @@ export async function POST(request: Request): Promise<NextResponse> {
         duration,
         fileURL,
         thumbnail,
-        genresIds,
+        genres: {
+          connect: genresIds.map((id: string) => ({ id })),
+        },
       },
     });
     revalidatePath("/dashboard/music");

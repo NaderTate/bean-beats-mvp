@@ -23,6 +23,8 @@ export async function POST(request: Request): Promise<NextResponse> {
   }
 
   try {
+    // check if the song exists in the playlist
+
     const playlist = await prisma.playlist.update({
       where: {
         id: playlistId,

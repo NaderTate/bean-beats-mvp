@@ -72,7 +72,8 @@ export const updateSong = async (options: {
     where: {
       id,
     },
-    data,
+    // @ts-ignore
+    data: { ...data, genres: { connect: genresIds?.map((id) => ({ id })) } },
   });
   await prisma.$transaction([removeSongGenres, updateSong]);
   revalidatePath("/dashboard/music");

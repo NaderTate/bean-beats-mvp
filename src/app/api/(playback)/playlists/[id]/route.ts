@@ -18,11 +18,7 @@ export async function GET(
         id,
       },
       include: {
-        songs: {
-          include: {
-            artist: true,
-          },
-        },
+        songs: true,
       },
     });
 
@@ -32,7 +28,31 @@ export async function GET(
         { status: 404 }
       );
     }
-    return NextResponse.json(playlist);
+
+    const placeholderImages = [
+      "https://files.catbox.moe/f1y8eg.jpg",
+      "https://files.catbox.moe/bfzzwk.jpg",
+      "https://files.catbox.moe/pbldi9.jpg",
+      "https://files.catbox.moe/ycynho.webp",
+    ];
+
+    const songThumbnails = playlist.songs.map((song) => song.thumbnail);
+    const placeholdersNeeded = Math.max(
+      0,
+      placeholderImages.length - songThumbnails.length
+    );
+
+    const images = [
+      ...songThumbnails,
+      ...placeholderImages.slice(0, placeholdersNeeded),
+    ];
+
+    const playlistWithImagesField = {
+      ...playlist,
+      images,
+    };
+
+    return NextResponse.json(playlistWithImagesField);
   } catch (error) {
     return NextResponse.json(
       { error: (error as Error).message },

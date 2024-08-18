@@ -201,7 +201,17 @@ const MusicMain = ({
           />
         )}
         {currentSection === "playlists" && (
-          <AddPlaylist onSubmit={toggleModal} allSongs={allSongs} />
+          <AddPlaylist
+            shopId={shopId}
+            onSubmit={toggleModal}
+            allSongs={allSongs}
+            shopPlaylists={playlists.filter(
+              (playlist) =>
+                !playlists.find(
+                  (shopPlaylist) => shopPlaylist.id === playlist.id
+                )
+            )}
+          />
         )}
       </Modal>
     </div>
