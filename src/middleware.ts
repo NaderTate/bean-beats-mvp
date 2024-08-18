@@ -7,12 +7,21 @@ const defaultLocale = "ar";
 export default function middleware(request: any) {
   const pathname = request.nextUrl.pathname;
 
-  // Check if the pathname is missing a locale
-  const pathnameIsMissingLocale = locales.every(
-    locale => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
-  );
+  // Exclude specific paths from locale redirection
+  const isPublicFile =
+    pathname.startsWith("/public/") ||
+    pathname.startsWith("/images/") ||
+    pathname.startsWith("/uploads/");
 
-  // Redirect if there is no locale
+  // Check if the pathname is missing a locale
+  const pathnameIsMissingLocale =
+    !isPublicFile &&
+    locales.every(
+      (locale) =>
+        !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+    );
+
+  // Redirect if there is no locale and it's not a public file
   if (pathnameIsMissingLocale) {
     const locale = defaultLocale;
     return NextResponse.redirect(new URL(`/${locale}${pathname}`, request.url));

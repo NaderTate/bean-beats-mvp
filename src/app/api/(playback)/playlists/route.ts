@@ -5,7 +5,6 @@ import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(request: Request): Promise<NextResponse> {
   const body = await request.json();
-  console.log(body);
 
   const {
     name,
@@ -34,6 +33,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         { status: 400 }
       );
     }
+
     const playlist = await prisma.playlist.create({
       data: {
         name,
@@ -66,8 +66,41 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       where: {
         shopId: shopId ?? undefined,
       },
+      include: {
+        songs: {
+          select: { thumbnail: true },
+          take: 4,
+          orderBy: { id: "desc" },
+        },
+      },
     });
-    return NextResponse.json(playlists);
+
+    const placeholderImages = [
+      "https://files.catbox.moe/f1y8eg.jpg",
+      "https://files.catbox.moe/bfzzwk.jpg",
+      "https://files.catbox.moe/pbldi9.jpg",
+      "https://files.catbox.moe/ycynho.webp",
+    ];
+
+    const playlistsWithPlaceholders = playlists.map((playlist) => {
+      const songThumbnails = playlist.songs.map((song) => song.thumbnail);
+      const placeholdersNeeded = Math.max(
+        0,
+        placeholderImages.length - songThumbnails.length
+      );
+
+      return {
+        ...playlist,
+        songs: [
+          ...playlist.songs,
+          ...placeholderImages
+            .slice(0, placeholdersNeeded)
+            .map((thumbnail) => ({ thumbnail })),
+        ],
+      };
+    });
+
+    return NextResponse.json(playlistsWithPlaceholders);
   } catch (error) {
     return NextResponse.json(
       { error: (error as Error).message },

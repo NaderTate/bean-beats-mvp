@@ -12,7 +12,6 @@ export async function POST(request: Request) {
     songsIds: string[];
     tableNumber: number;
   } = body;
-  console.log({ body });
   if (!songsIds || songsIds.length === 0) {
     return NextResponse.json(
       { error: "songsIds is required and can't be empty" },
