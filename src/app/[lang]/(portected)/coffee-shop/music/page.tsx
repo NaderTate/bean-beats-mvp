@@ -91,15 +91,15 @@ const MusicPage: NextPage = async ({}: MusicPageProps) => {
       }))) ||
     [];
 
-  const playlists =
+  const allPlaylists =
     (coffeeShop &&
       (await prisma.playlist.findMany({
-        where: { shopId: coffeeShop.id },
         select: {
           name: true,
           _count: { select: { songs: true } },
-
           id: true,
+          shopId: true,
+          songsIds: true,
         },
       }))) ||
     [];
@@ -109,10 +109,10 @@ const MusicPage: NextPage = async ({}: MusicPageProps) => {
       {coffeeShop && (
         <MusicMain
           allSongs={allSongs}
-          playlists={playlists}
           allAlbums={allAlbums}
           shopId={coffeeShop.id}
           allArtists={allArtists}
+          allPlaylists={allPlaylists}
           albums={coffeeShop?.Albums}
           artists={coffeeShop?.Artists}
           songs={coffeeShop?.SongCoffeeShop}

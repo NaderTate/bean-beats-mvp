@@ -47,7 +47,7 @@ export const updatePlaylist = async (options: {
 };
 
 export const deletePlaylist = async (id: string) => {
-  const playlist = await prisma.playlist.delete({
+  await prisma.playlist.delete({
     where: {
       id,
     },
@@ -59,14 +59,27 @@ export const addPlaylistsToShop = async (options: {
   playlistsIds: string[];
   shopId: string;
 }) => {
-  await prisma.coffeeShop.update({
+  const playlists = await prisma.playlist.findMany({
     where: {
-      id: options.shopId,
-    },
-    data: {
-      Playlist: {
-        connect: options.playlistsIds.map((id) => ({ id })),
+      id: {
+        in: options.playlistsIds,
       },
     },
   });
+
+  // create a duplicate of the playlists with the shopId
+  const playlistsWithShopId = playlists.map((playlist) => ({
+    ...playlist,
+    shopId: options.shopId,
+  }));
+
+  // remove the id from the playlists
+  const playlistsWithoutId = playlistsWithShopId.map(({ id, ...rest }) => rest);
+
+  // create the playlists in the shop
+  await prisma.playlist.createMany({
+    data: playlistsWithoutId,
+  });
+
+  revalidatePath("/coffee-shop/music");
 };

@@ -48,12 +48,14 @@ type Props = {
     image: string;
     id: string;
   }[];
-  playlists: {
+  allPlaylists: {
     id: string;
     name: string;
     _count: {
       songs: number;
     };
+    shopId: string | null;
+    songsIds: string[];
   }[];
   allAlbums: Album[];
   allArtists: Artist[];
@@ -66,7 +68,7 @@ const MusicMain = ({
   shopId,
   albums,
   artists,
-  playlists,
+  allPlaylists,
   allSongs,
   allAlbums,
   allArtists,
@@ -141,7 +143,12 @@ const MusicMain = ({
         )}
         {currentSection === "playlists" && (
           <Playlists
-            playlists={playlists}
+            allSongs={allSongs}
+            onSubmit={toggleModal}
+            playlists={
+              allPlaylists.filter((playlist) => playlist.shopId === shopId) ||
+              []
+            }
             setOpen={() => {
               setOpen(true);
             }}
@@ -203,14 +210,14 @@ const MusicMain = ({
         {currentSection === "playlists" && (
           <AddPlaylist
             shopId={shopId}
-            onSubmit={toggleModal}
             allSongs={allSongs}
-            shopPlaylists={playlists.filter(
-              (playlist) =>
-                !playlists.find(
-                  (shopPlaylist) => shopPlaylist.id === playlist.id
-                )
-            )}
+            onSubmit={toggleModal}
+            allPlaylists={
+              // filter playlists that are not already in the shop
+              allPlaylists.filter(
+                (playlist) => !playlist.shopId || playlist.shopId !== shopId
+              )
+            }
           />
         )}
       </Modal>

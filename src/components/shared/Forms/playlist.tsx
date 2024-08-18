@@ -34,6 +34,7 @@ function PlaylistForm({
   const [selectedSongs, setSelectedSongs] = useState<string[]>(
     playlist ? playlist.songsIds : []
   );
+  console.log({ playlist });
   return (
     <form
       onSubmit={handleSubmit(async (data) => {

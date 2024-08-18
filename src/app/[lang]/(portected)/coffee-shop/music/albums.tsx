@@ -19,7 +19,7 @@ type Props = {
   shopId: string;
 };
 
-const Albums = ({ albums, setOpen, shopId }: Props) => {
+const Albums = ({ albums, setOpen }: Props) => {
   return (
     <Table
       add={setOpen}

@@ -32,7 +32,7 @@ const AddArtist = ({ allArtists, onSubmit, shopId }: Props) => {
   return (
     <div className="bg-white rounded-lg">
       <h2 className="text-xl font-semibold mb-4">Select Artists</h2>
-      <div className="space-y-5">
+      <div className="space-y-5 h-80 mb-[80px] overflow-y-auto">
         {allArtists.map((artist) => (
           <div
             key={artist.id}

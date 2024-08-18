@@ -33,7 +33,7 @@ const AddAlbum = ({ allAlbums, shopId, onSubmit }: Props) => {
   return (
     <div className="bg-white rounded-lg">
       <h2 className="text-xl font-semibold mb-4">Select Albums</h2>
-      <div className="space-y-5">
+      <div className="space-y-5 h-80 mb-[70px] overflow-y-auto">
         {allAlbums.map((album) => (
           <div
             key={album.id}
@@ -62,7 +62,7 @@ const AddAlbum = ({ allAlbums, shopId, onSubmit }: Props) => {
             </label>
           </div>
         ))}
-      </div>{" "}
+      </div>
       <div className="flex-shrink-0 absolute bottom-0 w-[95%] bg-white p-4 shadow-lg">
         <button
           disabled={selectedAlbumIds.length === 0 || isSubmitting}
