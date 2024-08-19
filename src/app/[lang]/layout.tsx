@@ -9,6 +9,7 @@ import SessionProvider from "@/components/auth/Provider";
 
 import prisma from "@/lib/prisma";
 import { getUser } from "@/utils/get-user";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,6 +44,7 @@ export default async function RootLayout({
   return (
     <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"}>
       <body className={inter.className}>
+        <Toaster />
         <SessionProvider
           userRole={user?.role}
           sessionUser={sessionUser}

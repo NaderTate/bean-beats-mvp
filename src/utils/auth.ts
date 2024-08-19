@@ -3,7 +3,8 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import Google from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   adapter: PrismaAdapter(prisma),
@@ -39,6 +40,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       //   return user;
       // },
       authorize: async (credentials) => {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Please provide both email and password.");
+        }
         let user = null;
 
         // logic to verify if the user exists
@@ -50,7 +54,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           // meaning this is also the place you could do registration
           throw new Error("User not found.");
         }
+        // Check if the provided password matches the hashed password in the database
+        const isPasswordValid = await bcrypt.compare(
+          credentials.password as string,
+          user.password as string
+        );
 
+        if (!isPasswordValid) {
+          throw new Error("Invalid email or password.");
+        }
         // return user object with their profile data
         return user;
       },

@@ -3,16 +3,21 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
+import Spinner from "../shared/spinner";
+import Link from "next/link";
 
 export default function SignWith() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null); // Add error state
+  const [isLoading, setIsLoading] = useState(false);
 
   const sharedClasses =
     " p-4 text-2xl lg:text-4xl rounded-full border-2 transition ";
   const handleSignIn = async () => {
     try {
+      setError(null);
+      setIsLoading(true);
       const result = await signIn("credentials", {
         email,
         password,
@@ -28,6 +33,7 @@ export default function SignWith() {
     } catch (err) {
       setError("An unexpected error occurred");
     }
+    setIsLoading(false);
   };
   return (
     <div className="mt-5">
@@ -83,9 +89,12 @@ export default function SignWith() {
               <span className=" f text-gray-600"> Remember me </span>
             </div>
           </label>
-          <button className="text-orange-900 hover:text-blue-800">
+          <Link
+            href="/forgot-password"
+            className="text-orange-900 hover:text-blue-800"
+          >
             Forgot Password
-          </button>
+          </Link>
         </div>
         {error && <p className="text-red-600">{error}</p>}{" "}
       </section>
@@ -94,7 +103,7 @@ export default function SignWith() {
           onClick={handleSignIn}
           className=" bg-slate-500 text-white rounded-md px-5 py-3"
         >
-          Sign In
+          {isLoading ? <Spinner /> : "Sign in"}
         </button>
       </p>
       <div className="flex gap-4 items-center justify-center p-6 transition">
