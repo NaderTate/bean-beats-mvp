@@ -19,23 +19,39 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null;
-        }
-        const user = await prisma.user.findUnique({
+      // async authorize(credentials) {
+      //   if (!credentials?.email || !credentials?.password) {
+      //     return null;
+      //   }
+      //   const user = await prisma.user.findUnique({
+      //     where: { email: credentials.email as string },
+      //   });
+      //   if (!user || !user.password) {
+      //     return null;
+      //   }
+      //   const isPasswordValid = await bcrypt.compare(
+      //     credentials.password as string,
+      //     user.password
+      //   );
+      //   if (!isPasswordValid) {
+      //     return null;
+      //   }
+      //   return user;
+      // },
+      authorize: async (credentials) => {
+        let user = null;
+
+        // logic to verify if the user exists
+        user = await prisma.user.findUnique({
           where: { email: credentials.email as string },
         });
-        if (!user || !user.password) {
-          return null;
+        if (!user) {
+          // No user found, so this is their first attempt to login
+          // meaning this is also the place you could do registration
+          throw new Error("User not found.");
         }
-        const isPasswordValid = await bcrypt.compare(
-          credentials.password as string,
-          user.password
-        );
-        if (!isPasswordValid) {
-          return null;
-        }
+
+        // return user object with their profile data
         return user;
       },
     }),

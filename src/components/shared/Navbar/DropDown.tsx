@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { GoChevronDown } from "react-icons/go";
 import { signOut } from "next-auth/react";
+import useGetLang from "@/hooks/use-get-lang";
 
 export default function DropDown({
   user,
@@ -21,7 +22,7 @@ export default function DropDown({
       setIsOpen(false);
     }
   };
-
+  const { lang } = useGetLang();
   document.addEventListener("click", handleClickOutside);
 
   return (
@@ -34,7 +35,9 @@ export default function DropDown({
         onClick={() => setIsOpen(!isOpen)}
       />
       <div
-        className={`absolute top-[130%] right-0 mt-2  rounded-md shadow-lg py-1 bg-white ring-black ring-opacity-5 ${
+        className={`absolute top-[130%] ${
+          lang === "ar" ? "left-0" : "right-0"
+        } mt-2  rounded-md shadow-lg py-1 bg-white ring-black ring-opacity-5 ${
           isOpen ? "block" : "hidden"
         }`}
         role="menu"

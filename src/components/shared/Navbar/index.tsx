@@ -71,7 +71,7 @@ const Navbar = () => {
           className="flex items-end justify-center "
         >
           <Image
-            className="hidden  sm:block w-14"
+            className="hidden sm:block w-14"
             src="/images/only-logo.png"
             width={150}
             height={150}

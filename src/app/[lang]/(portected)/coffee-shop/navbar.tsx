@@ -78,7 +78,7 @@ const Navbar = () => {
             >
               {session?.user ? (
                 <>
-                  <div className="group hidden sm:flex shrink-0 items-center rounded-lg transition ">
+                  <div className="group hidden sm:flex shrink-0 items-center rounded-lg transition">
                     <span className="sr-only">Menu</span>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
