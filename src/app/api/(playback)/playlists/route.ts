@@ -9,9 +9,9 @@ export async function POST(request: Request): Promise<NextResponse> {
   const {
     name,
     shopId,
-    sognsIds,
+    songsIds,
     type,
-  }: { name: string; shopId: string; sognsIds: string[]; type: PlaylistType } =
+  }: { name: string; shopId: string; songsIds: string[]; type: PlaylistType } =
     body;
 
   // if type of type is not PlaylistType, return error
@@ -39,7 +39,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         name,
         shopId,
         songs: {
-          connect: sognsIds.map((id) => ({ id })),
+          connect: songsIds.map((id) => ({ id })),
         },
       },
     });

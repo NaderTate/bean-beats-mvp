@@ -2,16 +2,18 @@ import createMiddleware from "next-intl/middleware";
 import { NextResponse } from "next/server";
 
 const locales = ["en", "ar"];
-const defaultLocale = "ar";
+const defaultLocale = "en";
 
 export default function middleware(request: any) {
   const pathname = request.nextUrl.pathname;
 
   // Exclude specific paths from locale redirection
   const isPublicFile =
-    pathname.startsWith("/public/") ||
     pathname.startsWith("/images/") ||
-    pathname.startsWith("/uploads/");
+    pathname.startsWith("/uploads/") ||
+    pathname.startsWith("/favicon.ico") ||
+    pathname.startsWith("/_next/") || // Next.js static files (_next)
+    /\.(.*)$/.test(pathname); // Exclude all files with extensions like .png, .jpg, .css, etc.
 
   // Check if the pathname is missing a locale
   const pathnameIsMissingLocale =
