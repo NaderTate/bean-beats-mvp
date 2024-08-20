@@ -3,6 +3,7 @@ import React from "react";
 import { AiOutlineStock } from "react-icons/ai";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
+import useGetLang from "@/hooks/use-get-lang";
 
 type Item = {
   title: string;
@@ -21,7 +22,7 @@ export default function NCard({
   cb?: () => void;
 }) {
   const t = useTranslations();
-
+  const { lang } = useGetLang();
   return (
     <article
       onClick={() => cb?.()}
@@ -61,7 +62,7 @@ export default function NCard({
           className="flex justify-end "
         >
           <span className="-mb-[2px] -me-[2px] inline-flex items-center gap-1 rounded-ee-xl rounded-ss-xl bg-orange-800 px-3 py-1.5 text-white text-sm">
-            {selected && "selected"}
+            {selected && t("selected")}
           </span>
         </motion.div>
       </AnimatePresence>

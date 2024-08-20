@@ -12,11 +12,11 @@ const Main = ({ transaction }: Props) => {
   return (
     <div className="w-full p-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <Input value={transaction.tableNumber} disabled label="Table No." />
+        <Input value={transaction.tableNumber} disabled label="Table No" />
         <Input
           value={transaction.songsIds.length}
           disabled
-          label="No. of songs"
+          label="No of songs"
         />
         <Input
           value={new Date(transaction.createdAt).toLocaleString("en-US", {

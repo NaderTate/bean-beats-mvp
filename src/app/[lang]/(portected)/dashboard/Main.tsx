@@ -6,6 +6,7 @@ import LineChart from "@/components/shared/Charts/line-chart";
 
 import { FaShop } from "react-icons/fa6";
 import { FaMoneyBillWave, FaMusic } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 
 const list = [
   {
@@ -27,40 +28,6 @@ const list = [
   },
 ];
 
-const data = {
-  labels: [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ],
-  datasets: [
-    {
-      label: "Shops",
-      data: [0, 3, 8, 8, 12, 13, 25, 30, 35, 40, 45, 50],
-      fill: false,
-      backgroundColor: "#10B981",
-      borderColor: "#10B981",
-      cubicInterpolationMode: "monotone",
-    },
-    {
-      label: "Revenue",
-      data: [5, 122, 100, 90, 50, 230, 200, 300, 250, 400, 350, 500],
-      fill: false,
-      backgroundColor: "#3B82F6",
-      borderColor: "#3B82F6",
-      cubicInterpolationMode: "monotone",
-    },
-  ],
-};
 const songs = [
   {
     title: "Sky fall",
@@ -113,6 +80,7 @@ const songs = [
 ];
 
 const Main = () => {
+  const t = useTranslations();
   return (
     <main className="flex flex-col flex-1 w-full px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
       <section className=" grid col-span-1 gap-4  lg:grid-cols-3">
@@ -122,7 +90,44 @@ const Main = () => {
       </section>
       <section className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-8 pt-10 ">
         <div className="col-span-1 md:col-span-2 lg:col-span-5 border border-gray-200 rounded-xl shadow-md bg-white">
-          <LineChart data={data} />
+          <LineChart
+            data={{
+              labels: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+              ],
+              datasets: [
+                {
+                  label: t("Shops"),
+                  data: [0, 3, 8, 8, 12, 13, 25, 30, 35, 40, 45, 50],
+                  fill: false,
+                  backgroundColor: "#10B981",
+                  borderColor: "#10B981",
+                  cubicInterpolationMode: "monotone",
+                },
+                {
+                  label: t("Revenue"),
+                  data: [
+                    5, 122, 100, 90, 50, 230, 200, 300, 250, 400, 350, 500,
+                  ],
+                  fill: false,
+                  backgroundColor: "#3B82F6",
+                  borderColor: "#3B82F6",
+                  cubicInterpolationMode: "monotone",
+                },
+              ],
+            }}
+          />
         </div>
         <SongsList songs={songs} />
       </section>

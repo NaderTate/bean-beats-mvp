@@ -15,6 +15,7 @@ import {
 import { HiOutlineLogout } from "react-icons/hi";
 
 import useGetLang from "@/hooks/use-get-lang";
+import { useTranslations } from "next-intl";
 
 const links = [
   {
@@ -46,7 +47,7 @@ export default function Dashboard() {
 
   const [isOpened, setIsOpened] = useState(true);
   const [isPending, startTransition] = useTransition();
-
+  const t = useTranslations();
   return (
     <>
       <div
@@ -73,7 +74,7 @@ export default function Dashboard() {
                     >
                       <link.icon className="h-5 w-5 opacity-75" />
                       <span className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white -translate-x-20 opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
-                        {link.title}
+                        {t(link.title)}
                       </span>
                     </Link>
                   </li>
@@ -107,7 +108,7 @@ export default function Dashboard() {
                   >
                     <HiOutlineLogout className="h-5 w-5 opacity-75 text-primary" />
                     <span className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white -translate-x-20 opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
-                      Logout
+                      {t("Logout")}
                     </span>
                   </button>
                 </li>

@@ -9,6 +9,7 @@ import { MdEdit } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoMdAddCircle } from "react-icons/io";
+import { useTranslations } from "next-intl";
 
 interface TableProps {
   fields: any;
@@ -62,6 +63,7 @@ export default function Table({
     setOpenEdit(null);
   };
 
+  const t = useTranslations();
   return (
     <div className="mt-5 rounded-lg">
       <div className="flex justify-between items-center gap-2 py-4">
@@ -70,7 +72,7 @@ export default function Table({
             type="search"
             name="search"
             value={searchTerm}
-            placeholder="Search"
+            placeholder={t("Search") + "..."}
             className="focus:outline-none flex-1 h-full"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -84,7 +86,7 @@ export default function Table({
             className=" bg-primary hover:bg-primary/80 transition text-white rounded-lg py-2 px-4  md:px-10 md:py-4 flex items-center gap-2"
           >
             <IoMdAddCircle className="text-xl" size={25} />
-            Add
+            {t("Add")}
           </button>
         )}
       </div>
@@ -98,12 +100,12 @@ export default function Table({
                   key={key + "tabel-fields"}
                   className="whitespace-nowrap px-4 py-2 font-medium text-gray-900"
                 >
-                  {fields?.[key]}
+                  {t(fields?.[key])}
                 </td>
               ))}
               {(viewLink || editForm || deleteFn || viewModal) && (
                 <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                  Actions
+                  {t("Actions")}
                 </td>
               )}
             </tr>

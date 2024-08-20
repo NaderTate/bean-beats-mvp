@@ -27,7 +27,7 @@ const PaymentsTable = ({ transactions, viewLink }: Props) => {
           Date: new Date(transaction.createdAt).toLocaleDateString(),
         }))}
         fields={{
-          tableNumber: "Table No.",
+          tableNumber: "Table No",
           Date: "Date",
           amount: "Total Cost",
         }}

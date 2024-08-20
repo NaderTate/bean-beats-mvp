@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+
 import { IconType } from "react-icons";
 
 type Props = {
@@ -5,6 +7,8 @@ type Props = {
 };
 
 const Analytics = ({ data }: Props) => {
+  const t = useTranslations();
+
   return (
     <div className="ml-10 grid grid-cols-1 md:grid-cols-3 justify-between gap-20">
       {data.map((item, index) => (
@@ -15,7 +19,7 @@ const Analytics = ({ data }: Props) => {
           <item.icon className={item.iconColor} size={35} />
           <div>
             <p className="text-lg font-semibold">{item.value}</p>
-            <p className="text-sm text-gray-500">{item.label}</p>
+            <p className="text-sm text-gray-500">{t(item.label)}</p>
           </div>
         </div>
       ))}

@@ -3,8 +3,11 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import SignInWith from "@/components/auth/sign-in";
+import { useTranslations } from "next-intl";
 
 export default function Main() {
+  const t = useTranslations();
+
   return (
     <section className=" bg-orange-900/10 dark:bg-gray-900 lg:h-screen overflow-hidden">
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
@@ -29,11 +32,12 @@ export default function Main() {
           </Link>
           <div className="hidden lg:relative lg:block lg:p-12 bg-slate-100/25 backdrop-blur-sm">
             <h2 className="mt-6 text-2xl font-bold text-orange-950 dark:text-white sm:text-3xl md:text-4xl">
-              Music and Coffee
+              {t("Music and Coffee")}
             </h2>
             <p className="mt-4 leading-relaxed text-orange-950/80 dark:text-white/90 text-lg">
-              Bean Beats is a platform that combines the love of music and
-              coffee.
+              {t(
+                "Bean Beats is a platform that combines the love of music and coffee"
+              )}
             </p>
           </div>
         </section>
@@ -53,22 +57,22 @@ export default function Main() {
                 />
               </Link>
               <h2 className="mt-6 text-2xl font-bold text-orange-950 dark:text-white sm:text-3xl md:text-4xl">
-                Music and Coffee
+                {t("Music and Coffee")}
               </h2>
               <p className="mt-4 leading-relaxed text-orange-950/80 dark:text-white/90 text-lg">
-                {" "}
-                Bean Beats is a platform that combines the love of music and
-                coffee.
+                {t(
+                  "Bean Beats is a platform that combines the love of music and coffee"
+                )}
               </p>
             </div>
             <div className="relative flex flex-col-reverse sm:flex-col gap-5 mt-10">
               <div className="absolute w-[140%] h-[140%] bg-slate-100/10 -top-10 -right-10 -z-[1] hidden sm:block"></div>
               <div className="flex flex-col gap-4">
                 <h2 className="text-xl font-bold sm:text-2xl md:text-3xl">
-                  Welcome back to Bean Beats
+                  {t("Welcome back to Bean Beats")}
                 </h2>
                 <p className=" leading-relaxed text-gray-500 dark:text-gray-400 text-sm sm:text-lg">
-                  Elevate your Coffee Experience with Bean Sounds.
+                  {t("Elevate your Coffee Experience with Bean Sounds")}
                 </p>
               </div>
               <SignInWith />

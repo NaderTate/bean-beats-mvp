@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { ChangeEvent, forwardRef, HTMLInputTypeAttribute } from "react";
 
 type Props = {
@@ -14,19 +15,22 @@ type Props = {
   errMessage?: string;
 };
 
-const Input = forwardRef<HTMLInputElement, Props>(({ label, id, errMessage, ...props }, ref) => {
-  return (
-    <div>
-      {label && <label htmlFor={id}>{label}</label>}
-      <input
-        className="w-full rounded-lg border-gray-200 p-3 text-sm focus:outline-none focus:border-primary/50 border  dark:border-gray-600 dark:placeholder-gray-400 dark:bg-gray-700 dark:text-gray-400"
-        ref={ref}
-        {...props}
-      />
-      {errMessage && <span className="text-red-500">{errMessage}</span>}
-    </div>
-  );
-});
+const Input = forwardRef<HTMLInputElement, Props>(
+  ({ label, id, errMessage, ...props }, ref) => {
+    const t = useTranslations();
+    return (
+      <div>
+        {label && <label htmlFor={id}>{t(label)}</label>}
+        <input
+          className="w-full rounded-lg border-gray-200 p-3 text-sm focus:outline-none focus:border-primary/50 border  dark:border-gray-600 dark:placeholder-gray-400 dark:bg-gray-700 dark:text-gray-400"
+          ref={ref}
+          {...props}
+        />
+        {errMessage && <span className="text-red-500">{errMessage}</span>}
+      </div>
+    );
+  }
+);
 
 Input.displayName = "Input";
 
