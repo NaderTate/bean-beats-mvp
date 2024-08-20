@@ -4,6 +4,7 @@ import Link from "next/link";
 import { GoChevronDown } from "react-icons/go";
 import { signOut } from "next-auth/react";
 import useGetLang from "@/hooks/use-get-lang";
+import { useTranslations } from "next-intl";
 
 export default function DropDown({
   user,
@@ -25,6 +26,7 @@ export default function DropDown({
   const { lang } = useGetLang();
   document.addEventListener("click", handleClickOutside);
 
+  const t = useTranslations();
   return (
     <div className="relative" id="dropDown">
       <GoChevronDown
@@ -53,8 +55,14 @@ export default function DropDown({
               <span> {user?.email}</span>
             </p>
           </li>
-
-          <li>
+          <button
+            type="button"
+            className="w-full rounded-lg px-4 py-2 text-sm font-medium text-gray-500 [text-align:_inherit] hover:bg-gray-100 hover:text-gray-700"
+            onClick={() => signOut()}
+          >
+            {t("Logout")}
+          </button>
+          {/* <li>
             <details className="group [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
                 <span className="text-sm font-medium"> Account </span>
@@ -86,17 +94,11 @@ export default function DropDown({
                   </li>
                 )}
                 <li>
-                  <button
-                    type="button"
-                    className="w-full rounded-lg px-4 py-2 text-sm font-medium text-gray-500 [text-align:_inherit] hover:bg-gray-100 hover:text-gray-700"
-                    onClick={() => signOut()}
-                  >
-                    Logout
-                  </button>
+                  
                 </li>
               </ul>
             </details>
-          </li>
+          </li> */}
         </ul>
       </div>
     </div>

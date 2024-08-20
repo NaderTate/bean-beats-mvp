@@ -36,7 +36,7 @@ const Playlists = ({ playlists, setOpen, allSongs, onSubmit }: Props) => {
       fields={{
         number: "#",
         name: "Name",
-        songs: "No. of songs",
+        songs: "No of songs",
       }}
     />
   );

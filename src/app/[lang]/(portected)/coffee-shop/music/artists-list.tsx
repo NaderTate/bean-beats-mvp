@@ -26,7 +26,7 @@ const ArtistsList = ({ artists, setOpen }: Props) => {
       fields={{
         number: "#",
         name: "Artist",
-        songsCount: "No. of songs",
+        songsCount: "No of songs",
         image: "Image",
       }}
     />

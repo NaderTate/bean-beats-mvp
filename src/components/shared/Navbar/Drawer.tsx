@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { BiMenuAltRight } from "react-icons/bi";
+import { useTranslations } from "next-intl";
 
 export default function Drawer({
   user,
@@ -33,6 +34,7 @@ export default function Drawer({
     };
   });
 
+  const t = useTranslations();
   return (
     <div id="drawer" className="sm:hidden w-10">
       <BiMenuAltRight
@@ -91,7 +93,7 @@ export default function Drawer({
                         }
                         className="w-full rounded-lg px-4 py-2 text-sm font-medium text-gray-500 [text-align:_inherit] hover:bg-gray-100 hover:text-gray-700"
                       >
-                        Logout
+                        {t("Logout")}
                       </button>
                     </li>
                   </ul>

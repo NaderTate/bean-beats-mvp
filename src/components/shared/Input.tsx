@@ -22,9 +22,10 @@ const Input = forwardRef<HTMLInputElement, Props>(
       <div>
         {label && <label htmlFor={id}>{t(label)}</label>}
         <input
-          className="w-full rounded-lg border-gray-200 p-3 text-sm focus:outline-none focus:border-primary/50 border  dark:border-gray-600 dark:placeholder-gray-400 dark:bg-gray-700 dark:text-gray-400"
           ref={ref}
           {...props}
+          placeholder={t(props.placeholder)}
+          className="w-full rounded-lg border-gray-200 p-3 text-sm focus:outline-none focus:border-primary/50 border  dark:border-gray-600 dark:placeholder-gray-400 dark:bg-gray-700 dark:text-gray-400"
         />
         {errMessage && <span className="text-red-500">{errMessage}</span>}
       </div>

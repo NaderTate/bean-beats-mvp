@@ -33,7 +33,7 @@ const Albums = ({ albums, setOpen }: Props) => {
         number: "#",
         name: "Name",
         image: "Image",
-        songsCount: "No. of songs",
+        songsCount: "No of songs",
       }}
     />
   );

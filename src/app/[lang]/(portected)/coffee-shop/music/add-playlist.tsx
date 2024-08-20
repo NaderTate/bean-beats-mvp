@@ -8,6 +8,7 @@ import { addPlaylistsToShop } from "@/actions/playlists";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import Spinner from "@/components/shared/spinner";
+import { useTranslations } from "next-intl";
 
 type Props = {
   onSubmit: () => void;
@@ -53,15 +54,15 @@ const AddPlaylist = ({ onSubmit, allSongs, allPlaylists, shopId }: Props) => {
     toast.success("Artist added successfully");
     onSubmit();
   };
-
+  const t = useTranslations();
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Select Albums</h2>
+      <h2 className="text-xl font-semibold mb-4">{t("Select Playlists")}</h2>
       <div className="space-y-5 h-80 mb-[80px] overflow-y-auto">
         {allPlaylists.map((playlist) => (
           <div
             key={playlist.id}
-            className="cursor-pointer flex items-center space-x-3"
+            className="cursor-pointer flex items-center gap-x-3"
           >
             <input
               type="checkbox"
@@ -88,6 +89,9 @@ const AddPlaylist = ({ onSubmit, allSongs, allPlaylists, shopId }: Props) => {
           </div>
         ))}
       </div>
+      <button onClick={toggleModal} className="btn-primary">
+        Create Playlist
+      </button>
       <div className="flex-shrink-0 absolute bottom-0 w-[95%] bg-white p-4 shadow-lg">
         <button
           disabled={selectedPlaylists.length === 0 || isSubmitting}
@@ -98,12 +102,9 @@ const AddPlaylist = ({ onSubmit, allSongs, allPlaylists, shopId }: Props) => {
               : "bg-primary hover:bg-primary/80"
           } transition px-5 py-3 font-medium text-white sm:w-auto`}
         >
-          {isSubmitting ? <Spinner /> : "Submit"}
+          {isSubmitting ? <Spinner /> : t("Submit")}
         </button>
       </div>
-      <button onClick={toggleModal} className="btn-primary">
-        Create Playlist
-      </button>
       <Modal open={open} setOpen={toggleModal} title={"Create Playlist"}>
         <PlaylistForm onSubmit={onSubmit} allSongs={allSongs} />
       </Modal>

@@ -7,6 +7,7 @@ import Spinner from "@/components/shared/spinner";
 
 import { addSongsToShop } from "@/actions/songs";
 import { convertSecondsToTime } from "@/utils/conver-seconds-to-time";
+import { useTranslations } from "next-intl";
 
 type Props = { allSongs: Song[]; onSubmit: () => void; shopId: string };
 
@@ -43,9 +44,11 @@ const AddSong = ({ allSongs, onSubmit, shopId }: Props) => {
     onSubmit();
   };
 
+  const t = useTranslations();
+
   return (
     <div className="bg-white rounded-lg flex flex-col">
-      <h2 className="text-xl font-semibold mb-4">Select Songs</h2>
+      <h2 className="text-xl font-semibold mb-4">{t("Select Songs")}</h2>
       <div className="mb-16 space-y-5">
         {allSongs.map((song) => (
           <div
@@ -110,7 +113,7 @@ const AddSong = ({ allSongs, onSubmit, shopId }: Props) => {
               : "hover:bg-primary-500 bg-primary "
           } transition`}
         >
-          {isSubmitting ? <Spinner /> : "Submit"}
+          {isSubmitting ? <Spinner /> : t("Submit")}
         </button>
       </div>
     </div>

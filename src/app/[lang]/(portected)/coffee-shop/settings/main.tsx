@@ -4,6 +4,7 @@ import { useState } from "react";
 import { updateUserData } from "@/actions/users";
 
 import Input from "@/components/shared/Input";
+import { useTranslations } from "next-intl";
 
 type Props = {
   shopAdminData: {
@@ -27,9 +28,11 @@ const SettingsMain = ({ shopAdminData }: Props) => {
     setIsLoading(false);
   };
 
+  const t = useTranslations();
+
   return (
     <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5">
         <Input
           id="name"
           label="Name"
@@ -59,7 +62,7 @@ const SettingsMain = ({ shopAdminData }: Props) => {
           onClick={handleSave}
           className="bg-primary-500 text-white rounded-lg px-28 py-3 mt-10"
         >
-          {isLoading ? "Saving..." : "Save"}
+          {isLoading ? t("Saving") + "..." : t("Save")}
         </button>
       </div>
     </div>

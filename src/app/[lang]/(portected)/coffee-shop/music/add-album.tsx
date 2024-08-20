@@ -5,6 +5,7 @@ import { Album } from "@prisma/client";
 import Spinner from "@/components/shared/spinner";
 import { addAlbumsToShop } from "@/actions/albums";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 type Props = { allAlbums: Album[]; onSubmit: () => void; shopId: string };
 
@@ -30,9 +31,11 @@ const AddAlbum = ({ allAlbums, shopId, onSubmit }: Props) => {
     onSubmit();
   };
 
+  const t = useTranslations();
+
   return (
     <div className="bg-white rounded-lg">
-      <h2 className="text-xl font-semibold mb-4">Select Albums</h2>
+      <h2 className="text-xl font-semibold mb-4">{t("Select Albums")}</h2>
       <div className="space-y-5 h-80 mb-[70px] overflow-y-auto">
         {allAlbums.map((album) => (
           <div
@@ -73,7 +76,7 @@ const AddAlbum = ({ allAlbums, shopId, onSubmit }: Props) => {
               : "bg-primary hover:bg-primary/80"
           } transition px-5 py-3 font-medium text-white sm:w-auto`}
         >
-          {isSubmitting ? <Spinner /> : "Submit"}
+          {isSubmitting ? <Spinner /> : t("Submit")}
         </button>
       </div>
     </div>

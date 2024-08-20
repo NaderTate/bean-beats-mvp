@@ -8,6 +8,7 @@ import { FcNext } from "react-icons/fc";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { FaCreditCard, FaGear, FaMusic } from "react-icons/fa6";
 import useGetLang from "@/hooks/use-get-lang";
+import { useTranslations } from "next-intl";
 
 const links = [
   {
@@ -40,6 +41,7 @@ export default function Sidebar() {
 
   const [isPending, startTransition] = useTransition();
 
+  const t = useTranslations();
   return (
     <>
       <div
@@ -59,14 +61,14 @@ export default function Sidebar() {
                 {links.map((link) => (
                   <li key={link.href + "dashboardLink"}>
                     <Link
-                      href={`/coffee-shop/${link.href}`}
+                      href={`/${lang}/coffee-shop/${link.href}`}
                       className={`group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700 ${
                         pathname.includes(link.href) && "text-primary"
                       }`}
                     >
                       <link.icon className="h-5 w-5 opacity-75" />
                       <span className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white -translate-x-20 opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
-                        {link.title}
+                        {t(link.title)}
                       </span>
                     </Link>
                   </li>

@@ -7,13 +7,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Albums from "./albums";
 import AddSong from "./add-song";
 import AddAlbum from "./add-album";
+import Playlists from "./playlists";
 import SongsList from "./songs-list";
 import AddArtist from "./add-artist";
 import ArtistsList from "./artists-list";
-import Modal from "@/components/shared/Modal";
-import useGetLang from "@/hooks/use-get-lang";
-import Playlists from "./playlists";
 import AddPlaylist from "./add-playlist";
+import Modal from "@/components/shared/Modal";
+
+import useGetLang from "@/hooks/use-get-lang";
+import { useTranslations } from "next-intl";
 
 type Props = {
   songs: {
@@ -73,12 +75,14 @@ const MusicMain = ({
   allAlbums,
   allArtists,
 }: Props) => {
+  const t = useTranslations();
+  const { lang } = useGetLang();
   const { refresh, push } = useRouter();
+  const searchParams = useSearchParams();
+
+  const section = searchParams.get("section");
 
   const [open, setOpen] = useState(false);
-  const { lang } = useGetLang();
-  const searchParams = useSearchParams();
-  const section = searchParams.get("section");
   const [currentSection, setCurrentSection] = useState(section || "artists");
 
   const toggleModal = () => {
@@ -89,10 +93,10 @@ const MusicMain = ({
   };
 
   const actionButtons: Array<{ label: string }> = [
-    { label: "artists" },
-    { label: "albums" },
-    { label: "songs" },
-    { label: "playlists" },
+    { label: "Artists" },
+    { label: "Albums" },
+    { label: "Songs" },
+    { label: "Playlists" },
   ];
 
   return (
@@ -111,12 +115,12 @@ const MusicMain = ({
                 : "bg-gray-100 text-gray-900 border-gray-300 border"
             } px-9 py-3 rounded-md`}
           >
-            {button.label}
+            {t(button.label)}
           </button>
         ))}
       </div>
       <div>
-        {currentSection === "artists" && (
+        {currentSection === "Artists" && (
           <ArtistsList
             artists={artists}
             setOpen={() => {
@@ -124,7 +128,7 @@ const MusicMain = ({
             }}
           />
         )}
-        {currentSection === "albums" && (
+        {currentSection === "Albums" && (
           <Albums
             shopId={shopId}
             albums={albums}
@@ -133,7 +137,7 @@ const MusicMain = ({
             }}
           />
         )}
-        {currentSection === "songs" && (
+        {currentSection === "Songs" && (
           <SongsList
             songs={songs}
             setOpen={() => {
@@ -141,7 +145,7 @@ const MusicMain = ({
             }}
           />
         )}
-        {currentSection === "playlists" && (
+        {currentSection === "Playlists" && (
           <Playlists
             allSongs={allSongs}
             onSubmit={toggleModal}
@@ -159,16 +163,16 @@ const MusicMain = ({
         open={open}
         setOpen={toggleModal}
         title={
-          currentSection === "albums"
-            ? "Add Album"
-            : currentSection === "songs"
-            ? "Add Song"
-            : currentSection === "artists"
-            ? "Add Artist"
-            : "Add Playlist"
+          currentSection === "Albums"
+            ? t("Add Album")
+            : currentSection === "Songs"
+            ? t("Add Song")
+            : currentSection === "Artists"
+            ? t("Add Artist")
+            : t("Add Playlist")
         }
       >
-        {currentSection === "albums" && (
+        {currentSection === "Albums" && (
           <AddAlbum
             shopId={shopId}
             allAlbums={
@@ -181,7 +185,7 @@ const MusicMain = ({
             onSubmit={toggleModal}
           />
         )}
-        {currentSection === "songs" && (
+        {currentSection === "Songs" && (
           <AddSong
             allSongs={
               // filter songs that are not already in the shop
@@ -194,7 +198,7 @@ const MusicMain = ({
             shopId={shopId}
           />
         )}
-        {currentSection === "artists" && (
+        {currentSection === "Artists" && (
           <AddArtist
             shopId={shopId}
             onSubmit={toggleModal}
@@ -207,7 +211,7 @@ const MusicMain = ({
             }
           />
         )}
-        {currentSection === "playlists" && (
+        {currentSection === "Playlists" && (
           <AddPlaylist
             shopId={shopId}
             allSongs={allSongs}

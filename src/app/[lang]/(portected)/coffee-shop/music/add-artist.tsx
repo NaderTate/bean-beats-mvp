@@ -4,6 +4,7 @@ import { useState } from "react";
 import Spinner from "@/components/shared/spinner";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 type Props = { allArtists: Artist[]; onSubmit: () => void; shopId: string };
 
@@ -29,14 +30,16 @@ const AddArtist = ({ allArtists, onSubmit, shopId }: Props) => {
     onSubmit();
   };
 
+  const t = useTranslations();
+
   return (
     <div className="bg-white rounded-lg">
-      <h2 className="text-xl font-semibold mb-4">Select Artists</h2>
+      <h2 className="text-xl font-semibold mb-4">{t("Select Artists")}</h2>
       <div className="space-y-5 h-80 mb-[80px] overflow-y-auto">
         {allArtists.map((artist) => (
           <div
             key={artist.id}
-            className="cursor-pointer flex items-center space-x-3"
+            className="cursor-pointer flex items-center gap-x-3"
           >
             <input
               type="checkbox"
@@ -70,7 +73,7 @@ const AddArtist = ({ allArtists, onSubmit, shopId }: Props) => {
               : "bg-primary hover:bg-primary"
           } transition px-5 py-3 font-medium text-white sm:w-auto`}
         >
-          {isSubmitting ? <Spinner /> : "Submit"}
+          {isSubmitting ? <Spinner /> : t("Submit")}
         </button>
       </div>
     </div>

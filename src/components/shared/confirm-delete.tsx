@@ -4,6 +4,7 @@ import Modal from "./Modal";
 import Spinner from "./spinner";
 
 import { MdDeleteForever } from "react-icons/md";
+import { useTranslations } from "next-intl";
 
 interface ConfirmDeleteProps {
   deleteFn: () => Promise<void>;
@@ -21,6 +22,8 @@ const ConfirmDelete = ({ deleteFn }: ConfirmDeleteProps) => {
     setOpen(false);
   };
 
+  const t = useTranslations();
+
   return (
     <div>
       <MdDeleteForever
@@ -31,20 +34,20 @@ const ConfirmDelete = ({ deleteFn }: ConfirmDeleteProps) => {
       <Modal
         open={open}
         setOpen={toggleModal}
-        title={"Are you sure you want to delete this item?"}
+        title={t("Are you sure you want to delete this item?")}
       >
         <div className="flex justify-between">
           <button
             onClick={handleDelete}
             className="inline-block rounded-lg px-5 py-3 font-medium text-white bg-primary hover:bg-primary-500 transition"
           >
-            {isLoading ? <Spinner /> : "Delete"}
+            {isLoading ? <Spinner /> : t("Delete")}
           </button>
           <button
             onClick={toggleModal}
             className="bg-gray-300 text-gray-700 px-5 py-3 rounded-lg"
           >
-            Cancel
+            {t("Cancel")}
           </button>
         </div>
       </Modal>

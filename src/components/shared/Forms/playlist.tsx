@@ -34,7 +34,7 @@ function PlaylistForm({
   const [selectedSongs, setSelectedSongs] = useState<string[]>(
     playlist ? playlist.songsIds : []
   );
-  console.log({ playlist });
+
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
@@ -61,11 +61,11 @@ function PlaylistForm({
           Name
         </label>
         <input
-          className="w-full rounded-lg border-gray-200 p-3 text-sm focus:outline-none focus:border-primary/50 border  dark:border-gray-600 dark:placeholder-gray-400 dark:bg-gray-700 dark:text-gray-400"
-          placeholder="Name"
-          type="text"
           id="name"
+          type="text"
+          placeholder="Name"
           {...register("name")}
+          className="w-full rounded-lg border-gray-200 p-3 text-sm focus:outline-none focus:border-primary/50 border  dark:border-gray-600 dark:placeholder-gray-400 dark:bg-gray-700 dark:text-gray-400"
         />
       </div>
       <SelectSongs
