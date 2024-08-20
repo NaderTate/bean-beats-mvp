@@ -11,6 +11,7 @@ import { PayPalBtn } from "./paypal-btn";
 import { createTransaction } from "@/actions/transactions";
 import { useSongsCart } from "@/store/songs-cart";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 function getDayOfWeek() {
   const daysOfWeek = [
@@ -63,6 +64,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
     });
   }, []);
 
+  const t = useTranslations();
   if (!songs) {
     return (
       <div className="flex justify-center items-center">
@@ -78,7 +80,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
           <h1 className="text-2xl font-medium">No songs selected</h1>
           <Link href={`/shop/${shopId}/music`}>
             <button className="bg-primary text-white rounded-lg px-5 py-2 mt-5">
-              Browse Songs
+              {t("Browse Songs")}
             </button>
           </Link>
         </div>
@@ -108,22 +110,24 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
       ))}
       <div className="grid grid-cols-2 gap-5 mt-5 bg-slate-50 p-5 rounded-lg border">
         <div className="flex flex-col text-primary-500 font-semibold gap-4">
-          <span>Day: </span>
-          <span>Time: </span>
-          <span>Table: </span>
-          <span>Number of songs: </span>
+          <span>{t("Day")}: </span>
+          <span>{t("Time")}: </span>
+          <span>{t("Table")}: </span>
+          <span>{t("Number of songs")}: </span>
         </div>
         <div className="flex flex-col gap-4 text-gray-500 ">
-          <span>{getDayOfWeek()}</span>
+          <span>{t(getDayOfWeek())}</span>
           <span>{new Date().toLocaleTimeString()}</span>
           <span>20</span>
           <span>{songs.length}</span>
         </div>
         <span className="border-b-4 my-4 border-dashed col-span-2 "></span>
         <div>
-          <h3 className="text-primary font-semibold text-xl">summary</h3>
+          <h3 className="text-primary font-semibold text-xl">{t("summary")}</h3>
           <div className="flex justify-between pt-6">
-            <span className="text-primary-500 font-semibold">Total cost:</span>
+            <span className="text-primary-500 font-semibold">
+              {t("Total cost")}:
+            </span>
             <span>{totalAmount} SAR</span>
           </div>
         </div>

@@ -31,7 +31,7 @@ const ArtistPage = async ({ params: { id } }: ArtistPageProps) => {
         albums={artist.Album}
         songs={artist.Song.map((song, i) => ({
           song,
-          price: song.SongCoffeeShop[i].price,
+          price: song.SongCoffeeShop[i]?.price || "-",
         }))}
       />
     </>

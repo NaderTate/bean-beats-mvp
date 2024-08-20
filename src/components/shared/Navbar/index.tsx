@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState, useTransition } from "react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 import Drawer from "./Drawer";
@@ -13,10 +13,12 @@ import SignIn from "@/components/auth/sign-in";
 
 import { FiShoppingCart } from "react-icons/fi";
 import { useSongsCart } from "@/store/songs-cart";
+import useGetLang from "@/hooks/use-get-lang";
+import { useTranslations } from "next-intl";
 
 const Navbar = () => {
   const pathname = usePathname();
-  const shopId = pathname.split("/")[2];
+  const shopId = pathname.split("/")[3];
   const { data: session } = useSession();
 
   const [prevScrollPos, setPrevScrollPos] = useState(0);
@@ -52,14 +54,20 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [prevScrollPos, visible, isScrolled, handleScroll]);
 
+  const t = useTranslations();
+  const [isPending, startTransition] = useTransition();
+  const { lang } = useGetLang();
+  const { push } = useRouter();
   if (pathname === "/signin") {
     return null;
   }
+
   const navItems = [
-    { link: "/payment", name: "Payment" },
-    { link: "/queue", name: "Queue" },
-    { link: "/music", name: "Music" },
+    { link: "payment", name: "Payment" },
+    { link: "queue", name: "Queue" },
+    { link: "music", name: "Music" },
   ];
+
   return (
     <nav
       style={{ top: visible ? "0" : "-100px", transition: "top 0.6s" }}
@@ -88,19 +96,33 @@ const Navbar = () => {
         {navItems.map((item, index) => (
           <Link
             key={index}
-            href={`${shopId ? `/shop/${shopId}` : ""}${item.link}`}
+            href={`/${lang}/shop/${shopId}/${item.link}`}
             className={`hidden sm:flex items-center justify-center gap-2 font-semibold ${
               pathname.includes(item.link) ? "text-primary" : "text-gray-600"
             } hover:text-gray-800`}
           >
-            {item.name}
+            {t(item.name)}
           </Link>
         ))}
+        <button
+          onClick={() => {
+            startTransition(() => {
+              const newPath = pathname.replace(
+                lang,
+                lang === "en" ? "ar" : "en"
+              );
+              push(newPath, { scroll: false });
+            });
+          }}
+          className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+        >
+          {lang === "en" ? "AR" : "EN"}
+        </button>
       </div>
       <div className="inline-flex">
         <div className="relative p-3 m-3">
           <Link
-            href={`/shop/${shopId}/payment`}
+            href={`${lang}/shop/${shopId}/payment`}
             className="flex items-center gap-2"
           >
             <FiShoppingCart size={20} />

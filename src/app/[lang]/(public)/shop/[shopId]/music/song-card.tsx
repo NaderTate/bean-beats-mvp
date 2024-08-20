@@ -6,8 +6,9 @@ import { FiMinusCircle } from "react-icons/fi";
 import { MdAddCircleOutline } from "react-icons/md";
 import { useSongsCart } from "@/store/songs-cart";
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 
-type Props = { song: Song & { price: number } };
+type Props = { song: Song & { price: number | string } };
 
 const SongCard = ({ song }: Props) => {
   const storedSongs = localStorage.getItem("songs");
@@ -34,6 +35,7 @@ const SongCard = ({ song }: Props) => {
     }
   }, [setSongs, storedSongs]);
 
+  const t = useTranslations();
   return (
     <div className="flex justify-between shadow-lg rounded-md p-5">
       <div className="flex flex-row gap-4">
@@ -47,7 +49,7 @@ const SongCard = ({ song }: Props) => {
         </div>
         <div>
           <h3 className="text-primary">{song.title}</h3>
-          <span>Price: </span>
+          <span>{t("Price")}: </span>
           <span>{song.price}</span>
         </div>
       </div>

@@ -7,6 +7,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Songs from "./songs";
 import Albums from "./albums";
 import Artrists from "./artists";
+import { useTranslations } from "next-intl";
+import useGetLang from "@/hooks/use-get-lang";
 
 type Props = {
   songs: {
@@ -29,14 +31,15 @@ const MusicMain = ({ shopId, songs, albums, artists }: Props) => {
   );
 
   const sectionsData = ["Artists", "Songs", "Albums"];
-
+  const t = useTranslations();
+  const { lang } = useGetLang();
   return (
     <div className="md:p-20 p-5 pt-20 ">
-      <h3 className="font-semibold text-xl mb-5">Music List</h3>
+      <h3 className="font-semibold text-xl mb-5">{t("Music List")}</h3>
       <div>
         <input
           type="text"
-          placeholder="Search"
+          placeholder={t("Search")}
           className="w-full p-2 border border-gray-300 rounded-full"
         />
       </div>
@@ -46,7 +49,9 @@ const MusicMain = ({ shopId, songs, albums, artists }: Props) => {
             key={section}
             onClick={() => {
               setCurrentSection(section.toLowerCase() as Section);
-              push(`/shop/${shopId}/music?section=${section.toLowerCase()}`);
+              push(
+                `/${lang}/shop/${shopId}/music?section=${section.toLowerCase()}`
+              );
             }}
             className={`${
               currentSesction === section.toLocaleLowerCase()
@@ -54,7 +59,7 @@ const MusicMain = ({ shopId, songs, albums, artists }: Props) => {
                 : "bg-gray-100"
             } p-2 rounded-full w-full px-5 md:w-fit transition-all font-medium`}
           >
-            {section}
+            {t(section)}
           </button>
         ))}
       </div>

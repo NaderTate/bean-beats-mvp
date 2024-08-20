@@ -4,11 +4,12 @@ import { useState } from "react";
 import Songs from "../../music/songs";
 import Albums from "../../music/albums";
 import { Song } from "@prisma/client";
+import { useTranslations } from "next-intl";
 
 type Props = {
   songs: {
     song: Song;
-    price: number;
+    price: number | string;
   }[];
   albums: ExtendedAlbum[];
 };
@@ -23,6 +24,8 @@ const ArtistMain = ({ songs, albums }: Props) => {
     { name: "Songs", value: "songs" },
     { name: "Albums", value: "albums" },
   ];
+
+  const t = useTranslations();
   return (
     <div className="pt-20 p-5">
       {buttons.map((button) => (
@@ -35,7 +38,7 @@ const ArtistMain = ({ songs, albums }: Props) => {
               : "bg-gray-100 text-gray-900 border-gray-300 border"
           }  px-9 py-3 transition rounded-full mx-2`}
         >
-          {button.name}
+          {t(button.name)}
         </button>
       ))}
       {section === "songs" && <Songs songs={songs} />}

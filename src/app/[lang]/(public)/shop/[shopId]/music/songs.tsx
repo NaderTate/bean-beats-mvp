@@ -5,7 +5,7 @@ import SongCard from "./song-card";
 type Props = {
   songs: {
     song: Song;
-    price: number;
+    price: number | string;
   }[];
 };
 

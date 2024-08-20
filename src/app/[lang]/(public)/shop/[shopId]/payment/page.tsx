@@ -1,4 +1,3 @@
-import { NextPage } from "next";
 import { PaymentMain } from "./main";
 
 type PaymentPageProps = { params: { shopId: string } };

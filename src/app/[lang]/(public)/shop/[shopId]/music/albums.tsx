@@ -1,4 +1,5 @@
 import { Album } from "@prisma/client";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import React from "react";
 
@@ -17,6 +18,7 @@ const Albums = ({ albums }: Props) => {
 export default Albums;
 
 const Card = (album: ExtendedAlbum) => {
+  const t = useTranslations();
   return (
     <div className=" shadow-lg rounded-md p-5">
       <div className="flex flex-col gap-4">
@@ -31,7 +33,10 @@ const Card = (album: ExtendedAlbum) => {
         <div>
           <h3 className="text-primary">{album.name}</h3>
           <h3 className="text-gray-500">{album?.artist?.name}</h3>
-          <span>{album._count.Song} Songs</span>
+          <span className="flex gap-x-2">
+            <span>{t("Songs")}:</span>
+            <span> {album._count.Song}</span>
+          </span>
         </div>
       </div>
     </div>
