@@ -3,27 +3,25 @@ import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const body = await request.json();
-
-  const { songsIds, playlistId }: { songsIds: string[]; playlistId: string } =
-    body;
-
-  if (!songsIds) {
-    return NextResponse.json(
-      { error: "songsIds is required" },
-      { status: 400 }
-    );
-  }
-
-  if (!playlistId) {
-    return NextResponse.json(
-      { error: "playlistId is required" },
-      { status: 400 }
-    );
-  }
-
   try {
-    // check if the song exists in the playlist
+    const body = await request.json();
+
+    const { songsIds, playlistId }: { songsIds: string[]; playlistId: string } =
+      body;
+
+    if (!songsIds) {
+      return NextResponse.json(
+        { error: "songsIds is required" },
+        { status: 400 }
+      );
+    }
+
+    if (!playlistId) {
+      return NextResponse.json(
+        { error: "playlistId is required" },
+        { status: 400 }
+      );
+    }
 
     const playlist = await prisma.playlist.update({
       where: {
@@ -44,7 +42,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     });
   } catch (error) {
     return NextResponse.json(
-      { error: (error as Error).message },
+      // { error: (error as Error).message },
+      { error: "An error occurred, fix your shit" },
       { status: 400 }
     );
   }

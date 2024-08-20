@@ -1,6 +1,6 @@
-import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { NextResponse, NextRequest } from "next/server";
 
 // POST /api/song
 export async function POST(request: Request): Promise<NextResponse> {
