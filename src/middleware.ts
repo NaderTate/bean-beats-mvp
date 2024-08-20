@@ -11,9 +11,14 @@ export default function middleware(request: any) {
   const isPublicFile =
     pathname.startsWith("/images/") ||
     pathname.startsWith("/uploads/") ||
-    pathname.startsWith("/favicon.ico") ||
-    pathname.startsWith("/_next/") || // Next.js static files (_next)
-    /\.(.*)$/.test(pathname); // Exclude all files with extensions like .png, .jpg, .css, etc.
+    pathname.endsWith(".png") ||
+    pathname.endsWith(".jpg") ||
+    pathname.endsWith(".jpeg") ||
+    pathname.endsWith(".svg");
+
+  if (isPublicFile) {
+    return NextResponse.next();
+  }
 
   // Check if the pathname is missing a locale
   const pathnameIsMissingLocale =
@@ -36,6 +41,7 @@ export default function middleware(request: any) {
 }
 
 export const config = {
-  // Match all pathnames except for files with extensions and API routes
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|images/|.*\\.(?:png|jpg|jpeg|svg)).*)",
+  ],
 };
