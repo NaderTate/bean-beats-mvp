@@ -153,7 +153,7 @@ export default function Table({
                         />
 
                         <Modal
-                          title="Edit"
+                          title={t("Edit")}
                           open={openEdit === index}
                           setOpen={() => setOpenEdit(null)}
                         >

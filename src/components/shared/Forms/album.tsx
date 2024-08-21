@@ -8,6 +8,7 @@ import { Album, Artist } from "@prisma/client";
 import Select from "../Select";
 import { updateAlbum } from "@/actions/albums";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface AlbumFormProps {
   onSubmit: () => void;
@@ -44,6 +45,8 @@ export default function AlbumForm({
     value: artist.id,
     title: artist.name,
   }));
+
+  const t = useTranslations();
   return (
     <form
       onSubmit={handleSubmit(async (data) => {

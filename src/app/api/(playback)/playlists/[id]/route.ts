@@ -18,7 +18,12 @@ export async function GET(
         id,
       },
       include: {
-        songs: true,
+        songs: {
+          include: {
+            artist: { select: { name: true } },
+            album: { select: { name: true } },
+          },
+        },
       },
     });
 

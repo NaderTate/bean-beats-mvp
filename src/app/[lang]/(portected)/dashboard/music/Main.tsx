@@ -26,6 +26,7 @@ import useGetLang from "@/hooks/use-get-lang";
 import PlaylistForm from "@/components/shared/Forms/playlist";
 import { deleteGenre } from "@/actions/gneres";
 import GenreForm from "@/components/shared/Forms/genre";
+import { useTranslations } from "next-intl";
 
 const tableData = {
   page: 2,
@@ -133,6 +134,7 @@ export default function Main(props: MainProps) {
     genres: deleteGenre,
   };
 
+  const t = useTranslations();
   return (
     <main className="flex flex-col flex-1 w-full px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
       <section className=" grid col-span-1 gap-4 lg:grid-cols-5">
@@ -167,14 +169,14 @@ export default function Main(props: MainProps) {
         setOpen={toggleModal}
         title={
           shownSection === "albums"
-            ? "Add Album"
+            ? t("Add Album")
             : shownSection === "songs"
-            ? "Add Song"
+            ? t("Add Song")
             : shownSection === "artists"
-            ? "Add Artist"
+            ? t("Add Artist")
             : shownSection === "playlists"
-            ? "Add Playlist"
-            : "Add Genre"
+            ? t("Add Playlist")
+            : t("Add Genre")
         }
       >
         {shownSection === "albums" && (

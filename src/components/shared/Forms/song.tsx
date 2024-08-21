@@ -12,6 +12,7 @@ import Spinner from "../spinner";
 
 import { updateSong } from "@/actions/songs";
 import SelectGenres from "../select-genres";
+import { useTranslations } from "next-intl";
 
 type Props = {
   albums: Album[];
@@ -133,7 +134,8 @@ const SongForm = ({
     title: artist.name,
   }));
 
-  console.log(errors);
+  const t = useTranslations();
+
   return (
     <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
       <Controller
@@ -169,43 +171,52 @@ const SongForm = ({
           required: "This field is required",
         })}
       />
-      <h2 className="mb-4">Genres</h2>
+      <h2 className="mb-4">{t("Genres")}</h2>
       <SelectGenres
-        selectedGenreIds={song ? song.genresIds : []}
         genres={genres}
         handleCheckboxChange={setSelectedGenres}
+        selectedGenreIds={song ? song.genresIds : []}
       />
       <div>
         <label
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           htmlFor="file_input"
         >
-          Upload Song
+          {t("Upload a song file")}
         </label>
 
-        <input
-          className="block p-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-          id="file_input"
-          type="file"
-          accept="audio/mpeg"
-          {...register("file", {
-            required: !song?.fileURL,
-          })}
-        />
+        <div className="block p-2 w-full">
+          <label
+            htmlFor="file_input"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+          >
+            Select song file
+          </label>
+          <input
+            placeholder="Upload a song file"
+            type="file"
+            id="file_input"
+            accept="audio/mpeg"
+            className="block p-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+            {...register("file", {
+              required: !song?.fileURL,
+            })}
+          />
+        </div>
         <p
           className="mt-1 text-sm text-gray-500 dark:text-gray-300"
           id="file_input_help"
         >
           {isEditSession
-            ? "Leave empty to keep the same file "
-            : "Upload a song file "}
+            ? t("Leave empty to keep the same file")
+            : t("Upload a song file")}
           {song?.fileURL && (
             <Link
               className="text-blue-500 hover:underline"
               href={song?.fileURL}
               target="_blank"
             >
-              ( Open Song )
+              ( {t("Open Song")} )
             </Link>
           )}
         </p>
@@ -216,7 +227,7 @@ const SongForm = ({
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           htmlFor="file_input"
         >
-          Upload song poster
+          {t("Upload song poster")}
         </label>
         <input
           className="block p-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
@@ -230,15 +241,15 @@ const SongForm = ({
           id="file_input_help"
         >
           {isEditSession
-            ? "Leave empty to keep the same image "
-            : "Upload a song thumbnail "}
+            ? t("Leave empty to keep the same image")
+            : t("Upload a song thumbnail")}
           {song?.thumbnail && (
             <Link
               className="text-blue-500 hover:underline"
               href={song?.thumbnail}
               target="_blank"
             >
-              ( View thumbnail )
+              ( {t("View thumbnail")} )
             </Link>
           )}
         </p>
@@ -249,7 +260,7 @@ const SongForm = ({
           type="submit"
           className="inline-block w-full rounded-lg bg-primary hover:bg-primary-500 transition px-5 py-3 font-medium text-white sm:w-auto"
         >
-          {isSubmitting || isLoading ? <Spinner /> : "Submit"}
+          {isSubmitting || isLoading ? <Spinner /> : t("Submit")}
         </button>
       </div>
     </form>

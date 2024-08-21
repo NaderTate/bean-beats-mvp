@@ -95,5 +95,18 @@
   "December": "ديسمبر",
 
   "summary": "ملخص",
-  "Total cost": "التكلفة الإجمالية"
+  "Total cost": "التكلفة الإجمالية",
+  "Add Genre": "إضافة نوع",
+  "Select": "اختر",
+  "Album": "ألبوم",
+  "Upload a song file": "ارفع ملف الأغنية",
+  "No results found": "لم يتم العثور على نتائج",
+  "Leave empty to keep the same file": "اتركه فارغًا للحفاظ على نفس الملف",
+
+  "Open Song": "تشغيل الأغنية",
+  "Edit": "تعديل",
+  "Upload song poster": "تحميل ملصق الأغنية",
+  "Leave empty to keep the same image": "اتركه فارغًا للحفاظ على نفس الصورة",
+  "Upload a song thumbnail": "تحميل صورة مصغرة للأغنية",
+  "View thumbnail": "عرض الصورة المصغرة"
 }
