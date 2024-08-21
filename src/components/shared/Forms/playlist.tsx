@@ -5,6 +5,7 @@ import { createPlaylist, updatePlaylist } from "@/actions/playlists";
 import SelectSongs from "../select-songs";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import Input from "../Input";
 
 interface PlaylistFormProps {
   onSubmit: () => void;
@@ -25,7 +26,7 @@ function PlaylistForm({
   const {
     register,
     handleSubmit,
-    formState: { isLoading, isSubmitting },
+    formState: { isLoading, isSubmitting, errors },
   } = useForm<Inputs>({
     defaultValues: {
       name: playlist?.name,
@@ -59,18 +60,15 @@ function PlaylistForm({
       })}
       className="space-y-4"
     >
-      <div>
-        <label className="sr-only" htmlFor="name">
-          {t("name")}
-        </label>
-        <input
-          id="name"
-          type="text"
-          {...register("name")}
-          placeholder={t("Name")}
-          className="w-full rounded-lg border-gray-200 p-3 text-sm focus:outline-none focus:border-primary/50 border  dark:border-gray-600 dark:placeholder-gray-400 dark:bg-gray-700 dark:text-gray-400"
-        />
-      </div>
+      <Input
+        id="name"
+        label={t("Name")}
+        placeholder={t("Name")}
+        errMessage={errors.name?.message}
+        {...register("name", {
+          required: "This field is required",
+        })}
+      />
       <SelectSongs
         songs={allSongs}
         handleCheckboxChange={setSelectedSongs}

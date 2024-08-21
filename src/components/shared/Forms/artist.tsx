@@ -8,9 +8,12 @@ import Spinner from "../spinner";
 
 import { updateArtist } from "@/actions/artists";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
+import Input from "../Input";
 
 type Inputs = {
   name: string;
+  image: FileList | string;
 };
 
 export default function ArtistForm({
@@ -24,10 +27,11 @@ export default function ArtistForm({
   const {
     register,
     handleSubmit,
-    formState: { isLoading, isSubmitting },
+    formState: { isLoading, isSubmitting, errors },
   } = useForm<Inputs>({
     defaultValues: {
       name: artist?.name,
+      image: artist?.image,
     },
   });
 
@@ -38,17 +42,20 @@ export default function ArtistForm({
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
-        if (!inputFileRef.current?.files) {
+        if (data.image === null) {
           return alert("No file selected");
         }
 
-        const file = inputFileRef.current.files?.[0];
-        const newBlob = file
-          ? await upload(file.name, file, {
-              access: "public",
-              handleUploadUrl: "/api/upload",
-            })
-          : { url: artist?.image };
+        const newBlob =
+          typeof data.image === "string"
+            ? { url: data.image } // If it's a URL, just use it
+            : data.image?.length > 0
+            ? await upload(data.image[0].name, data.image[0], {
+                access: "public",
+                handleUploadUrl: "/api/upload",
+              })
+            : { url: artist?.image }; // If no new file is uploaded, keep the existing image URL
+
         id
           ? await updateArtist({
               id,
@@ -68,18 +75,15 @@ export default function ArtistForm({
       })}
       className="space-y-4"
     >
-      <div>
-        <label className="sr-only" htmlFor="name">
-          {t("Name")}
-        </label>
-        <input
-          id="name"
-          type="text"
-          {...register("name")}
-          placeholder={t("Name")}
-          className="w-full rounded-lg border-gray-200 p-3 text-sm focus:outline-none focus:border-primary/50 border  dark:border-gray-600 dark:placeholder-gray-400 dark:bg-gray-700 dark:text-gray-400"
-        />
-      </div>
+      <Input
+        id="name"
+        label={t("Name")}
+        placeholder={t("Name")}
+        errMessage={errors.name?.message}
+        {...register("name", {
+          required: "This field is required",
+        })}
+      />
 
       <div>
         <label
@@ -92,14 +96,34 @@ export default function ArtistForm({
           type="file"
           id="file_input"
           accept="image/*"
-          ref={inputFileRef}
+          {...register("image", {
+            required: !id && "This field is required", // Only required if creating a new album
+            validate: (value) =>
+              typeof value === "string" ||
+              value?.length > 0 ||
+              "This field is required", // Checks if the value is a string (URL) or a file is uploaded
+          })}
           className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
         />
+        {!!errors.image && (
+          <span className="text-red-500 text-sm">{errors.image.message}</span>
+        )}
         <p
           className="mt-1 text-sm text-gray-500 dark:text-gray-300"
           id="file_input_help"
         >
-          SVG, PNG, JPG or GIF (MAX. 800x400px).
+          {!!id
+            ? t("Leave empty to keep the same image")
+            : t("Upload a song thumbnail")}
+          {artist?.image && (
+            <Link
+              target="_blank"
+              href={artist?.image}
+              className="text-blue-500 hover:underline"
+            >
+              ( {t("View image")} )
+            </Link>
+          )}
         </p>
       </div>
 
