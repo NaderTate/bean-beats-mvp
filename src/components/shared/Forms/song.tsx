@@ -122,7 +122,7 @@ const SongForm = ({
       });
     }
 
-    onSubmit(); // Call onSubmit to close the modal
+    onSubmit();
   };
   const albumOptions = albums.map((album) => ({
     value: album.id,

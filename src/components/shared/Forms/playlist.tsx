@@ -4,6 +4,7 @@ import Spinner from "../spinner";
 import { createPlaylist, updatePlaylist } from "@/actions/playlists";
 import SelectSongs from "../select-songs";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface PlaylistFormProps {
   onSubmit: () => void;
@@ -35,6 +36,8 @@ function PlaylistForm({
     playlist ? playlist.songsIds : []
   );
 
+  const t = useTranslations();
+
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
@@ -58,13 +61,13 @@ function PlaylistForm({
     >
       <div>
         <label className="sr-only" htmlFor="name">
-          Name
+          {t("name")}
         </label>
         <input
           id="name"
           type="text"
-          placeholder="Name"
           {...register("name")}
+          placeholder={t("Name")}
           className="w-full rounded-lg border-gray-200 p-3 text-sm focus:outline-none focus:border-primary/50 border  dark:border-gray-600 dark:placeholder-gray-400 dark:bg-gray-700 dark:text-gray-400"
         />
       </div>
@@ -79,7 +82,7 @@ function PlaylistForm({
           type="submit"
           className="aboslute bottom-0 inline-block w-full rounded-lg bg-primary hover:bg-primary-500 transition px-5 py-3 font-medium text-white sm:w-auto"
         >
-          {isSubmitting || isLoading ? <Spinner /> : "Submit"}
+          {isSubmitting || isLoading ? <Spinner /> : t("Submit")}
         </button>
       </div>
     </form>

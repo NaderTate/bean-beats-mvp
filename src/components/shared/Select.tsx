@@ -33,7 +33,9 @@ const Select = forwardRef<HTMLSelectElement, Props>(
             </option>
           ))}
         </select>
-        {errMessage && <span className="text-red-500">{errMessage}</span>}
+        {errMessage && (
+          <span className="text-red-500 text-sm">{errMessage}</span>
+        )}
       </div>
     );
   }

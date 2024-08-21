@@ -1,4 +1,5 @@
 import { Song } from "@prisma/client";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import React, { useState, useEffect, useCallback } from "react";
 
@@ -33,23 +34,24 @@ const SelectSongs = ({
     [selectedSongs, handleCheckboxChange]
   );
 
+  const t = useTranslations();
   return (
     <div>
       <input
         type="text"
-        placeholder="Search songs..."
         value={searchQuery}
+        placeholder={t("Search songs") + "..."}
         onChange={(e) => setSearchQuery(e.target.value)}
         className="p-2 border border-gray-300 rounded mb-4 w-full"
       />
       <div className="max-h-96 overflow-y-auto">
         {filteredSongs.length === 0 ? (
-          <div className="text-gray-500">No results found</div>
+          <div className="text-gray-500">{t("No results found")}</div>
         ) : (
           filteredSongs.map((song) => (
             <div
               key={song.id}
-              className="cursor-pointer flex items-center space-x-3 mb-3"
+              className="cursor-pointer flex items-center gap-x-3 mb-3"
             >
               <input
                 type="checkbox"

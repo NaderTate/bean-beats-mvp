@@ -7,6 +7,7 @@ import Spinner from "../spinner";
 import { createGenre, updateGenre } from "@/actions/gneres";
 import { Genre } from "@prisma/client";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 type Inputs = {
   name: string;
@@ -30,6 +31,9 @@ function GenreForm({ onSubmit, itemToEdit: genre }: GenreFormProps) {
     },
   });
   const inputFileRef = useRef<HTMLInputElement>(null);
+
+  const t = useTranslations();
+
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
@@ -70,7 +74,7 @@ function GenreForm({ onSubmit, itemToEdit: genre }: GenreFormProps) {
     >
       <div>
         <label className="sr-only" htmlFor="name">
-          Name
+          {t("Name")}
         </label>
         <input
           id="name"
@@ -86,29 +90,29 @@ function GenreForm({ onSubmit, itemToEdit: genre }: GenreFormProps) {
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           htmlFor="file_input"
         >
-          Upload Image
+          {t("Upload Image")}
         </label>
         <input
-          className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-          id="file_input"
-          ref={inputFileRef}
           type="file"
+          id="file_input"
           accept="image/*"
+          ref={inputFileRef}
+          className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
         />
         <p
           className="mt-1 text-sm text-gray-500 dark:text-gray-300"
           id="file_input_help"
         >
           {!!id
-            ? "Leave empty to keep the same image "
-            : "Upload a song thumbnail "}
+            ? t("Leave empty to keep the same image")
+            : t("Upload a song thumbnail")}
           {genre?.image && (
             <Link
               className="text-blue-500 hover:underline"
               href={genre?.image}
               target="_blank"
             >
-              ( View image )
+              ( {t("View image")} )
             </Link>
           )}
         </p>
@@ -119,7 +123,7 @@ function GenreForm({ onSubmit, itemToEdit: genre }: GenreFormProps) {
           type="submit"
           className="inline-block w-full rounded-lg bg-primary hover:bg-primary-500 transition px-5 py-3 font-medium text-white sm:w-auto"
         >
-          {isSubmitting || isLoading ? <Spinner /> : "Submit"}
+          {isSubmitting || isLoading ? <Spinner /> : t("Submit")}
         </button>
       </div>
     </form>
