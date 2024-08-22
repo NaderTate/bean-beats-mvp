@@ -8,6 +8,7 @@ import { Genre } from "@prisma/client";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import Input from "../Input";
+import { uploadFile } from "@/utils/upload-files";
 
 type Inputs = {
   name: string;
@@ -46,10 +47,7 @@ function GenreForm({ onSubmit, itemToEdit: genre }: GenreFormProps) {
           typeof data.image === "string"
             ? { url: data.image } // If it's a URL, just use it
             : data.image?.length > 0
-            ? await upload(data.image[0].name, data.image[0], {
-                access: "public",
-                handleUploadUrl: "/api/upload",
-              })
+            ? await uploadFile(data.image[0])
             : { url: genre?.image }; // If no new file is uploaded, keep the existing image URL
 
         id

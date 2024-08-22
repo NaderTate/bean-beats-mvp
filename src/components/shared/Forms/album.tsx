@@ -10,6 +10,7 @@ import { updateAlbum } from "@/actions/albums";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import Input from "../Input";
+import { uploadFile } from "@/utils/upload-files";
 
 interface AlbumFormProps {
   onSubmit: () => void;
@@ -42,7 +43,6 @@ export default function AlbumForm({
       year: album?.year || new Date().getFullYear(),
     },
   });
-  const inputFileRef = useRef<HTMLInputElement>(null);
 
   const artistOptions = artists.map((artist) => ({
     value: artist.id,
@@ -62,10 +62,7 @@ export default function AlbumForm({
           typeof data.image === "string"
             ? { url: data.image } // If it's a URL, just use it
             : data.image?.length > 0
-            ? await upload(data.image[0].name, data.image[0], {
-                access: "public",
-                handleUploadUrl: "/api/upload",
-              })
+            ? await uploadFile(data.image[0])
             : { url: album?.image }; // If no new file is uploaded, keep the existing image URL
 
         id

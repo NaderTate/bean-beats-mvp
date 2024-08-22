@@ -10,6 +10,7 @@ import { updateArtist } from "@/actions/artists";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import Input from "../Input";
+import { uploadFile } from "@/utils/upload-files";
 
 type Inputs = {
   name: string;
@@ -35,8 +36,6 @@ export default function ArtistForm({
     },
   });
 
-  const inputFileRef = useRef<HTMLInputElement>(null);
-
   const t = useTranslations();
 
   return (
@@ -50,10 +49,7 @@ export default function ArtistForm({
           typeof data.image === "string"
             ? { url: data.image } // If it's a URL, just use it
             : data.image?.length > 0
-            ? await upload(data.image[0].name, data.image[0], {
-                access: "public",
-                handleUploadUrl: "/api/upload",
-              })
+            ? await uploadFile(data.image[0])
             : { url: artist?.image }; // If no new file is uploaded, keep the existing image URL
 
         id

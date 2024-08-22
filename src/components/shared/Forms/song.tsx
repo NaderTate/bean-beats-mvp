@@ -13,6 +13,7 @@ import Spinner from "../spinner";
 import { updateSong } from "@/actions/songs";
 import SelectGenres from "../select-genres";
 import { useTranslations } from "next-intl";
+import { uploadFile } from "@/utils/upload-files";
 
 type Props = {
   albums: Album[];
@@ -80,18 +81,12 @@ const SongForm = ({
     const songFile = file?.[0]; // Check if file is defined
     const thumbnailImage = thumbnail?.[0]; // Check if thumbnail is defined
 
-    const newSongBlob = songFile
-      ? await upload(songFile.name, songFile, {
-          access: "public",
-          handleUploadUrl: "/api/upload",
-        })
+    const newSongFIle = songFile
+      ? await uploadFile(songFile)
       : { url: song?.fileURL };
 
     const newThumbnailBlob = thumbnailImage
-      ? await upload(thumbnailImage.name, thumbnailImage, {
-          access: "public",
-          handleUploadUrl: "/api/upload",
-        })
+      ? await uploadFile(thumbnailImage)
       : { url: song?.thumbnail };
 
     if (id) {
@@ -99,7 +94,7 @@ const SongForm = ({
         id,
         data: {
           title: otherData.title,
-          fileURL: newSongBlob.url,
+          fileURL: newSongFIle.url,
           albumId: otherData.albumId,
           artistId: otherData.artistId,
           duration: otherData.duration,
@@ -115,7 +110,7 @@ const SongForm = ({
         },
         body: JSON.stringify({
           ...otherData,
-          fileURL: newSongBlob.url,
+          fileURL: newSongFIle.url,
           thumbnail: newThumbnailBlob.url,
           genresIds: selectedGenres,
         }),
