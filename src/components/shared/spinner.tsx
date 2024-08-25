@@ -1,6 +1,10 @@
-export default function Spinner() {
+interface SpinnerProps {
+  className?: string;
+}
+
+export default function Spinner({ className }: SpinnerProps) {
   return (
-    <div role="status">
+    <div role="status" className={className}>
       <svg
         aria-hidden="true"
         className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"

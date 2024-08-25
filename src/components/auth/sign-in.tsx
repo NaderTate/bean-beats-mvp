@@ -21,7 +21,7 @@ export default function SignWith() {
   const t = useTranslations();
 
   const sharedClasses =
-    " p-4 text-2xl lg:text-4xl rounded-full border-2 transition ";
+    " p-4 transition w-full flex items-center gap-x-5 w-full bg-gray-100 border-gray-200 border rounded-md text-nowrap";
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -57,10 +57,10 @@ export default function SignWith() {
 
   return (
     <div className="mt-5">
-      <section className="flex flex-col gap-2 ">
+      <section className="flex flex-col gap-4">
         <label
           htmlFor="UserEmail"
-          className="relative block overflow-hidden rounded-md border border-gray-300/50 px-4 pt-4 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
+          className="relative block overflow-hidden rounded-md border border-gray-300/50 px-4 pt-4 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600 bg-gray-100"
         >
           <input
             type="email"
@@ -69,7 +69,7 @@ export default function SignWith() {
             placeholder={t("Email")}
             onKeyDown={handleKeyDown}
             onChange={(e) => setEmail(e.target.value)}
-            className="peer h-8 w-full border-none bg-transparent p-0 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
+            className="peer h-8 w-full border-none bg-transparent p-0 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm "
           />
 
           <span className="absolute start-3 top-3 -translate-y-1/2 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs">
@@ -78,7 +78,7 @@ export default function SignWith() {
         </label>
         <label
           htmlFor="UserPassword"
-          className="relative block overflow-hidden rounded-md border border-gray-300/50 px-4 pt-4 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
+          className="relative block overflow-hidden rounded-md border border-gray-300/50 px-4 pt-4 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600 bg-gray-100"
         >
           <input
             type={isPasswordVisible ? "text" : "password"}
@@ -102,6 +102,20 @@ export default function SignWith() {
             {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
           </button>
         </label>
+        <div className="flex gap-4 items-center justify-center transition">
+          <button
+            onClick={() => signIn("google", { callbackUrl: "/" })}
+            className={"google-btn " + sharedClasses}
+          >
+            <FcGoogle size={25} /> {t("Sign in with Google")}
+          </button>
+          <button
+            onClick={() => signIn("facebook", { callbackUrl: "/" })}
+            className={"text-blue-700   " + sharedClasses}
+          >
+            <FaFacebook size={25} /> {t("Sign in with Facebook")}
+          </button>
+        </div>
         <div className="flex justify-between items-center my-5">
           <label
             htmlFor="Option1"
@@ -127,36 +141,26 @@ export default function SignWith() {
             {t("Forgot password?")}
           </Link>
         </div>
-        {error && <p className="text-red-600">{error}</p>}{" "}
+        <p
+          className={`text-red-600 h-5 mb-3 mt-6 ${
+            error ? "opacity-100" : "opacity-0"
+          } `}
+        >
+          {error}
+        </p>
       </section>
       <p className="text-center mb-4">
         <button
           onClick={handleSignIn}
-          className=" bg-slate-500 text-white rounded-md px-5 py-3"
+          className=" bg-[#341E0C] font-bold text-white rounded-md h-14 w-full text-center"
         >
-          {isLoading ? <Spinner /> : t("Sign in")}
+          {isLoading ? (
+            <Spinner className="flex justify-center" />
+          ) : (
+            t("Sign in")
+          )}
         </button>
       </p>
-      <div className="flex gap-4 items-center justify-center p-6 transition">
-        <span className=" text-lg lg:text-xl ">{t("Sign in with")}:</span>
-        <button
-          onClick={() => signIn("google", { callbackUrl: "/" })}
-          className={
-            " border-red-600 border google-btn hover:bg-red-600" + sharedClasses
-          }
-        >
-          <FcGoogle />
-        </button>
-        <button
-          onClick={() => signIn("facebook", { callbackUrl: "/" })}
-          className={
-            "text-blue-700 hover:text-white hover:bg-blue-600 border-blue-600" +
-            sharedClasses
-          }
-        >
-          <FaFacebook />
-        </button>
-      </div>
     </div>
   );
 }
