@@ -39,9 +39,7 @@ export async function POST(request: NextRequest) {
       <div style="text-align: center; margin: 20px 0;">
         <a href="${process.env.APP_URL}/en/signin?section=create-new-password&userid=${userId}" style="background-color: #007bff; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
       </div>
-      <p style="color: #555;">
-        If the button above doesn't work, you can also reset your password by clicking the link below:
-      </p>
+   
       
       <p style="color: #555;">Thank you,</p>
       <p style="color: #555;">The Bean Beats Team</p>
