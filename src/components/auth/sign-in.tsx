@@ -119,13 +119,13 @@ export default function SignWith() {
         <div className="flex justify-between items-center my-5">
           <label
             htmlFor="Option1"
-            className="flex cursor-pointer items-start gap-4 rounded-lg border border-gray-200 transition"
+            className="flex cursor-pointer items-start gap-4 rounded-lg transition"
           >
             <div className="flex items-center">
               <input
                 type="checkbox"
                 id="Option1" // Associate this id with the label's htmlFor attribute
-                className="size-5 rounded border-gray-300 bg-black"
+                className="size-5 rounded bg-black"
               />
             </div>
 

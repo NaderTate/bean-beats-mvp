@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
         We received a request to reset your password. Click the button below to reset your password. If you did not request this change, you can safely ignore this email.
       </p>
       <div style="text-align: center; margin: 20px 0;">
-        <a href="${process.env.APP_URL}/en/reset-password?userid=${userId}" style="background-color: #007bff; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
+        <a href="${process.env.APP_URL}/en/signin?section=create-new-password&userid=${userId}" style="background-color: #007bff; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
       </div>
       <p style="color: #555;">
         If the button above doesn't work, you can also reset your password by clicking the link below:

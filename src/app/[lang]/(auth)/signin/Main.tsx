@@ -1,14 +1,24 @@
 "use client";
-import React from "react";
-import Image from "next/image";
+
 import Link from "next/link";
-import SignInWith from "@/components/auth/sign-in";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
+
 import useGetLang from "@/hooks/use-get-lang";
+import SignInWith from "@/components/auth/sign-in";
+import NewPasswordForm from "@/components/auth/new-password";
+import ForgotPasswordForm from "@/components/auth/forget-password";
+
+type section = "login" | "forget-password" | "create-new-password";
 
 export default function Main() {
   const t = useTranslations();
   const { lang } = useGetLang();
+  const searchParams = useSearchParams();
+  const userId = searchParams.get("userid");
+  const section: section = (searchParams.get("section") as section) || "login";
+
   return (
     <section className="dark:bg-gray-900 lg:h-screen overflow-hidden relative">
       {/* Logo Link with dynamic positioning */}
@@ -57,13 +67,16 @@ export default function Main() {
         <main className="flex items-center justify-center px-1 sm:px-8 py-8 lg:py-12 lg:col-span-6 relative">
           <div className="w-full px-3 sm:px-8 relative">
             <div className="max-w-lg mx-auto relative flex flex-col-reverse sm:flex-col gap-5 mt-10">
-              <div className="absolute w-[140%] h-[140%] bg-slate-100/10 -top-10 -right-10 -z-[1] hidden sm:block"></div>
-              <div className="flex flex-col gap-4">
-                <h2 className="text-xl text-center font-bold sm:text-2xl md:text-3xl">
-                  {t("Welcome back to Bean Beats")}
-                </h2>
-              </div>
-              <SignInWith />
+              {section === "login" && (
+                <>
+                  <h2 className="text-xl text-center font-bold sm:text-2xl md:text-3xl">
+                    {t("Welcome back to Bean Beats")}
+                  </h2>
+                  <SignInWith />
+                </>
+              )}
+              {section === "forget-password" && <ForgotPasswordForm />}
+              {section === "create-new-password" && <NewPasswordForm />}
             </div>
           </div>
         </main>
