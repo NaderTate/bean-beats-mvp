@@ -1,9 +1,21 @@
-import { NextPage } from "next";
+import prisma from "@/lib/prisma";
+import Songs from "../../music/songs";
 
-type AlbumPageProps = {};
+type AlbumPageProps = {
+  params: { id: string; shopId: string };
+};
 
-const AlbumPage: NextPage = async ({}: AlbumPageProps) => {
-  return <>AlbumPage</>;
+const AlbumPage = async ({ params: { id, shopId } }: AlbumPageProps) => {
+  const songs = await prisma.songCoffeeShop.findMany({
+    where: { AND: [{ coffeeShopId: shopId }, { song: { artistId: id } }] },
+    include: { song: true },
+  });
+
+  return (
+    <>
+      <Songs songs={songs} />
+    </>
+  );
 };
 
 export default AlbumPage;

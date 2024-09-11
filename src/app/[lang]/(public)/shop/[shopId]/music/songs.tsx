@@ -10,6 +10,13 @@ type Props = {
 };
 
 const Songs = ({ songs }: Props) => {
+  if (songs.length === 0) {
+    return (
+      <div className="mt-24">
+        <h1>No songs found</h1>
+      </div>
+    );
+  }
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
       {songs.map((song) => (

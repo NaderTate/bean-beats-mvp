@@ -1,94 +1,73 @@
 import { NextPage } from "next";
 import prisma from "@/lib/prisma";
 
-import { getUser } from "@/utils/get-user";
+import { getCoffeeShop, getUser } from "@/utils/get-user";
 import MusicMain from "./main";
 
 type MusicPageProps = {};
 
 const MusicPage: NextPage = async ({}: MusicPageProps) => {
-  const user = await getUser();
-
-  const coffeeShop = user
-    ? await prisma.coffeeShop.findFirst({
-        where: { adminId: user?.id },
+  const coffeeShop_ = await getCoffeeShop();
+  if (!coffeeShop_) {
+    return (
+      <div className="flex flex-col min-h-screen justify-center items-center">
+        <h1 className="font-bold text-xl">Coffee Shop not found</h1>
+      </div>
+    );
+  }
+  const coffeeShop = await prisma.coffeeShop.findUnique({
+    where: { id: coffeeShop_.id },
+    select: {
+      id: true,
+      SongCoffeeShop: {
         select: {
           id: true,
-          SongCoffeeShop: {
+          price: true,
+          song: {
             select: {
               id: true,
-              price: true,
-              song: {
-                select: {
-                  id: true,
-                  title: true,
-                  thumbnail: true,
-                  artist: { select: { name: true, image: true } },
-                },
-              },
+              title: true,
+              thumbnail: true,
+              artist: { select: { name: true, image: true } },
             },
-            orderBy: { id: "desc" },
-          },
-          Artists: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
-              _count: { select: { Song: true } },
-            },
-            orderBy: { id: "desc" },
-          },
-          Albums: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
-              _count: { select: { Song: true } },
-              artist: { select: { name: true } },
-            },
-            orderBy: { id: "desc" },
           },
         },
-      })
-    : null;
+        orderBy: { id: "desc" },
+      },
+      Artists: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          _count: { select: { Song: true } },
+        },
+        orderBy: { id: "desc" },
+      },
+      Albums: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          _count: { select: { Song: true } },
+          artist: { select: { name: true } },
+        },
+        orderBy: { id: "desc" },
+      },
+    },
+  });
 
   const allAlbums =
     (coffeeShop &&
-      (await prisma.album.findMany({
-        // where: {
-        //   NOT: {
-        //     id: {
-        //       in: coffeeShop.Albums.map((album) => album.id),
-        //     },
-        //   },
-        // },
-      }))) ||
+      (await prisma.album.findMany({ orderBy: { id: "desc" } }))) ||
     [];
 
   const allArtists =
     (coffeeShop &&
-      (await prisma.artist.findMany({
-        // where: {
-        //   NOT: {
-        //     id: {
-        //       in: coffeeShop.Artists.map((artist) => artist.id),
-        //     },
-        //   },
-        // },
-      }))) ||
+      (await prisma.artist.findMany({ orderBy: { id: "desc" } }))) ||
     [];
 
   const allSongs =
-    (coffeeShop &&
-      (await prisma.song.findMany({
-        // where: {
-        //   NOT: {
-        //     id: {
-        //       in: coffeeShop.SongCoffeeShop.map((song) => song.song.id),
-        //     },
-        //   },
-        // },
-      }))) ||
+    (coffeeShop && (await prisma.song.findMany({ orderBy: { id: "desc" } }))) ||
     [];
 
   const allPlaylists =
@@ -101,6 +80,7 @@ const MusicPage: NextPage = async ({}: MusicPageProps) => {
           shopId: true,
           songsIds: true,
         },
+        orderBy: { id: "desc" },
       }))) ||
     [];
 

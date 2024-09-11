@@ -29,7 +29,7 @@ export const getCoffeeShop = async () => {
   if (user) {
     if (user.role === "EMPLOYEE") {
       const coffeeShopOnEmployee = await prisma.coffeeShopOnEmployee.findFirst({
-        where: { id: user.id },
+        where: { userId: user.id },
         select: { coffeeShop: { include: { _count: true } } },
       });
 

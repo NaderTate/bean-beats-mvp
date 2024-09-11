@@ -8,12 +8,12 @@ import { User } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { CoffeeShop, UserRole } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
+import useGetLang from "@/hooks/use-get-lang";
 
 const Provider = ({
   children,
   userRole,
   sessionUser,
-  coffeeShops,
 }: Readonly<{
   children: React.ReactNode;
   coffeeShops: CoffeeShop[];
@@ -22,6 +22,7 @@ const Provider = ({
 }>) => {
   const { push } = useRouter();
   const pathname = usePathname();
+  // const { lang } = useGetLang();
 
   if (pathname.includes("/dashboard") && !pathname.includes("/coffee-shop")) {
     if (!sessionUser) {
@@ -41,9 +42,9 @@ const Provider = ({
     if (!sessionUser) {
       push("/signin");
     }
-    if (userRole !== "SHOP_ADMIN") {
-      push("/dashboard");
-    }
+    // if (userRole == "EMPLOYEE" || userRole == "SHOP_ADMIN") {
+    //   push(`/${lang}/coffee-shop/dashboard`);
+    // }
   }
 
   const initialOptions: ReactPayPalScriptOptions = {

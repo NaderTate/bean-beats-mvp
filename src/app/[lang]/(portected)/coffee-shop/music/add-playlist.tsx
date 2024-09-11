@@ -91,7 +91,7 @@ const AddPlaylist = ({ onSubmit, allSongs, allPlaylists, shopId }: Props) => {
         ))}
       </div>
       <button onClick={toggleModal} className="btn-primary">
-        Create Playlist
+        {t("Create Playlist")}
       </button>
       <div className="flex-shrink-0 absolute bottom-0 w-[95%] bg-white p-4 shadow-lg">
         <button

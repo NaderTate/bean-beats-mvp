@@ -1,28 +1,21 @@
 import prisma from "@/lib/prisma";
+import Songs from "../../songs";
 
 type AlbumPageProps = {
   params: { id: string; shopId: string };
 };
 
 const AlbumPage = async ({ params: { id, shopId } }: AlbumPageProps) => {
-  const album = await prisma.album.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      Song: {
-        where: {
-          SongCoffeeShop: {
-            some: {
-              coffeeShopId: shopId,
-            },
-          },
-        },
-      },
-    },
+  const songs = await prisma.songCoffeeShop.findMany({
+    where: { AND: [{ coffeeShopId: shopId }, { song: { artistId: id } }] },
+    include: { song: true },
   });
 
-  return <>AlbumPage</>;
+  return (
+    <>
+      <Songs songs={songs} />
+    </>
+  );
 };
 
 export default AlbumPage;

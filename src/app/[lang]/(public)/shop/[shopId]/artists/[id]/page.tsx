@@ -1,39 +1,25 @@
 import ArtistMain from "./main";
 import prisma from "@/lib/prisma";
 
-type ArtistPageProps = { params: { id: string } };
+type ArtistPageProps = { params: { id: string; shopId: string } };
 
-const ArtistPage = async ({ params: { id } }: ArtistPageProps) => {
-  const artist = await prisma.artist.findUnique({
-    where: { id },
+const ArtistPage = async ({ params: { id, shopId } }: ArtistPageProps) => {
+  const songs = await prisma.songCoffeeShop.findMany({
+    where: { AND: [{ coffeeShopId: shopId }, { song: { artistId: id } }] },
+    include: { song: true },
+  });
+
+  const albums = await prisma.album.findMany({
+    where: { AND: [{ coffeeShopsIds: { has: shopId } }, { artistId: id }] },
     include: {
-      Song: { include: { SongCoffeeShop: true } },
-      Album: {
-        include: {
-          artist: { select: { name: true } },
-          _count: { select: { Song: true } },
-        },
-      },
+      artist: { select: { name: true } },
+      _count: { select: { Song: true } },
     },
   });
 
-  if (!artist) {
-    return (
-      <div>
-        <h1>Artist not found</h1>
-      </div>
-    );
-  }
-
   return (
     <>
-      <ArtistMain
-        albums={artist.Album}
-        songs={artist.Song.map((song, i) => ({
-          song,
-          price: song.SongCoffeeShop[i]?.price || "-",
-        }))}
-      />
+      <ArtistMain albums={albums} songs={songs} shopId={shopId} />
     </>
   );
 };

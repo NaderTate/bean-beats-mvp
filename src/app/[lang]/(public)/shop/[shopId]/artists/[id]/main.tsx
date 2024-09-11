@@ -12,9 +12,10 @@ type Props = {
     price: number | string;
   }[];
   albums: ExtendedAlbum[];
+  shopId: string;
 };
 
-const ArtistMain = ({ songs, albums }: Props) => {
+const ArtistMain = ({ songs, albums, shopId }: Props) => {
   type sections = "songs" | "albums";
   const [section, setSection] = useState<sections>("songs");
   const buttons: Array<{
@@ -42,7 +43,7 @@ const ArtistMain = ({ songs, albums }: Props) => {
         </button>
       ))}
       {section === "songs" && <Songs songs={songs} />}
-      {section === "albums" && <Albums albums={albums} />}
+      {section === "albums" && <Albums albums={albums} shopId={shopId} />}
     </div>
   );
 };

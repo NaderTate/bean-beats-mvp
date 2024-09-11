@@ -1,15 +1,16 @@
-import { Album } from "@prisma/client";
+import useGetLang from "@/hooks/use-get-lang";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
-type Props = { albums: ExtendedAlbum[] };
+type Props = { albums: ExtendedAlbum[]; shopId: string };
 
-const Albums = ({ albums }: Props) => {
+const Albums = ({ albums, shopId }: Props) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-5">
       {albums.map((album) => (
-        <Card key={album.id} {...album} />
+        <Card key={album.id} album={album} shopId={shopId} />
       ))}
     </div>
   );
@@ -17,10 +18,17 @@ const Albums = ({ albums }: Props) => {
 
 export default Albums;
 
-const Card = (album: ExtendedAlbum) => {
+const Card = (data: { album: ExtendedAlbum; shopId: string }) => {
   const t = useTranslations();
+  const { lang } = useGetLang();
+
+  const { album, shopId } = data;
+
   return (
-    <div className=" shadow-lg rounded-md p-5">
+    <Link
+      href={`/${lang}/shop/${shopId}/albums/${album.id}`}
+      className=" shadow-lg rounded-md p-5"
+    >
       <div className="flex flex-col gap-4">
         <div className="w-full h-32 relative">
           <Image
@@ -39,6 +47,6 @@ const Card = (album: ExtendedAlbum) => {
           </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

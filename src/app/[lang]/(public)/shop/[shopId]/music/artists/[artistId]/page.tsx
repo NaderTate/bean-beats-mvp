@@ -1,21 +1,28 @@
 import prisma from "@/lib/prisma";
 import MainArtist from "./main";
 
-type ArtistPageProps = { params: { artistId: string; shopId: string } };
+type ArtistPageProps = { params: { shopId: string; artistId: string } };
 
 const ArtistPage = async ({
   params: { artistId, shopId },
 }: ArtistPageProps) => {
-  const songs = await prisma.song.findMany({
-    where: {
-      SongCoffeeShop: { some: { coffeeShopId: shopId } },
-      artistId,
-    },
-    include: { SongCoffeeShop: true },
+  console.log({ artistId, shopId });
+  // const songs = await prisma.song.findMany({
+  //   where: {
+  //     AND: [
+  //       { SongCoffeeShop: { } },
+  //       { artistId },
+  //     ],
+  //   },
+  //   include: { SongCoffeeShop: true },
+  // });
+  const songs = await prisma.songCoffeeShop.findMany({
+    where: { AND: [{ coffeeShopId: shopId }, { song: { artistId } }] },
+    include: { song: true },
   });
 
   const albums = await prisma.album.findMany({
-    where: { coffeeShopsIds: { has: shopId }, artistId },
+    where: { AND: [{ coffeeShopsIds: { has: shopId } }, { artistId }] },
     include: {
       artist: { select: { name: true } },
       _count: { select: { Song: true } },
@@ -24,13 +31,7 @@ const ArtistPage = async ({
 
   return (
     <div className="mt-24 px-14">
-      <MainArtist
-        songs={songs.map((song, i) => ({
-          song,
-          price: song.SongCoffeeShop[i].price,
-        }))}
-        albums={albums}
-      />
+      <MainArtist shopId={shopId} songs={songs} albums={albums} />
     </div>
   );
 };

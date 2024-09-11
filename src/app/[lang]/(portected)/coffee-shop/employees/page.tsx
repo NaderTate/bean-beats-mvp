@@ -9,7 +9,12 @@ type EmployessPageProps = {};
 
 const EmployessPage: NextPage = async ({}: EmployessPageProps) => {
   const coffeeShop = await getCoffeeShop();
-  if (!coffeeShop) return <></>;
+  if (!coffeeShop)
+    return (
+      <div className="flex flex-col min-h-screen justify-center items-center">
+        <h1 className="font-bold text-lg">Coffee shop not found :(</h1>
+      </div>
+    );
   const employees = await prisma.coffeeShopOnEmployee.findMany({
     where: { coffeeShopId: coffeeShop.id },
     include: { user: true },

@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import bcrypt from "bcrypt";
 
 export const createEmployee = async (data: {
   shopId: string;
@@ -15,6 +16,9 @@ export const createEmployee = async (data: {
   const { shopId, employee } = data;
 
   try {
+    const hashedPassword =
+      employee.password && (await bcrypt.hash(employee.password, 10));
+
     const existingUser = await prisma.user.findUnique({
       where: { email: employee.email },
     });
@@ -28,6 +32,7 @@ export const createEmployee = async (data: {
           create: {
             ...employee,
             role: "EMPLOYEE",
+            password: hashedPassword,
           },
         },
         coffeeShop: { connect: { id: shopId } },

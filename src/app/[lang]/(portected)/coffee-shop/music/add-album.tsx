@@ -36,7 +36,7 @@ const AddAlbum = ({ allAlbums, shopId, onSubmit }: Props) => {
   return (
     <div className="bg-white rounded-lg">
       <h2 className="text-xl font-semibold mb-4">{t("Select Albums")}</h2>
-      <div className="space-y-5 h-80 mb-[70px] overflow-y-auto">
+      <div className="space-y-5 h-80 mb-[80px] overflow-y-auto">
         {allAlbums.map((album) => (
           <div
             key={album.id}

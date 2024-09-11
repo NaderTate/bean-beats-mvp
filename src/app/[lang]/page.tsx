@@ -1,29 +1,40 @@
-import { getUser } from "@/utils/get-user";
-import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
-import CreatePassword from "./create-password";
+import { redirect } from "next/navigation";
+
+import CreatePassword from "./(public)/create-password";
+
+import { getUser } from "@/utils/get-user";
 
 interface HomePageProps {
   params: { lang: string };
 }
 export default async function Home({ params: { lang } }: HomePageProps) {
   const sessionUser = await getUser();
+
   const user = sessionUser
     ? await prisma.user.findUnique({
         where: { id: sessionUser?.id },
         select: { role: true, password: true, id: true },
       })
     : null;
+
   if (user && !user.password) {
     return <CreatePassword userId={user.id} />;
   }
+
   if (user?.role === "PLATFORM_ADMIN") {
     redirect(`/${lang}/dashboard`);
   }
+
+  if (user?.role === "EMPLOYEE") {
+    redirect(`/${lang}/coffee-shop/dashboard`);
+  }
+
   if (user?.role === "SHOP_ADMIN") {
     const userShops = await prisma.coffeeShop.findMany({
       where: { adminId: sessionUser?.id },
     });
+
     if (!userShops || userShops.length === 0) {
       const shop = await prisma.coffeeShop.create({
         data: {
@@ -37,7 +48,9 @@ export default async function Home({ params: { lang } }: HomePageProps) {
         },
       });
     }
-    redirect("/coffee-shop/dashboard");
+
+    redirect(`/${lang}/coffee-shop/dashboard`);
   }
-  return <main></main>;
+
+  return <></>;
 }

@@ -12,11 +12,12 @@ type Props = {
     price: number;
   }[];
   albums: ExtendedAlbum[];
+  shopId: string;
 };
 
-const MainArtist = ({ songs, albums }: Props) => {
+const MainArtist = ({ songs, albums, shopId }: Props) => {
   const [selectedTab, setSelectedTab] = React.useState("albums");
-
+  console.log({ shopId });
   return (
     <div>
       <div className="flex justify-start gap-2 items-center">
@@ -51,7 +52,7 @@ const MainArtist = ({ songs, albums }: Props) => {
         </button>
       </div>
       <div className="mt-8">
-        {selectedTab === "albums" && <Albums albums={albums} />}
+        {selectedTab === "albums" && <Albums albums={albums} shopId={shopId} />}
         {selectedTab === "songs" && <Songs songs={songs} />}
       </div>
     </div>
