@@ -8,12 +8,18 @@ export const updateUserData = async (data: {
   name: string;
   email: string;
   phoneNumber: string;
+  password?: string;
+  image?: string | undefined;
 }) => {
+  const hashedPassword =
+    data.password && (await bcrypt.hash(data.password, 10));
   const user = await prisma.user.update({
     where: { email: data.email },
     data: {
       name: data.name,
       phoneNumber: data.phoneNumber,
+      password: hashedPassword,
+      image: data.image || undefined,
     },
   });
   revalidatePath("/coffee-shop/settings");

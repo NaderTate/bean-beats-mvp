@@ -1,17 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { CoffeeShop, User } from "@prisma/client";
+import { User } from "@prisma/client";
 
 import Table from "@/components/shared/table";
 import Modal from "@/components/shared/Modal";
-import ShopForm from "@/components/shared/Forms/shop";
+import EmployeeForm from "@/components/shared/Forms/employee";
+import { useTranslations } from "next-intl";
+import { removeEmployeeFromShop } from "@/actions/employee";
 
-type Props = { shops: (CoffeeShop & { admin: User })[] };
+type Props = { shopId: string; employees: User[] };
 
-const ShopsMain = ({ shops }: Props) => {
+const EmployeesMain = ({ employees, shopId }: Props) => {
   const { refresh } = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations();
@@ -26,28 +27,26 @@ const ShopsMain = ({ shops }: Props) => {
   return (
     <div className="w-full">
       <Table
-        editForm={<ShopForm onSubmit={toggleModal} />}
-        addBtnLabel={t("Add New Shop")}
+        deleteFn={removeEmployeeFromShop}
+        editForm={<EmployeeForm shopId={shopId} onSubmit={toggleModal} />}
+        addBtnLabel={t("Add New Employee")}
         add={() => setIsOpen(true)}
-        data={shops.map((shop, i) => ({
-          ...shop,
+        data={employees.map((employee, i) => ({
+          ...employee,
           number: i + 1,
-          adminName: shop.admin.name,
-          adminEmail: shop.admin.email,
         }))}
         fields={{
           number: "#",
-          name: "Shop Name",
-          adminName: "Admin Name",
-          adminEmail: "Admin Email",
+          name: "Name",
+          email: "Email",
         }}
       />
 
       <Modal open={isOpen} title="Create new shop" setOpen={toggleModal}>
-        <ShopForm onSubmit={() => setIsOpen(false)} />
+        <EmployeeForm shopId={shopId} onSubmit={() => setIsOpen(false)} />
       </Modal>
     </div>
   );
 };
 
-export default ShopsMain;
+export default EmployeesMain;

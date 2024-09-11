@@ -1,5 +1,9 @@
-import { CoffeeShop } from "@prisma/client";
+"use client";
+
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
+import { CoffeeShop } from "@prisma/client";
 import { useForm, Controller } from "react-hook-form";
 
 import Input from "../Input";
@@ -7,8 +11,6 @@ import Button from "@/components/button";
 import FileUploader from "@/components/file-dropzone";
 
 import { createShopWithAdmin, updateShop } from "@/actions/shops";
-import { useState } from "react";
-import toast from "react-hot-toast";
 
 type Props = { itemToEdit?: CoffeeShop; onSubmit: () => void };
 
@@ -217,7 +219,7 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
           </>
         )}
         <Button isLoading={isLoading} type="submit">
-          Submit
+          {t("Submit")}
         </Button>
       </form>
     </div>

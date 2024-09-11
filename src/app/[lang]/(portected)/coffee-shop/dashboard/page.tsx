@@ -1,4 +1,4 @@
-import { getUser } from "@/utils/get-user";
+import { getCoffeeShop, getUser } from "@/utils/get-user";
 import { NextPage } from "next";
 import prisma from "@/lib/prisma";
 import Analytics from "./analytics";
@@ -9,6 +9,7 @@ import { FaCircleUser } from "react-icons/fa6";
 import LineChart from "@/components/shared/Charts/line-chart";
 import SongCard from "./song-card";
 import Table from "@/components/shared/table";
+import { CoffeeShop } from "@prisma/client";
 
 const data = {
   labels: [
@@ -40,13 +41,7 @@ const data = {
 type DashboardPageProps = {};
 
 const DashboardPage: NextPage = async ({}: DashboardPageProps) => {
-  const user = await getUser();
-  const coffeeShop = user
-    ? await prisma.coffeeShop.findFirst({
-        where: { adminId: user?.id },
-        include: { _count: { select: { SongCoffeeShop: true } } },
-      })
-    : null;
+  const coffeeShop = await getCoffeeShop();
 
   const songsQueue = await prisma.queueSong.findMany({
     where: { coffeeShopId: coffeeShop?.id },
@@ -55,6 +50,7 @@ const DashboardPage: NextPage = async ({}: DashboardPageProps) => {
     },
     orderBy: { id: "asc" },
   });
+
   return (
     <div className="p-5">
       <Analytics

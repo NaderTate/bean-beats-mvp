@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { FcNext } from "react-icons/fc";
+import { IoPeopleSharp } from "react-icons/io5";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { FaCreditCard, FaGear, FaMusic } from "react-icons/fa6";
+
 import useGetLang from "@/hooks/use-get-lang";
-import { useTranslations } from "next-intl";
 
 const links = [
   {
@@ -30,6 +32,11 @@ const links = [
     title: "Settings",
     icon: FaGear,
     href: "settings",
+  },
+  {
+    title: "Emplyees",
+    icon: IoPeopleSharp,
+    href: "employees",
   },
 ];
 
