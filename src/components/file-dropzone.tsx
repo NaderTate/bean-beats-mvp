@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BsCloudUpload } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx"; // Importing the cross icon
 import Spinner from "@/components/shared/spinner"; // Assuming Spinner is already implemented
@@ -8,7 +8,13 @@ interface FileUploaderProps {
   label?: string;
   errorMessage?: string;
   defaultImageUrl?: string;
-  onFileUpload: (url: string | null) => void;
+  defaultAudioUrl?: string; // New prop for default audio URL
+  accept?: string; // New prop to specify file types
+  onFileUpload: (
+    url: string | null,
+    fileType: "image" | "audio" | null,
+    duration?: number
+  ) => void; // Modified callback to pass file type and duration
 }
 
 const FileUploader: React.FC<FileUploaderProps> = ({
@@ -16,25 +22,52 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   onFileUpload,
   errorMessage,
   defaultImageUrl,
+  defaultAudioUrl, // Receiving the default audio URL
+  accept = "image/*,audio/*", // Default accept value for images and audio
 }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | undefined>(
     defaultImageUrl
-  ); // State to hold the uploaded image URL
+  ); // State for uploaded image URL
+  const [uploadedAudioUrl, setUploadedAudioUrl] = useState<string | undefined>(
+    defaultAudioUrl
+  ); // State for uploaded audio URL
 
   // Handle file upload
   const handleFileUpload = async (file: File) => {
     setIsUploading(true);
     try {
       const url = await uploadFile(file); // Assuming uploadFile returns the file URL
-      setUploadedImageUrl(url.url); // Set the uploaded image URL
-      onFileUpload(url.url); // Pass the URL to the parent
+      const fileType = file.type.startsWith("image")
+        ? "image"
+        : file.type.startsWith("audio")
+        ? "audio"
+        : null;
+
+      if (fileType === "image") {
+        setUploadedImageUrl(url.url); // Set the uploaded image URL
+        setUploadedAudioUrl(undefined); // Clear any audio URL
+        onFileUpload(url.url, "image"); // Pass the URL and file type to the parent
+      } else if (fileType === "audio") {
+        setUploadedAudioUrl(url.url); // Set the uploaded audio URL
+        setUploadedImageUrl(undefined); // Clear any image URL
+        getAudioDuration(url.url); // Get the audio duration and pass it to the parent
+      }
     } catch (error) {
       console.error("File upload failed", error);
     } finally {
       setIsUploading(false);
     }
+  };
+
+  // Get audio duration
+  const getAudioDuration = (audioUrl: string) => {
+    const audio = new Audio(audioUrl);
+    audio.onloadedmetadata = () => {
+      const duration = audio.duration;
+      onFileUpload(audioUrl, "audio", duration); // Pass the URL, file type, and duration to the parent
+    };
   };
 
   // Handle drag events
@@ -62,10 +95,11 @@ const FileUploader: React.FC<FileUploaderProps> = ({
     }
   };
 
-  // Handle image removal
-  const handleRemoveImage = () => {
+  // Handle image or audio removal
+  const handleRemoveFile = () => {
     setUploadedImageUrl(undefined); // Reset the uploaded image state
-    onFileUpload(null); // Pass null to the parent
+    setUploadedAudioUrl(undefined); // Reset the uploaded audio state
+    onFileUpload(null, null); // Pass null to the parent
   };
 
   return (
@@ -88,8 +122,24 @@ const FileUploader: React.FC<FileUploaderProps> = ({
             <button
               type="button"
               className="absolute top-0 right-0 bg-gray-200 rounded-full p-1"
-              onClick={handleRemoveImage}
+              onClick={handleRemoveFile}
               aria-label="Remove image"
+            >
+              <RxCross2 className="text-red-500 text-xl" />
+            </button>
+          </div>
+        ) : uploadedAudioUrl ? ( // If an audio file is uploaded, display audio player
+          <div className="relative">
+            <audio controls className="w-full">
+              <source src={uploadedAudioUrl} type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
+            {/* Remove audio button */}
+            <button
+              type="button"
+              className="absolute top-0 right-0 bg-gray-200 rounded-full p-1"
+              onClick={handleRemoveFile}
+              aria-label="Remove audio"
             >
               <RxCross2 className="text-red-500 text-xl" />
             </button>
@@ -116,7 +166,12 @@ const FileUploader: React.FC<FileUploaderProps> = ({
               </div>
             )}
             {/* Invisible file input */}
-            <input type="file" onChange={handleFileChange} className="hidden" />
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className="hidden"
+              accept={accept} // Set the file types using the accept prop
+            />
           </label>
         )}
         {errorMessage && (

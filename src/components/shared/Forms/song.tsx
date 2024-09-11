@@ -4,7 +4,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, set } from "react-hook-form";
 import { Album, Artist, Genre, Song } from "@prisma/client";
 
 import Input from "../Input";
@@ -14,6 +14,8 @@ import SelectGenres from "../select-genres";
 
 import { uploadFile } from "@/utils/upload-files";
 import { isSongExisting, updateSong } from "@/actions/songs";
+import FileUploader from "@/components/file-dropzone";
+import Button from "@/components/button";
 
 type Props = {
   albums: Album[];
@@ -66,46 +68,43 @@ const SongForm = ({
     song ? song.genresIds : []
   );
 
-  useEffect(() => {
-    if (file) {
-      const audio = new Audio(URL.createObjectURL(file));
-      audio.addEventListener("loadedmetadata", () => {
-        setValue("duration", audio.duration);
-      });
-    }
-  }, [file, setValue]);
+  // useEffect(() => {
+  //   if (file) {
+  //     const audio = new Audio(URL.createObjectURL(file));
+  //     audio.addEventListener("loadedmetadata", () => {
+  //       setValue("duration", audio.duration);
+  //     });
+  //   }
+  // }, [file, setValue]);
 
   const submitHandler = async (data: any) => {
     const { file, thumbnail, ...otherData } = data;
-    const doesSongTitleExist = await isSongExisting({ title: otherData.title });
-    if (doesSongTitleExist) {
-      toast.error("A song with this title already exists");
-      return;
-    }
-    const songFile = file?.[0]; // Check if file is defined
-    const thumbnailImage = thumbnail?.[0]; // Check if thumbnail is defined
 
-    const newSongFIle = songFile
-      ? await uploadFile(songFile)
-      : { url: song?.fileURL };
+    // const songFile = file?.[0]; // Check if file is defined
+    // const thumbnailImage = thumbnail?.[0]; // Check if thumbnail is defined
 
-    const newThumbnailBlob = thumbnailImage
-      ? await uploadFile(thumbnailImage)
-      : { url: song?.thumbnail };
+    // const newSongFIle = songFile
+    //   ? await uploadFile(songFile)
+    //   : { url: song?.fileURL };
+
+    // const newThumbnailBlob = thumbnailImage
+    //   ? await uploadFile(thumbnailImage)
+    //   : { url: song?.thumbnail };
 
     if (id) {
       await updateSong({
         id,
         data: {
           title: otherData.title,
-          fileURL: newSongFIle.url,
+          fileURL: file,
           albumId: otherData.albumId,
           artistId: otherData.artistId,
           duration: otherData.duration,
-          thumbnail: newThumbnailBlob.url,
+          thumbnail,
           genresIds: selectedGenres,
         },
       });
+      toast.success("Song updated successfully");
     } else {
       const res = await fetch("/api/songs", {
         method: "POST",
@@ -114,15 +113,18 @@ const SongForm = ({
         },
         body: JSON.stringify({
           ...otherData,
-          fileURL: newSongFIle.url,
-          thumbnail: newThumbnailBlob.url,
+          fileURL: file,
+          thumbnail,
           genresIds: selectedGenres,
         }),
       });
       const data = await res.json();
       if (data.error) console.log(data);
+      else {
+        toast.success("Song created successfully");
+      }
     }
-    // onSubmit();
+    onSubmit();
   };
   const albumOptions = albums.map((album) => ({
     value: album.id,
@@ -162,22 +164,59 @@ const SongForm = ({
         })}
       />
 
-      <Input
-        id="title"
-        label="Title"
-        placeholder="Title"
-        errMessage={errors.title?.message}
-        {...register("title", {
-          required: "This field is required",
-        })}
+      <Controller
+        control={control}
+        name="title"
+        rules={{ required: "This field is required" }}
+        render={({ field }) => (
+          <Input
+            label={"Title"}
+            placeholder="Title"
+            defaultValue={song?.title || ""}
+            onChange={(e) => {
+              field.onChange(e.target.value);
+            }}
+            errMessage={errors.title?.message}
+          />
+        )}
       />
+
       <h2 className="mb-4">{t("Genres")}</h2>
       <SelectGenres
         genres={genres}
         handleCheckboxChange={setSelectedGenres}
         selectedGenreIds={song ? song.genresIds : []}
       />
-      <div>
+
+      <Controller
+        control={control}
+        name="thumbnail"
+        render={({ field }) => (
+          <FileUploader
+            defaultImageUrl={song?.thumbnail || ""}
+            label="Thumbnail"
+            onFileUpload={(url) => field.onChange(url)}
+            errorMessage={errors.thumbnail?.message}
+          />
+        )}
+      />
+      <Controller
+        control={control}
+        name="file"
+        render={({ field }) => (
+          <FileUploader
+            accept="audio/mpeg"
+            defaultAudioUrl={song?.fileURL || ""}
+            label="Song File"
+            onFileUpload={(url, type, duration) => {
+              field.onChange(url);
+              setValue("duration", duration || 0);
+            }}
+            errorMessage={errors.file?.message}
+          />
+        )}
+      />
+      {/* <div>
         <label
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           htmlFor="file_input"
@@ -220,9 +259,9 @@ const SongForm = ({
             </Link>
           )}
         </p>
-      </div>
+      </div> */}
 
-      <div>
+      {/* <div>
         <label
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           htmlFor="file_input"
@@ -253,16 +292,11 @@ const SongForm = ({
             </Link>
           )}
         </p>
-      </div>
+      </div> */}
 
-      <div className="mt-4">
-        <button
-          type="submit"
-          className="inline-block w-full rounded-lg bg-primary hover:bg-primary-500 transition px-5 py-3 font-medium text-white sm:w-auto"
-        >
-          {isSubmitting || isLoading ? <Spinner /> : t("Submit")}
-        </button>
-      </div>
+      <Button className="mt-4" isLoading={isSubmitting || isLoading}>
+        Submit
+      </Button>
     </form>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 import { useRef } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { upload } from "@vercel/blob/client";
 
 import Spinner from "../spinner";
@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import Input from "../Input";
 import { uploadFile } from "@/utils/upload-files";
+import FileUploader from "@/components/file-dropzone";
 
 interface AlbumFormProps {
   onSubmit: () => void;
@@ -32,6 +33,7 @@ export default function AlbumForm({
 }: AlbumFormProps) {
   const id = album?.id;
   const {
+    control,
     register,
     handleSubmit,
     formState: { isLoading, isSubmitting, errors },
@@ -89,25 +91,39 @@ export default function AlbumForm({
       })}
       className="space-y-4"
     >
-      <Input
-        id="name"
-        label={t("Name")}
-        placeholder={t("Name")}
-        errMessage={errors.name?.message}
-        {...register("name", {
-          required: "This field is required",
-        })}
+      <Controller
+        control={control}
+        name="name"
+        rules={{ required: "This field is required" }}
+        render={({ field }) => (
+          <Input
+            label={"Name"}
+            placeholder="Name"
+            defaultValue={album?.name || ""}
+            onChange={(e) => {
+              field.onChange(e.target.value);
+            }}
+            errMessage={errors.name?.message}
+          />
+        )}
+      />
+      <Controller
+        control={control}
+        name="year"
+        rules={{ required: "This field is required" }}
+        render={({ field }) => (
+          <Input
+            label={"Year"}
+            placeholder="Year"
+            defaultValue={album?.year || ""}
+            onChange={(e) => {
+              field.onChange(e.target.value);
+            }}
+            errMessage={errors.name?.message}
+          />
+        )}
       />
 
-      <Input
-        id="year"
-        label={t("Year")}
-        placeholder={t("Year")}
-        errMessage={errors.year?.message}
-        {...register("year", {
-          required: "This field is required",
-        })}
-      />
       <Select
         id="artist"
         label={t("Artist")}
@@ -117,48 +133,19 @@ export default function AlbumForm({
         })}
         errMessage={errors.artistId?.message}
       />
-      <div>
-        <label
-          htmlFor="file_input"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          {t("Upload Image")}
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-          className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-          id="file_input"
-          {...register("image", {
-            required: !id && "This field is required", // Only required if creating a new album
-            validate: (value) =>
-              typeof value === "string" ||
-              value?.length > 0 ||
-              "This field is required", // Checks if the value is a string (URL) or a file is uploaded
-          })}
-        />
-        {!!errors.image && (
-          <span className="text-red-500 text-sm">{errors.image.message}</span>
-        )}
 
-        <p
-          className="mt-1 text-sm text-gray-500 dark:text-gray-300"
-          id="file_input_help"
-        >
-          {!!id
-            ? t("Leave empty to keep the same image")
-            : t("Upload a song thumbnail")}
-          {album?.image && (
-            <Link
-              target="_blank"
-              href={album?.image}
-              className="text-blue-500 hover:underline"
-            >
-              ( {t("View thumbnail")} )
-            </Link>
-          )}
-        </p>
-      </div>
+      <Controller
+        control={control}
+        name="image"
+        render={({ field }) => (
+          <FileUploader
+            defaultImageUrl={album?.image || ""}
+            label="Image"
+            onFileUpload={(url) => field.onChange(url)}
+            errorMessage={errors.image?.message}
+          />
+        )}
+      />
 
       <div className="mt-4">
         <button

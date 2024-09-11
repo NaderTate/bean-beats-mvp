@@ -2,11 +2,11 @@ import Main from "./Main";
 import prisma from "@/lib/prisma";
 
 export default async function Page() {
-  const songs = await prisma.song.findMany();
-  const albums = await prisma.album.findMany();
-  const artists = await prisma.artist.findMany();
-  const playlists = await prisma.playlist.findMany();
-  const genres = await prisma.genre.findMany();
+  const songs = await prisma.song.findMany({ orderBy: { id: "desc" } });
+  const albums = await prisma.album.findMany({ orderBy: { id: "desc" } });
+  const artists = await prisma.artist.findMany({ orderBy: { id: "desc" } });
+  const playlists = await prisma.playlist.findMany({ orderBy: { id: "desc" } });
+  const genres = await prisma.genre.findMany({ orderBy: { id: "desc" } });
   return (
     <Main
       songs={songs}
