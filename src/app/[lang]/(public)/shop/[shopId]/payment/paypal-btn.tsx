@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 // import { updateUserPlan } from "@/actions/users";
 // import { getSusbcriptionDetails } from "@/utils/paypal";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { useTranslations } from "next-intl";
 
 type PayPalBtnProps =
   | { action: "order"; amount: number; onPaymentSuccess: () => void }
@@ -16,6 +17,7 @@ type PayPalBtnProps =
     };
 
 export const PayPalBtn = (props: PayPalBtnProps) => {
+  const t = useTranslations();
   const [{ options, isPending }] = usePayPalScriptReducer();
   // const [currency, setCurrency] = useState(options.currency);
   const [message, setMessage] = useState("");
@@ -126,7 +128,7 @@ export const PayPalBtn = (props: PayPalBtnProps) => {
               if (orderData.status === "COMPLETED") {
                 props.onPaymentSuccess && props.onPaymentSuccess();
               } else {
-                toast.error("Payment failed!");
+                toast.error(t("Payment failed!"));
               }
               setMessage(
                 `Transaction ${transaction.status}: ${transaction.id}. See console for all available details`

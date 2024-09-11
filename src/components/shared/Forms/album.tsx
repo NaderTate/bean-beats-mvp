@@ -1,17 +1,13 @@
 "use client";
-import { useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { upload } from "@vercel/blob/client";
 
-import Spinner from "../spinner";
 import { Album, Artist } from "@prisma/client";
 import Select from "../Select";
 import { updateAlbum } from "@/actions/albums";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import Input from "../Input";
-import { uploadFile } from "@/utils/upload-files";
 import FileUploader from "@/components/file-dropzone";
+import Button from "@/components/button";
 
 interface AlbumFormProps {
   onSubmit: () => void;
@@ -23,7 +19,7 @@ type Inputs = {
   name: string;
   year: number;
   artistId: string;
-  image: FileList | string;
+  image: string;
 };
 
 export default function AlbumForm({
@@ -56,44 +52,36 @@ export default function AlbumForm({
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
-        if (data.image === null) {
-          return alert("No file selected");
+        if (id) {
+          await updateAlbum({
+            id,
+            data: {
+              ...data,
+              year: Number(data.year),
+              image: data.image,
+            },
+          });
+        } else {
+          await fetch("/api/albums", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ...data,
+              year: Number(data.year),
+              image: data.image,
+            }),
+          });
         }
 
-        const newBlob =
-          typeof data.image === "string"
-            ? { url: data.image } // If it's a URL, just use it
-            : data.image?.length > 0
-            ? await uploadFile(data.image[0])
-            : { url: album?.image }; // If no new file is uploaded, keep the existing image URL
-
-        id
-          ? await updateAlbum({
-              id,
-              data: {
-                ...data,
-                year: Number(data.year),
-                image: newBlob.url,
-              },
-            })
-          : await fetch("/api/albums", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                ...data,
-                year: Number(data.year),
-                image: newBlob.url,
-              }),
-            });
         onSubmit();
       })}
       className="space-y-4"
     >
       <Controller
-        control={control}
         name="name"
+        control={control}
         rules={{ required: "This field is required" }}
         render={({ field }) => (
           <Input
@@ -137,6 +125,7 @@ export default function AlbumForm({
       <Controller
         control={control}
         name="image"
+        rules={{ required: "This field is required" }}
         render={({ field }) => (
           <FileUploader
             defaultImageUrl={album?.image || ""}
@@ -147,14 +136,9 @@ export default function AlbumForm({
         )}
       />
 
-      <div className="mt-4">
-        <button
-          type="submit"
-          className="inline-block w-full rounded-lg bg-primary hover:bg-primary-500 transition px-5 py-3 font-medium text-white sm:w-auto"
-        >
-          {isSubmitting || isLoading ? <Spinner /> : t("Submit")}
-        </button>
-      </div>
+      <Button className="mt-4" isLoading={isSubmitting || isLoading}>
+        Submit
+      </Button>
     </form>
   );
 }

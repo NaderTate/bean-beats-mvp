@@ -4,10 +4,13 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 import Spinner from "@/components/shared/spinner";
+import { useTranslations } from "next-intl";
 
 type Props = {};
 
 const ForgotPasswordForm = ({}: Props) => {
+  const t = useTranslations();
+
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
@@ -22,7 +25,7 @@ const ForgotPasswordForm = ({}: Props) => {
         "Content-Type": "application/json",
       },
     });
-    toast.success("Password reset link sent successfully");
+    toast.success(t("Password reset link sent successfully"));
     setIsLoading(false);
     setIsEmailSent(true);
   };

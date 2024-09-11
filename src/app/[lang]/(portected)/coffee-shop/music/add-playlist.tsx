@@ -34,6 +34,8 @@ const AddPlaylist = ({ onSubmit, allSongs, allPlaylists, shopId }: Props) => {
     setOpen(!open);
   };
 
+  const t = useTranslations();
+
   const [selectedPlaylists, setSelectedPlaylists] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleCheckboxChange = (playlistId: string) => {
@@ -51,10 +53,9 @@ const AddPlaylist = ({ onSubmit, allSongs, allPlaylists, shopId }: Props) => {
       shopId,
     });
     setIsSubmitting(false);
-    toast.success("Artist added successfully");
+    toast.success(t("Artist added successfully"));
     onSubmit();
   };
-  const t = useTranslations();
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">{t("Select Playlists")}</h2>

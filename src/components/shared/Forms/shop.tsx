@@ -54,10 +54,10 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
           logo: data.shopLogo,
         });
         if (res.updated) {
-          toast.success("Shop updated successfully");
+          toast.success(t("Shop updated successfully"));
           onSubmit();
         } else {
-          toast.error("Failed to update shop");
+          toast.error(t("Failed to update shop"));
         }
       } else {
         const res = await createShopWithAdmin({
@@ -210,7 +210,7 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
               name="shopAdminImage"
               render={({ field }) => (
                 <FileUploader
-                  label="Shop Admin Image"
+                  label="Admin Image"
                   onFileUpload={(url) => field.onChange(url)}
                   errorMessage={errors.shopAdminImage?.message}
                 />

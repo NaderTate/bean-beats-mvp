@@ -9,6 +9,8 @@ import { useTranslations } from "next-intl";
 type Props = { allArtists: Artist[]; onSubmit: () => void; shopId: string };
 
 const AddArtist = ({ allArtists, onSubmit, shopId }: Props) => {
+  const t = useTranslations();
+
   const [selectedArtistsIds, setSelectedArtistsIds] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleCheckboxChange = (artistId: string) => {
@@ -26,11 +28,9 @@ const AddArtist = ({ allArtists, onSubmit, shopId }: Props) => {
       shopId,
     });
     setIsSubmitting(false);
-    toast.success("Artist added successfully");
+    toast.success(t("Artist added successfully"));
     onSubmit();
   };
-
-  const t = useTranslations();
 
   return (
     <div className="bg-white rounded-lg">

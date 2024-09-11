@@ -3,6 +3,7 @@
 import { updateUserPassword } from "@/actions/users";
 import Spinner from "@/components/shared/spinner";
 import useGetLang from "@/hooks/use-get-lang";
+import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -10,6 +11,7 @@ import toast from "react-hot-toast";
 type Props = {};
 
 const NewPasswordForm = ({}: Props) => {
+  const t = useTranslations();
   const searchParams = useSearchParams();
 
   const [password, setPassword] = useState("");
@@ -28,7 +30,7 @@ const NewPasswordForm = ({}: Props) => {
 
     // Check if passwords match
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error(t("Passwords do not match"));
       return;
     }
 
@@ -36,10 +38,10 @@ const NewPasswordForm = ({}: Props) => {
 
     try {
       await updateUserPassword({ userId, password });
-      toast.success("Password updated successfully");
+      toast.success(t("Password updated successfully"));
       push(`/${lang}/signin`);
     } catch (error) {
-      toast.error("Error updating password");
+      toast.error(t("Error updating password"));
     } finally {
       setIsLoading(false);
     }

@@ -3,6 +3,7 @@ import { BsCloudUpload } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx"; // Importing the cross icon
 import Spinner from "@/components/shared/spinner"; // Assuming Spinner is already implemented
 import { uploadFile } from "@/utils/upload-files"; // Function to handle file upload
+import { useTranslations } from "next-intl";
 
 interface FileUploaderProps {
   label?: string;
@@ -25,6 +26,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   defaultAudioUrl, // Receiving the default audio URL
   accept = "image/*,audio/*", // Default accept value for images and audio
 }) => {
+  const t = useTranslations();
   const [isUploading, setIsUploading] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | undefined>(
@@ -106,7 +108,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
     <>
       {label && (
         <label className="block text-sm font-medium text-gray-700">
-          {label}
+          {t(label)}
         </label>
       )}
       <div className="w-full max-w-md mx-auto">
@@ -161,7 +163,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
               <div>
                 <BsCloudUpload className="mx-auto text-teal-400 text-3xl" />
                 <p className="mt-4 text-teal-600">
-                  Drop a file here to upload, or click to browse
+                  {t("Drop a file here to upload, or click to browse")}
                 </p>
               </div>
             )}
@@ -175,7 +177,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
           </label>
         )}
         {errorMessage && (
-          <p className="mt-2 text-sm text-red-600">{errorMessage}</p>
+          <p className="mt-2 text-sm text-red-600">{t(errorMessage)}</p>
         )}
       </div>
     </>

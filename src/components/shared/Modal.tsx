@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoClose } from "react-icons/io5";
+import { useTranslations } from "next-intl";
 
 export default function Modal({
   children,
@@ -14,6 +15,7 @@ export default function Modal({
   setOpen: () => void;
   title: string;
 }) {
+  const t = useTranslations();
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -63,7 +65,7 @@ export default function Modal({
                 <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                   <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                      {title}
+                      {t(title)}
                     </h3>
 
                     <IoClose

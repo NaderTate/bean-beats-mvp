@@ -20,7 +20,7 @@ export const createEmployee = async (data: {
     });
     if (existingUser) {
       revalidatePath("/coffee-shop/employees");
-      return { error: "A User with this email already exists." };
+      return { error: "A User with this email already exists" };
     }
     const createEmployee = await prisma.coffeeShopOnEmployee.create({
       data: {

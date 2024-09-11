@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 import Spinner from "@/components/shared/spinner";
 import { updateUserPassword } from "@/actions/users";
-import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 type Props = { userId: string };
 
 const CreatePassword = ({ userId }: Props) => {
+  const t = useTranslations();
+
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -17,7 +20,7 @@ const CreatePassword = ({ userId }: Props) => {
     setIsLoading(true);
 
     await updateUserPassword({ userId, password });
-    toast.success("Password created successfully");
+    toast.success(t("Password created successfully"));
     setIsLoading(false);
   };
 

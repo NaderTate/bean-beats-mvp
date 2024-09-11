@@ -44,7 +44,7 @@ const SelectGenres = ({
         onChange={(e) => setSearchQuery(e.target.value)}
         className="p-2 border border-gray-300 rounded mb-4 w-full"
       />
-      <div className="max-h-96 overflow-y-auto">
+      <div className="max-h-96 overflow-y-auto flex flex-wrap gap-5">
         {filteredGenres.length === 0 ? (
           <div className="text-gray-500">{t("No results found")}</div>
         ) : (

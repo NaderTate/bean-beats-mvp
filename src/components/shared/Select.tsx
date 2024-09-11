@@ -15,6 +15,7 @@ interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
 const Select = forwardRef<HTMLSelectElement, Props>(
   ({ options, label, errMessage, ...props }, ref) => {
     const t = useTranslations();
+
     return (
       <div>
         <label htmlFor={props.id || props.name}>{t(label)}</label>
@@ -34,7 +35,7 @@ const Select = forwardRef<HTMLSelectElement, Props>(
           ))}
         </select>
         {errMessage && (
-          <span className="text-red-500 text-sm">{errMessage}</span>
+          <span className="text-red-500 text-sm">{t(errMessage)}</span>
         )}
       </div>
     );

@@ -8,6 +8,7 @@ import { FaShop } from "react-icons/fa6";
 import { FaMoneyBillWave, FaMusic } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import useGetLang from "@/hooks/use-get-lang";
 
 const list = [
   {
@@ -85,6 +86,7 @@ const songs = [
 
 const Main = () => {
   const t = useTranslations();
+  const { lang } = useGetLang();
   const { push } = useRouter();
 
   return (
@@ -94,7 +96,7 @@ const Main = () => {
           <NCard
             key={item.title + "section1"}
             item={item}
-            cb={() => push(item.href)}
+            cb={() => push(`/${lang}${item.href}`)}
           />
         ))}
       </section>

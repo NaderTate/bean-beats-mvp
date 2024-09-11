@@ -58,7 +58,7 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
           toast.success("Employee updated successfully");
           onSubmit();
         } else {
-          toast.error("Failed to update employee");
+          toast.error(t("Failed to update employee"));
         }
         return;
       }
@@ -73,18 +73,18 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
         shopId,
       });
       if (res.error) {
-        toast.error(res.error);
+        toast.error(t(res.error));
         return;
       }
       if (res.created) {
-        toast.success("Employee created successfully");
+        toast.success(t("Employee created successfully"));
         onSubmit();
       } else {
-        toast.error("Failed to create employee");
+        toast.error(t("Failed to create employee"));
       }
     } catch (error: any) {
       console.log(error);
-      toast.error(error.error);
+      toast.error(t(error.error));
     } finally {
       setIsLoading(false);
     }

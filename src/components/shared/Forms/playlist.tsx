@@ -1,11 +1,12 @@
 import { Playlist, Song } from "@prisma/client";
-import { useForm } from "react-hook-form";
-import Spinner from "../spinner";
+import { Controller, useForm } from "react-hook-form";
 import { createPlaylist, updatePlaylist } from "@/actions/playlists";
 import SelectSongs from "../select-songs";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import Input from "../Input";
+import Button from "@/components/button";
+import toast from "react-hot-toast";
 
 interface PlaylistFormProps {
   onSubmit: () => void;
@@ -24,6 +25,7 @@ function PlaylistForm({
 }: PlaylistFormProps) {
   const id = playlist?.id;
   const {
+    control,
     register,
     handleSubmit,
     formState: { isLoading, isSubmitting, errors },
@@ -42,47 +44,54 @@ function PlaylistForm({
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
-        id
-          ? await updatePlaylist({
-              id,
-              data: {
-                ...data,
-                songsIds: selectedSongs,
-              },
-            })
-          : await createPlaylist({
-              data: {
-                ...data,
-                songsIds: selectedSongs,
-              },
-            });
+        if (id) {
+          await updatePlaylist({
+            id,
+            data: {
+              ...data,
+              songsIds: selectedSongs,
+            },
+          });
+          toast.success(t("Playlist updated successfully"));
+        } else {
+          await createPlaylist({
+            data: {
+              ...data,
+              songsIds: selectedSongs,
+            },
+          });
+          toast.success(t("Playlist created successfully"));
+        }
+
         onSubmit();
       })}
       className="space-y-4"
     >
-      <Input
-        id="name"
-        label={t("Name")}
-        placeholder={t("Name")}
-        errMessage={errors.name?.message}
-        {...register("name", {
-          required: "This field is required",
-        })}
+      <Controller
+        name="name"
+        control={control}
+        rules={{ required: "This field is required" }}
+        render={({ field }) => (
+          <Input
+            label={"Name"}
+            placeholder="Name"
+            defaultValue={playlist?.name || ""}
+            onChange={(e) => {
+              field.onChange(e.target.value);
+            }}
+            errMessage={errors.name?.message}
+          />
+        )}
       />
+
       <SelectSongs
         songs={allSongs}
         handleCheckboxChange={setSelectedSongs}
         selectedSongIds={playlist ? playlist.songsIds : []}
       />
-
-      <div className="mt-4">
-        <button
-          type="submit"
-          className="aboslute bottom-0 inline-block w-full rounded-lg bg-primary hover:bg-primary-500 transition px-5 py-3 font-medium text-white sm:w-auto"
-        >
-          {isSubmitting || isLoading ? <Spinner /> : t("Submit")}
-        </button>
-      </div>
+      <Button className="mt-4" isLoading={isSubmitting || isLoading}>
+        {t("Submit")}
+      </Button>
     </form>
   );
 }

@@ -10,6 +10,8 @@ import { useTranslations } from "next-intl";
 type Props = { allAlbums: Album[]; onSubmit: () => void; shopId: string };
 
 const AddAlbum = ({ allAlbums, shopId, onSubmit }: Props) => {
+  const t = useTranslations();
+
   const [selectedAlbumIds, setSelectedAlbumIds] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleCheckboxChange = (albumId: string) => {
@@ -27,11 +29,9 @@ const AddAlbum = ({ allAlbums, shopId, onSubmit }: Props) => {
       shopId,
     });
     setIsSubmitting(false);
-    toast.success("Albums added successfully");
+    toast.success(t("Albums added successfully"));
     onSubmit();
   };
-
-  const t = useTranslations();
 
   return (
     <div className="bg-white rounded-lg">

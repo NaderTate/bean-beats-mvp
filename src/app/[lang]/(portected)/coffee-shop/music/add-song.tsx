@@ -14,6 +14,8 @@ type Props = { allSongs: Song[]; onSubmit: () => void; shopId: string };
 type SelectedSong = { songId: string; price: number };
 
 const AddSong = ({ allSongs, onSubmit, shopId }: Props) => {
+  const t = useTranslations();
+
   const [selectedSongs, setSelectedSongs] = useState<SelectedSong[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -40,11 +42,9 @@ const AddSong = ({ allSongs, onSubmit, shopId }: Props) => {
       shopId,
     });
     setIsSubmitting(false);
-    toast.success("Song added successfully");
+    toast.success(t("Song added successfully"));
     onSubmit();
   };
-
-  const t = useTranslations();
 
   return (
     <div className="bg-white rounded-lg flex flex-col">
