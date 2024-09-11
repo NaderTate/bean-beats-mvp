@@ -6,11 +6,9 @@ import { NextResponse, NextRequest } from "next/server";
 export async function POST(request: Request): Promise<NextResponse> {
   const body = await request.json();
 
-  console.log("song body", body);
-
   const { title, artistId, albumId, duration, fileURL, thumbnail, genresIds } =
     body;
-  console.log("song body", body);
+
   try {
     const song = await prisma.song.create({
       data: {

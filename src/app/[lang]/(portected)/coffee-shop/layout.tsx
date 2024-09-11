@@ -1,10 +1,9 @@
-import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
 import Navbar from "./navbar";
 import Sidebar from "./sidebar";
 
 import { getUser } from "@/utils/get-user";
-import { redirect } from "next/navigation";
 
 const Layout = async ({
   children,
@@ -21,7 +20,7 @@ const Layout = async ({
     <div className="flex">
       <Navbar />
       <Sidebar />
-      <div className="mt-20 w-full">{children}</div>
+      <div className="mt-20 w-full px-5">{children}</div>
     </div>
   );
 };

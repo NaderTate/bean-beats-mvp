@@ -23,6 +23,7 @@ type Props = {
 const Playlists = ({ playlists, setOpen, allSongs, onSubmit }: Props) => {
   return (
     <Table
+      addBtnLabel="Add New Playlist"
       editForm={<PlaylistForm allSongs={allSongs} onSubmit={onSubmit} />}
       add={setOpen}
       deleteFn={deletePlaylist}

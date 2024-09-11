@@ -1,40 +1,60 @@
+"use client";
+
+import clsx from "clsx";
 import { useTranslations } from "next-intl";
-import { ChangeEvent, forwardRef, HTMLInputTypeAttribute } from "react";
+import { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 
-type Props = {
+type InputFieldProps = {
   id?: string;
-  step?: number;
-  label?: string;
-  disabled?: boolean;
+  label: string;
   placeholder?: string;
-  min?: number | string;
-  value?: string | number;
-  defaultValue?: string | number;
-  type?: HTMLInputTypeAttribute | undefined;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  className?: string;
   errMessage?: string;
-};
+  as?: "input" | "textarea"; // New prop to determine if the component should be an input or textarea
+} & InputHTMLAttributes<HTMLInputElement> &
+  TextareaHTMLAttributes<HTMLTextAreaElement>;
 
-const Input = forwardRef<HTMLInputElement, Props>(
-  ({ label, id, errMessage, ...props }, ref) => {
-    const t = useTranslations();
-    return (
-      <div>
-        {label && <label htmlFor={id}>{t(label)}</label>}
-        <input
-          ref={ref}
-          {...props}
-          placeholder={t(props.placeholder)}
-          className="w-full rounded-lg border-gray-200 p-3 text-sm focus:outline-none focus:border-primary/50 border  dark:border-gray-600 dark:placeholder-gray-400 dark:bg-gray-700 dark:text-gray-400"
-        />
-        {errMessage && (
-          <span className="text-red-500 text-sm">{errMessage}</span>
+const Input: React.FC<InputFieldProps> = ({
+  id,
+  label,
+  placeholder = "",
+  className,
+  errMessage,
+  as = "input", // Default to input if not specified
+  ...rest
+}) => {
+  const t = useTranslations();
+
+  const Component = as === "textarea" ? "textarea" : "input"; // Conditionally select the component
+
+  return (
+    <div>
+      <label
+        htmlFor={id}
+        className={clsx(
+          "relative block overflow-hidden rounded-md border px-4 pt-4 shadow-sm focus-within:ring-1",
+          className
         )}
-      </div>
-    );
-  }
-);
+      >
+        <Component
+          id={id}
+          {...rest}
+          placeholder={placeholder}
+          className={clsx(
+            "peer w-full border-none bg-transparent p-0 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm",
+            as === "textarea" ? "h-20 resize-none" : "h-8" // Adjust height for textarea
+          )}
+        />
 
-Input.displayName = "Input";
+        <span className="absolute start-3 top-3 -translate-y-1/2 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs">
+          {t(label)}
+        </span>
+      </label>
+      {errMessage && (
+        <p className="mt-1 text-xs text-red-600">{t(errMessage)}</p>
+      )}
+    </div>
+  );
+};
 
 export default Input;

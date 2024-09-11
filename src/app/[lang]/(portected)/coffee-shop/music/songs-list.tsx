@@ -23,6 +23,7 @@ type Props = {
 const SongsList = ({ songs, setOpen }: Props) => {
   return (
     <Table
+      addBtnLabel="Add New Song"
       add={setOpen}
       deleteFn={deleteCoffeeShopSong}
       data={songs.map((song, i) => ({

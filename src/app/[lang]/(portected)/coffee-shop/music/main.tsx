@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Album, Artist, Song } from "@prisma/client";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -15,7 +16,6 @@ import AddPlaylist from "./add-playlist";
 import Modal from "@/components/shared/Modal";
 
 import useGetLang from "@/hooks/use-get-lang";
-import { useTranslations } from "next-intl";
 
 type Props = {
   songs: {
@@ -83,7 +83,7 @@ const MusicMain = ({
   const section = searchParams.get("section");
 
   const [open, setOpen] = useState(false);
-  const [currentSection, setCurrentSection] = useState(section || "artists");
+  const [currentSection, setCurrentSection] = useState(section || "Artists");
 
   const toggleModal = () => {
     setTimeout(() => {

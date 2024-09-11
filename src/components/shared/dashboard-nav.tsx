@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import {
   FcNext,
+  FcShop,
   FcMusic,
   FcBarChart,
   FcMoneyTransfer,
@@ -15,7 +17,6 @@ import {
 import { HiOutlineLogout } from "react-icons/hi";
 
 import useGetLang from "@/hooks/use-get-lang";
-import { useTranslations } from "next-intl";
 
 const links = [
   {
@@ -37,6 +38,11 @@ const links = [
     title: "Transactions",
     icon: FcMoneyTransfer,
     href: "/dashboard/transactions",
+  },
+  {
+    title: "Shops",
+    icon: FcShop,
+    href: "/dashboard/shops",
   },
 ];
 

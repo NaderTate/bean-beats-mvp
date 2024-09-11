@@ -1,5 +1,6 @@
 "use client";
 
+import { removeArtistFromShop } from "@/actions/artists";
 import Table from "@/components/shared/table";
 
 type Props = {
@@ -17,6 +18,8 @@ type Props = {
 const ArtistsList = ({ artists, setOpen }: Props) => {
   return (
     <Table
+      addBtnLabel="Add New Artist"
+      deleteFn={removeArtistFromShop}
       add={setOpen}
       data={artists.map((artist, i) => ({
         ...artist,

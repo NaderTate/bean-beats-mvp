@@ -87,3 +87,13 @@ export const deleteCoffeeShopSong = async (id: string) => {
   });
   revalidatePath("/coffee-shop/music");
 };
+
+export const isSongExisting = async (data: Prisma.SongWhereInput) => {
+  const song = await prisma.song.findFirst({
+    where: data,
+  });
+  if (song) {
+    return true;
+  }
+  return false;
+};

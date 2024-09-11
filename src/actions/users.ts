@@ -9,7 +9,6 @@ export const updateUserData = async (data: {
   email: string;
   phoneNumber: string;
 }) => {
-  console.log({ data });
   const user = await prisma.user.update({
     where: { email: data.email },
     data: {

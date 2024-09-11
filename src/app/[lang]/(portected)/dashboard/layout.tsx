@@ -6,7 +6,7 @@ const Layout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <div className="flex min-h-screen overflow-x-hidden">
+    <div className="flex min-h-screen overflow-x-hidden px-5">
       <Dashboard />
       {children}
     </div>

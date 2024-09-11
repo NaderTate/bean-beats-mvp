@@ -7,6 +7,7 @@ import LineChart from "@/components/shared/Charts/line-chart";
 import { FaShop } from "react-icons/fa6";
 import { FaMoneyBillWave, FaMusic } from "react-icons/fa";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 
 const list = [
   {
@@ -14,17 +15,20 @@ const list = [
     title: "Total Revenue",
     value: 240.94,
     percent: "67.81%",
+    href: "/dashboard/transactions",
   },
   {
     Icon: () => <FaShop className="text-4xl text-blue-500" />,
     title: "Coffee Shops",
     value: 64,
+    href: "/dashboard/shops",
   },
 
   {
     Icon: () => <FaMusic className="text-4xl text-yellow-500" />,
     title: "Songs",
     value: 1600,
+    href: "/dashboard/music?secion=Songs",
   },
 ];
 
@@ -81,11 +85,17 @@ const songs = [
 
 const Main = () => {
   const t = useTranslations();
+  const { push } = useRouter();
+
   return (
     <main className="flex flex-col flex-1 w-full px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
       <section className=" grid col-span-1 gap-4  lg:grid-cols-3">
         {list.map((item) => (
-          <NCard key={item.title + "section1"} item={item} />
+          <NCard
+            key={item.title + "section1"}
+            item={item}
+            cb={() => push(item.href)}
+          />
         ))}
       </section>
       <section className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-8 pt-10 ">

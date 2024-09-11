@@ -22,6 +22,7 @@ type Props = {
 const Albums = ({ albums, setOpen }: Props) => {
   return (
     <Table
+      addBtnLabel="Add New Album"
       add={setOpen}
       deleteFn={reomveAlbumFromShop}
       data={albums.map((album, i) => ({

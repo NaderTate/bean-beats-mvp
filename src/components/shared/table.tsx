@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import React, { useState, useEffect, cloneElement } from "react";
@@ -22,6 +24,8 @@ interface TableProps {
   viewLink?: string;
   deleteFn?: (id: string) => Promise<void>;
   viewModal?: any;
+  hideSearch?: boolean;
+  addBtnLabel?: string;
 }
 
 export default function Table({
@@ -35,6 +39,8 @@ export default function Table({
   viewLink,
   deleteFn,
   viewModal,
+  hideSearch = false,
+  addBtnLabel,
 }: TableProps) {
   const [modifiedData, setModifiedData] = useState(data);
   const [openEdit, setOpenEdit] = useState<number | null>(null);
@@ -67,26 +73,28 @@ export default function Table({
   return (
     <div className="mt-5 rounded-lg">
       <div className="flex justify-between items-center gap-2 py-4">
-        <div className="mx-auto text-gray-600 border-2 border-gray-300  px-5 h-10 md:h-14  rounded-lg text-sm flex-1 flex justify-between items-center gap-5">
-          <input
-            type="search"
-            name="search"
-            value={searchTerm}
-            placeholder={t("Search") + "..."}
-            className="focus:outline-none flex-1 h-full"
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button title="search" type="submit" className="">
-            <CiSearch className="text-gray-600  text-2xl" />
-          </button>
-        </div>
+        {!hideSearch && (
+          <div className="mx-auto text-gray-600 border-2 border-gray-300  px-5 h-10 md:h-14  rounded-lg text-sm flex-1 flex justify-between items-center gap-5">
+            <input
+              type="search"
+              name="search"
+              value={searchTerm}
+              placeholder={t("Search") + "..."}
+              className="focus:outline-none flex-1 h-full"
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button title="search" type="submit" className="">
+              <CiSearch className="text-gray-600  text-2xl" />
+            </button>
+          </div>
+        )}
         {add && (
           <button
             onClick={add}
             className=" bg-primary hover:bg-primary/80 transition text-white rounded-lg py-2 px-4  md:px-10 md:py-4 flex items-center gap-2"
           >
             <IoMdAddCircle className="text-xl" size={25} />
-            {t("Add")}
+            {addBtnLabel ? t(addBtnLabel) : t("Add")}
           </button>
         )}
       </div>

@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { getUser } from "@/utils/get-user";
 import { revalidatePath } from "next/cache";
 
 export const addArtistsToShop = async (data: {
@@ -57,6 +58,33 @@ export const updateArtist = async (options: {
       id,
     },
     data,
+  });
+  revalidatePath("/dashboard/music");
+};
+
+export const removeArtistFromShop = async (artistId: string) => {
+  const user = await getUser();
+  if (!user) {
+    throw new Error("User not found");
+  }
+  const shop = await prisma.coffeeShop.findFirst({
+    where: {
+      adminId: user.id,
+    },
+  });
+  if (!shop) {
+    throw new Error("Shop not found");
+  }
+
+  await prisma.coffeeShop.update({
+    where: {
+      id: shop.id,
+    },
+    data: {
+      Artists: {
+        disconnect: { id: artistId },
+      },
+    },
   });
   revalidatePath("/dashboard/music");
 };

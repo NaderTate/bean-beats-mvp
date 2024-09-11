@@ -1,19 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
-import { upload } from "@vercel/blob/client";
+import { useTranslations } from "next-intl";
 import { useForm, Controller } from "react-hook-form";
 import { Album, Artist, Genre, Song } from "@prisma/client";
 
 import Input from "../Input";
 import Select from "../Select";
 import Spinner from "../spinner";
-
-import { updateSong } from "@/actions/songs";
 import SelectGenres from "../select-genres";
-import { useTranslations } from "next-intl";
+
 import { uploadFile } from "@/utils/upload-files";
+import { isSongExisting, updateSong } from "@/actions/songs";
 
 type Props = {
   albums: Album[];
@@ -77,7 +77,11 @@ const SongForm = ({
 
   const submitHandler = async (data: any) => {
     const { file, thumbnail, ...otherData } = data;
-
+    const doesSongTitleExist = await isSongExisting({ title: otherData.title });
+    if (doesSongTitleExist) {
+      toast.error("A song with this title already exists");
+      return;
+    }
     const songFile = file?.[0]; // Check if file is defined
     const thumbnailImage = thumbnail?.[0]; // Check if thumbnail is defined
 
@@ -103,7 +107,7 @@ const SongForm = ({
         },
       });
     } else {
-      await fetch("/api/songs", {
+      const res = await fetch("/api/songs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -115,9 +119,10 @@ const SongForm = ({
           genresIds: selectedGenres,
         }),
       });
+      const data = await res.json();
+      if (data.error) console.log(data);
     }
-
-    onSubmit();
+    // onSubmit();
   };
   const albumOptions = albums.map((album) => ({
     value: album.id,

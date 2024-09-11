@@ -2,3 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(0);
+  animation: ripple-animation 600ms linear;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 16%,
+    63% 16%,
+    48% 72%,
+    59% 100%,
+    0 100%,
+    0% 30%
+  ); /* Adjusted to match your image */
+  pointer-events: none; /* Make sure the overlay does not block interactions with the video */
+}

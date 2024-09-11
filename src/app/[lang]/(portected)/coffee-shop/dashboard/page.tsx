@@ -8,6 +8,7 @@ import { FaMusic } from "react-icons/fa";
 import { FaCircleUser } from "react-icons/fa6";
 import LineChart from "@/components/shared/Charts/line-chart";
 import SongCard from "./song-card";
+import Table from "@/components/shared/table";
 
 const data = {
   labels: [
@@ -47,12 +48,15 @@ const DashboardPage: NextPage = async ({}: DashboardPageProps) => {
       })
     : null;
 
-  const currentPlayingSong = await prisma.queueSong.findFirst({
+  const songsQueue = await prisma.queueSong.findMany({
     where: { coffeeShopId: coffeeShop?.id },
-    include: { song: { include: { artist: { select: { name: true } } } } },
+    include: {
+      song: { include: { artist: { select: { name: true, image: true } } } },
+    },
+    orderBy: { id: "asc" },
   });
   return (
-    <>
+    <div className="p-5">
       <Analytics
         data={[
           {
@@ -76,13 +80,28 @@ const DashboardPage: NextPage = async ({}: DashboardPageProps) => {
         ]}
       />
       <LineChart data={data} />
-      {currentPlayingSong && (
+      {songsQueue.length > 0 && (
         <>
-          <h1 className="text-2xl font-semibold mt-5">Now Playing</h1>
-          <SongCard song={currentPlayingSong.song} />
+          <h1 className="text-2xl font-semibold mt-5">Current playing song</h1>
+          <SongCard song={songsQueue[0].song} />
+          <h1 className="text-2xl font-semibold -mb-10 mt-10">Music Queue</h1>
+          <Table
+            hideSearch
+            data={songsQueue.map(({ song }, i) => ({
+              ...song,
+              number: i + 1,
+              artistName: song.artist?.name,
+              artistImage: song.artist?.image,
+            }))}
+            fields={{
+              number: "#",
+              title: "Song Name",
+              artistName: "Artist",
+            }}
+          />
         </>
       )}
-    </>
+    </div>
   );
 };
 

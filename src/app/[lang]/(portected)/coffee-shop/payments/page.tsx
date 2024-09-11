@@ -26,7 +26,12 @@ const PaymentsPage: NextPage = async ({}: PaymentsPageProps) => {
     : null;
   return (
     <>
-      {coffeeShop && <PaymentsTable transactions={coffeeShop?.Transactions} />}
+      {coffeeShop && (
+        <PaymentsTable
+          transactions={coffeeShop?.Transactions}
+          viewLink="/coffee-shop/payments"
+        />
+      )}
     </>
   );
 };
