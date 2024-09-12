@@ -81,7 +81,7 @@ const CreateAccount = ({ onSubmit }: Props) => {
   return (
     <div className="mt-80">
       <h1 className="font-bold text-2xl text-center mb-5">
-        Create a new account
+        {t("Create a new account")}
       </h1>
       <form onSubmit={handleSubmit(submitHandler)} className="space-y-5">
         <>

@@ -95,7 +95,6 @@ const ProfileForm = ({ itemToEdit: User, onSubmit }: Props) => {
             rules={{ required: "This field is required" }}
             render={({ field }) => (
               <Input
-                disabled={!!isEditSession}
                 defaultValue={User?.email}
                 onChange={(e) => {
                   field.onChange(e.target.value);

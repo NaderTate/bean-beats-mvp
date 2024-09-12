@@ -164,5 +164,6 @@
   "Profile": "الملف الشخصي",
   "Edit profile": "تعديل الملف الشخصي",
   "Data updated successfully": "تم تحديث البيانات بنجاح",
-  "Failed to update data": "فشل تحديث البيانات"
+  "Failed to update data": "فشل تحديث البيانات",
+  "Create a new account": "إنشاء حساب جديد"
 }
