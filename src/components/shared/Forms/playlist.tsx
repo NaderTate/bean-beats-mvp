@@ -26,7 +26,7 @@ function PlaylistForm({
   const id = playlist?.id;
   const {
     control,
-    register,
+
     handleSubmit,
     formState: { isLoading, isSubmitting, errors },
   } = useForm<Inputs>({
