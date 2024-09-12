@@ -36,13 +36,13 @@ const MusicMain = ({ shopId, songs, albums, artists }: Props) => {
   return (
     <div className="md:p-20 p-5 pt-20 ">
       <h3 className="font-semibold text-xl mb-5">{t("Music List")}</h3>
-      <div>
+      {/* <div>
         <input
           type="text"
           placeholder={t("Search")}
           className="w-full p-2 border border-gray-300 rounded-full"
         />
-      </div>
+      </div> */}
       <div className="flex gap-x-5 my-10">
         {sectionsData.map((section) => (
           <button
