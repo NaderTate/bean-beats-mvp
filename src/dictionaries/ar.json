@@ -162,5 +162,7 @@
   "Phone": "الهاتف",
   "Add New Employee": "إضافة موظف جديد",
   "Profile": "الملف الشخصي",
-  "Edit profile": "تعديل الملف الشخصي"
+  "Edit profile": "تعديل الملف الشخصي",
+  "Data updated successfully": "تم تحديث البيانات بنجاح",
+  "Failed to update data": "فشل تحديث البيانات"
 }

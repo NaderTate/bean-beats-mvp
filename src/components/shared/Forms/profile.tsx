@@ -11,11 +11,10 @@ import Button from "@/components/button";
 import FileUploader from "@/components/file-dropzone";
 
 import { updateUserData } from "@/actions/users";
-import { createEmployee } from "@/actions/employee";
 
-type Props = { shopId: string; itemToEdit?: User; onSubmit: () => void };
+type Props = { itemToEdit: User; onSubmit: () => void };
 
-const ProfileForm = ({ itemToEdit: User, onSubmit, shopId }: Props) => {
+const ProfileForm = ({ itemToEdit: User, onSubmit }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   User;
   const id = User?.id;
@@ -47,42 +46,21 @@ const ProfileForm = ({ itemToEdit: User, onSubmit, shopId }: Props) => {
   const submitHandler = async (data: Inputs) => {
     try {
       setIsLoading(true);
-      if (isEditSession) {
-        const res = await updateUserData({
-          id: User.id,
-          name: data.name,
-          email: data.email,
-          image: data.image,
-          phoneNumber: data.phone,
-        });
-        if (res) {
-          toast.success("Employee updated successfully");
-          onSubmit();
-        } else {
-          toast.error(t("Failed to update employee"));
-        }
-        return;
-      }
-      const res = await createEmployee({
-        employee: {
-          name: data.name,
-          email: data.email,
-          phoneNumber: data.phone,
-          password: data.password,
-          image: data.image,
-        },
-        shopId,
+
+      const res = await updateUserData({
+        id: User.id,
+        name: data.name,
+        email: data.email,
+        image: data.image,
+        phoneNumber: data.phone,
       });
-      if (res.error) {
-        toast.error(t(res.error));
-        return;
-      }
-      if (res.created) {
-        toast.success(t("Employee created successfully"));
+      if (res) {
+        toast.success("Data updated successfully");
         onSubmit();
       } else {
-        toast.error(t("Failed to create employee"));
+        toast.error(t("Failed to update data"));
       }
+      return;
     } catch (error: any) {
       console.log(error);
       toast.error(t(error.error));

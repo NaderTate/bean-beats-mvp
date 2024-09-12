@@ -21,6 +21,8 @@ import { HiOutlineLogout } from "react-icons/hi";
 
 import useGetLang from "@/hooks/use-get-lang";
 import LanguageToggle from "../language-toggle";
+import ProfileForm from "./Forms/profile";
+import { User } from "@prisma/client";
 
 const links = [
   {
@@ -50,7 +52,7 @@ const links = [
   },
 ];
 
-export default function Dashboard() {
+export default function Dashboard({ user }: { user: User }) {
   const { push } = useRouter();
   const { lang } = useGetLang();
   const pathname = usePathname();
@@ -139,9 +141,9 @@ export default function Dashboard() {
           />
         </button>
       </div>
-      {/* <Modal open={isModalOpen} title="Edit profile" setOpen={toggleModal}>
-        <EmployeeForm shopId={shopId} onSubmit={() => setIsOpen(false)} />
-      </Modal> */}
+      <Modal open={isModalOpen} title="Edit profile" setOpen={toggleModal}>
+        <ProfileForm itemToEdit={user} onSubmit={toggleModal} />
+      </Modal>
     </>
   );
 }
