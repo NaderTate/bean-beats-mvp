@@ -4,7 +4,7 @@ import Table from "@/components/shared/table";
 import { Song } from "@prisma/client";
 
 type Props = {
-  songs: (Song & { artist: { name: string; image: string } | null })[];
+  songs: (Song & { artist: { name: string } | null })[];
 };
 
 const SongsList = ({ songs }: Props) => {
@@ -15,7 +15,6 @@ const SongsList = ({ songs }: Props) => {
           ...song,
           number: i + 1,
           artistName: song.artist?.name,
-          artistImage: song.artist?.image,
         }))}
         fields={{
           number: "#",

@@ -3,9 +3,7 @@ import { Song, Transaction } from "@prisma/client";
 import SongsList from "./songs-list";
 
 type Props = {
-  transaction: Transaction & {
-    songs: (Song & { artist: { name: string; image: string } | null })[];
-  };
+  transaction: Transaction;
 };
 
 const Main = ({ transaction }: Props) => {
@@ -13,11 +11,7 @@ const Main = ({ transaction }: Props) => {
     <div className="w-full p-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <Input value={transaction.tableNumber} disabled label="Table No" />
-        <Input
-          value={transaction.songsIds.length}
-          disabled
-          label="No of songs"
-        />
+        <Input value={transaction.songs.length} disabled label="No of songs" />
         <Input
           value={new Date(transaction.createdAt).toLocaleString("en-US", {
             month: "short",
@@ -32,6 +26,7 @@ const Main = ({ transaction }: Props) => {
         />
         <Input value={transaction.amount} disabled label="Total Cost" />
       </div>
+      {/* @ts-ignore */}
       <SongsList songs={transaction.songs} />
     </div>
   );

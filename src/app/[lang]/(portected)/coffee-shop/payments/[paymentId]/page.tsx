@@ -11,9 +11,9 @@ const PayemtPage = async ({ params: { paymentId } }: PayemtPageProps) => {
     where: {
       id: paymentId,
     },
-    include: {
-      songs: { include: { artist: { select: { name: true, image: true } } } },
-    },
+    // include: {
+    //   songs: { include: { artist: { select: { name: true, image: true } } } },
+    // },
   });
   if (transaction)
     return (
