@@ -53,6 +53,8 @@ const SongForm = ({
       duration: song?.duration,
       albumId: song?.albumId || undefined,
       artistId: song?.artistId || undefined,
+      file: song?.fileURL || "",
+      thumbnail: song?.thumbnail || "",
     },
   });
 
