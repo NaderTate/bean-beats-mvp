@@ -64,7 +64,9 @@ const MusicMain = ({ shopId, songs, albums, artists }: Props) => {
         ))}
       </div>
       {currentSesction === "songs" && <Songs songs={songs} />}
-      {currentSesction === "albums" && <Albums albums={albums} />}
+      {currentSesction === "albums" && (
+        <Albums albums={albums} shopId={shopId} />
+      )}
       {currentSesction === "artists" && (
         <Artrists artists={artists} shopId={shopId} />
       )}

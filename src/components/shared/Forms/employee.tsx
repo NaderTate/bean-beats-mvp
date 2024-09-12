@@ -51,7 +51,6 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
           name: data.name,
           email: data.email,
           phoneNumber: data.phone,
-          password: data.password || "",
           image: data.image,
         });
         if (res) {
