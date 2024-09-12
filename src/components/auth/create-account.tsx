@@ -140,6 +140,7 @@ const CreateAccount = ({ onSubmit }: Props) => {
               rules={{ required: "This field is required" }}
               render={({ field }) => (
                 <Input
+                  type="password"
                   label="Password"
                   placeholder="Password"
                   onChange={(e) => {
