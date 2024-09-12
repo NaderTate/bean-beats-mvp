@@ -1,59 +1,31 @@
-import prisma from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse, NextRequest } from 'next/server'
+import prisma from '@/lib/prisma'
 
-export async function POST(req: NextRequest) {
-  const { queueSongId, coffeeShopId } = await req.json();
-
-  if (!queueSongId) {
-    return NextResponse.json(
-      { error: "queueSongId is required" },
-      { status: 400 }
-    );
-  }
-
-  if (!coffeeShopId) {
-    return NextResponse.json(
-      { error: "coffeeShopId is required" },
-      { status: 400 }
-    );
-  }
-
+export async function PATCH(request: NextRequest, { params: { shopId } }: { params: { shopId: string } }) {
   try {
-    const queueSong = await prisma.queueSong.delete({
+    const song = await prisma.queueSong.findFirst({
       where: {
-        id: queueSongId,
+        coffeeShopId: shopId,
       },
-      include: {
-        song: true,
+      orderBy: {
+        id: 'asc',
       },
-    });
+    })
 
-    if (!queueSong) {
-      throw new Error("Queue song not found");
+    if (!song) {
+      return NextResponse.json({ message: 'No songs in the queue' }, { status: 404 })
     }
-    const queue = await prisma.queueSong.findMany({
+
+    // remove the song from the queue
+    await prisma.queueSong.delete({
       where: {
-        coffeeShopId,
+        id: song.id,
       },
-      include: {
-        song: true,
-      },
-    });
+    })
 
-    return NextResponse.json({ deleted: true, deletedSong: queueSong, queue });
-  } catch (error: any) {
-    if (error.code === "P2025") {
-      // Prisma error code for record not found
-      return NextResponse.json(
-        { error: "Queue song not found" },
-        { status: 404 }
-      );
-    } else {
-      // Handle other errors (e.g., Prisma connection errors)
-      return NextResponse.json(
-        { error: "An unexpected error occurred" },
-        { status: 500 }
-      );
-    }
+    return NextResponse.json('Song removed from queue')
+  } catch (error) {
+    console.error('Error fetching or processing the queue:', error)
+    return NextResponse.json({ message: 'An error occurred while processing the queue' }, { status: 500 })
   }
 }

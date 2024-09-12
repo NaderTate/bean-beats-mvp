@@ -1,11 +1,11 @@
 import { NextResponse, NextRequest } from 'next/server'
 import prisma from '@/lib/prisma'
 
-export async function GET(request: NextRequest, { params: { shopId } }: { params: { shopId: string } }) {
+export async function PATCH(request: NextRequest, { params: { shopId } }: { params: { shopId: string } }) {
   try {
     // get the first song in the queue
-    const searchParams = request.nextUrl.searchParams
-    const method = searchParams.get('method')
+    const body = await request.json()
+    const { method } = body
 
     const song = await prisma.queueSong.findFirst({
       where: {
