@@ -111,7 +111,7 @@ const Navbar = ({ shopId }: { shopId: string }) => {
                   />
                 </>
               ) : (
-                <SignIn />
+                <SignIn setSection={() => {}} />
               )}
             </motion.div>
           )}
