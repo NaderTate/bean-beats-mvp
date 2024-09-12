@@ -8,17 +8,22 @@ import { usePathname } from "next/navigation";
 import SignIn from "@/components/auth/sign-in";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { FaEye } from "react-icons/fa";
+
 import Drawer from "@/components/shared/Navbar/Drawer";
 import DropDown from "@/components/shared/Navbar/DropDown";
+import useGetLang from "@/hooks/use-get-lang";
+import Tooltip from "@/components/tooltip";
 
-const Navbar = () => {
+const Navbar = ({ shopId }: { shopId: string }) => {
   const pathname = usePathname();
-  const shopId = pathname.split("/")[2];
   const { data: session } = useSession();
 
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const { lang } = useGetLang();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleScroll = () => {
@@ -67,7 +72,12 @@ const Navbar = () => {
           />
         </Link>
       </div>
-      <div className="inline-flex">
+      <div className="inline-flex items-center">
+        <Link target="_blank" href={`/${lang}/shop/${shopId}`}>
+          <Tooltip label="View as customer" direction="bottom">
+            <FaEye size={25} className="text-primary" />
+          </Tooltip>
+        </Link>
         <AnimatePresence mode="wait">
           {session?.user && (
             <motion.div
