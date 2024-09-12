@@ -122,7 +122,7 @@ const Navbar = () => {
       <div className="inline-flex">
         <div className="relative p-3 m-3">
           <Link
-            href={`${lang}/shop/${shopId}/payment`}
+            href={`/${lang}/shop/${shopId}/payment`}
             className="flex items-center gap-2"
           >
             <FiShoppingCart size={20} />

@@ -15,10 +15,10 @@ import { createEmployee } from "@/actions/employee";
 
 type Props = { shopId: string; itemToEdit?: User; onSubmit: () => void };
 
-const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
+const ProfileForm = ({ itemToEdit: User, onSubmit, shopId }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
-  Employee;
-  const id = Employee?.id;
+  User;
+  const id = User?.id;
   const isEditSession = !!id;
 
   const t = useTranslations();
@@ -27,8 +27,8 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
     name: string;
     email: string;
     phone: string;
-    password: string;
     image?: string;
+    password: string;
   };
 
   const {
@@ -37,9 +37,10 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
-      name: Employee?.name || "",
-      email: Employee?.email,
-      phone: Employee?.phoneNumber || "",
+      name: User?.name || "",
+      email: User?.email,
+      phone: User?.phoneNumber || "",
+      image: User?.image || "",
     },
   });
 
@@ -48,11 +49,11 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
       setIsLoading(true);
       if (isEditSession) {
         const res = await updateUserData({
-          id: Employee.id,
+          id: User.id,
           name: data.name,
           email: data.email,
-          phoneNumber: data.phone,
           image: data.image,
+          phoneNumber: data.phone,
         });
         if (res) {
           toast.success("Employee updated successfully");
@@ -101,7 +102,7 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
               <Input
                 label="Name"
                 placeholder="Name"
-                defaultValue={Employee?.name || ""}
+                defaultValue={User?.name || ""}
                 onChange={(e) => {
                   field.onChange(e.target.value);
                 }}
@@ -117,7 +118,7 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
             render={({ field }) => (
               <Input
                 disabled={!!isEditSession}
-                defaultValue={Employee?.email}
+                defaultValue={User?.email}
                 onChange={(e) => {
                   field.onChange(e.target.value);
                 }}
@@ -134,7 +135,7 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
             rules={{ required: "This field is required" }}
             render={({ field }) => (
               <Input
-                defaultValue={Employee?.phoneNumber || ""}
+                defaultValue={User?.phoneNumber || ""}
                 label="Phone"
                 placeholder="Phone"
                 onChange={(e) => {
@@ -151,7 +152,7 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
               rules={{ required: !isEditSession && "This field is required" }}
               render={({ field }) => (
                 <Input
-                  defaultValue={Employee?.password || ""}
+                  defaultValue={User?.password || ""}
                   label="Password"
                   placeholder="Password"
                   onChange={(e) => {
@@ -169,7 +170,7 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
           name="image"
           render={({ field }) => (
             <FileUploader
-              defaultImageUrl={Employee?.image || ""}
+              defaultImageUrl={User?.image || ""}
               label="Image"
               onFileUpload={(url) => field.onChange(url)}
               errorMessage={errors.image?.message}
@@ -185,4 +186,4 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
   );
 };
 
-export default EmployeeForm;
+export default ProfileForm;

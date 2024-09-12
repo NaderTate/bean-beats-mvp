@@ -1,5 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export const createTransaction = async ({
   shopId,
@@ -21,9 +22,11 @@ export const createTransaction = async ({
       select: {
         id: true,
         price: true,
+        song: {
+          select: { id: true, title: true, artist: { select: { name: true } } },
+        },
       },
     });
-    console.log({ songsIds });
     const amount = songs.reduce((acc, song) => acc + song.price, 0);
 
     const transaction = await prisma.transaction.create({
@@ -35,20 +38,40 @@ export const createTransaction = async ({
             id: shopId,
           },
         },
+        // store the name, album, and price of each song in the transaction
         songs: {
-          connect: songs.map((song) => ({ id: song.id })),
+          set: songs.map((song) => ({
+            id: song.id,
+            title: song.song.title,
+            artist: song.song.artist?.name,
+            price: song.price,
+          })),
         },
         tableNumber,
       },
     });
 
+    const updateSongsTimesPurchased = songs.forEach(async (song) => {
+      await prisma.song.update({
+        where: {
+          id: song.song.id,
+        },
+        data: {
+          timesPurchased: {
+            increment: 1,
+          },
+        },
+      });
+    });
+
     const addedSongsToQueue = await prisma.queueSong.createMany({
       data: songs.map((song) => ({
-        songId: song.id,
+        songId: song.song.id,
         coffeeShopId: shopId,
         transactionId: transaction.id,
       })),
     });
+    revalidatePath("/shop/[shopId]/queue");
   } catch (error) {
     console.error("Failed to create transaction:", error);
     return { success: false, message: "Failed to create transaction" };

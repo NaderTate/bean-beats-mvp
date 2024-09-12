@@ -10,9 +10,15 @@ type Song = {
 };
 
 export default function SongsList({
-  songs,
+  topSongs,
 }: Readonly<{
-  songs: Song[];
+  topSongs: {
+    artist: {
+      name: string;
+    } | null;
+    title: string;
+    thumbnail: string;
+  }[];
 }>) {
   const t = useTranslations();
   return (
@@ -22,18 +28,18 @@ export default function SongsList({
           {t("Top performing songs")}
         </h2>
       </div>
-      {songs.slice(0, 5).map((song) => (
+      {topSongs.map((song) => (
         <div
           key={song.title + "section2"}
           className="flex gap-2 border border-gray-200 rounded-xl shadow-sm h-16"
         >
           <div className="flex items-center justify-center p-1">
             <Image
-              src={song.image}
+              src={song.thumbnail}
               alt={song.title}
               width={60}
               height={60}
-              className="rounded-l-xl"
+              className="rounded-full object-cover aspect-square"
             />
           </div>
           <div className="flex flex-col justify-center items-center flex-1  rounded-b-xl px-2">
@@ -41,13 +47,10 @@ export default function SongsList({
               <p className="text-sm font-semibold text-gray-700">
                 {song.title}
               </p>
-              <p className="text-sm font-semibold text-gray-800">
-                {song.price}
-              </p>
             </div>
             <div className="flex flex-wrap w-full ">
               <p className="text-xs font-semibold text-gray-500">
-                {song.singer}
+                {song.artist?.name}
               </p>
             </div>
           </div>

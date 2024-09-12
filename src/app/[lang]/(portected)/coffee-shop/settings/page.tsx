@@ -19,6 +19,7 @@ const SettingsPage: NextPage = async ({}: SettingsPageProps) => {
     <>
       <SettingsMain
         shopAdminData={{
+          id: userData?.id as string,
           email: userData?.email,
           name: userData?.name,
           phoneNumber: userData?.phoneNumber,

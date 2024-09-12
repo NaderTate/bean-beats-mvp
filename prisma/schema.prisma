@@ -136,9 +136,9 @@ model Song {
   artistId        String?          @db.ObjectId
   albumId         String?          @db.ObjectId
   QueueSong       QueueSong[]
-  Transactions    Transaction[]    @relation(fields: [transactionsIds], references: [id])
   transactionsIds String[]         @default([]) @db.ObjectId
   SongCoffeeShop  SongCoffeeShop[]
+  timesPurchased  Int              @default(0)
   genres          Genre[]          @relation(fields: [genresIds], references: [id])
   genresIds       String[]         @default([]) @db.ObjectId
   playlists       Playlist[]       @relation(fields: [playlistsIds], references: [id])
@@ -220,8 +220,7 @@ model Transaction {
   amount      Float
   shop        CoffeeShop        @relation(fields: [shopId], references: [id])
   shopId      String            @db.ObjectId
-  songs       Song[]            @relation(fields: [songsIds], references: [id])
-  songsIds    String[]          @db.ObjectId
+  songs       Json[]
   tableNumber Int
   createdAt   DateTime          @default(now())
   QueueSong   QueueSong[]

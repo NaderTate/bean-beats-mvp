@@ -84,7 +84,16 @@ const songs = [
   },
 ];
 
-const Main = () => {
+interface MainProps {
+  topSongs: {
+    artist: {
+      name: string;
+    } | null;
+    title: string;
+    thumbnail: string;
+  }[];
+}
+const Main = ({ topSongs }: MainProps) => {
   const t = useTranslations();
   const { lang } = useGetLang();
   const { push } = useRouter();
@@ -141,7 +150,7 @@ const Main = () => {
             }}
           />
         </div>
-        <SongsList songs={songs} />
+        <SongsList topSongs={topSongs} />
       </section>
     </main>
   );

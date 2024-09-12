@@ -88,3 +88,18 @@ export const removeArtistFromShop = async (artistId: string) => {
   });
   revalidatePath("/dashboard/music");
 };
+
+export const isArtistExisting = async (data: {
+  artistName: string;
+  artistId?: string;
+}) => {
+  const artist = await prisma.artist.findFirst({
+    where: {
+      name: data.artistName,
+      id: {
+        not: data.artistId,
+      },
+    },
+  });
+  return artist;
+};

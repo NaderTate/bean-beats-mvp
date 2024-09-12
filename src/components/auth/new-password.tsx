@@ -8,9 +8,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-type Props = {};
+type Props = {
+  setSection: (section: string) => void;
+};
 
-const NewPasswordForm = ({}: Props) => {
+const NewPasswordForm = ({ setSection }: Props) => {
   const t = useTranslations();
   const searchParams = useSearchParams();
 
@@ -39,6 +41,7 @@ const NewPasswordForm = ({}: Props) => {
     try {
       await updateUserPassword({ userId, password });
       toast.success(t("Password updated successfully"));
+      setSection("login");
       push(`/${lang}/signin`);
     } catch (error) {
       toast.error(t("Error updating password"));

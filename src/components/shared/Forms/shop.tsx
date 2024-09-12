@@ -3,16 +3,20 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
-import { CoffeeShop } from "@prisma/client";
+import { CoffeeShop, User } from "@prisma/client";
 import { useForm, Controller } from "react-hook-form";
 
 import Input from "../Input";
 import Button from "@/components/button";
 import FileUploader from "@/components/file-dropzone";
 
+import { updateUserData } from "@/actions/users";
 import { createShopWithAdmin, updateShop } from "@/actions/shops";
 
-type Props = { itemToEdit?: CoffeeShop; onSubmit: () => void };
+type Props = {
+  itemToEdit?: CoffeeShop & { admin: User };
+  onSubmit: () => void;
+};
 
 const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -41,6 +45,10 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
       shopName: Shop?.name,
       shopAddress: Shop?.address,
       shopLogo: Shop?.logo,
+      shopAdminName: Shop?.admin.name || "",
+      shopAdminEmail: Shop?.admin.email || "",
+      shopAdminPhone: Shop?.admin.phoneNumber || "",
+      shopAdminImage: Shop?.admin.image || "",
     },
   });
 
@@ -48,6 +56,17 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
     try {
       setIsLoading(true);
       if (isEditSession) {
+        const updatingAdmin = await updateUserData({
+          id: Shop.admin.id,
+          name: data.shopAdminName,
+          email: data.shopAdminEmail,
+          phoneNumber: data.shopAdminPhone,
+          image: data.shopAdminImage,
+        });
+        if (!updatingAdmin) {
+          toast.error(t("Failed to update admin"));
+          return;
+        }
         const res = await updateShop(id, {
           name: data.shopName,
           address: data.shopAddress,
@@ -137,57 +156,60 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
             />
           )}
         />
-        {!isEditSession && (
-          <>
-            <div className="grid gird-cols-1 md:grid-cols-2 gap-5">
-              <Controller
-                control={control}
-                name="shopAdminName"
-                rules={{ required: "This field is required" }}
-                render={({ field }) => (
-                  <Input
-                    label="Admin Name"
-                    placeholder="Admin Name"
-                    onChange={(e) => {
-                      field.onChange(e.target.value);
-                    }}
-                    errMessage={errors.shopAdminName?.message}
-                  />
-                )}
-              />
 
-              <Controller
-                control={control}
-                name="shopAdminEmail"
-                rules={{ required: "This field is required" }}
-                render={({ field }) => (
-                  <Input
-                    onChange={(e) => {
-                      field.onChange(e.target.value);
-                    }}
-                    label="Admin Email"
-                    placeholder="Admin Email"
-                    errMessage={errors.shopAdminEmail?.message}
-                  />
-                )}
-              />
+        <>
+          <div className="grid gird-cols-1 md:grid-cols-2 gap-5">
+            <Controller
+              control={control}
+              name="shopAdminName"
+              rules={{ required: "This field is required" }}
+              render={({ field }) => (
+                <Input
+                  label="Admin Name"
+                  placeholder="Admin Name"
+                  defaultValue={Shop?.admin.name || ""}
+                  onChange={(e) => {
+                    field.onChange(e.target.value);
+                  }}
+                  errMessage={errors.shopAdminName?.message}
+                />
+              )}
+            />
 
-              <Controller
-                control={control}
-                name="shopAdminPhone"
-                rules={{ required: "This field is required" }}
-                render={({ field }) => (
-                  <Input
-                    label="Admin Phone"
-                    placeholder="Admin Phone"
-                    onChange={(e) => {
-                      field.onChange(e.target.value);
-                    }}
-                    errMessage={errors.shopAdminPhone?.message}
-                  />
-                )}
-              />
+            <Controller
+              control={control}
+              name="shopAdminEmail"
+              rules={{ required: "This field is required" }}
+              render={({ field }) => (
+                <Input
+                  defaultValue={Shop?.admin.email || ""}
+                  onChange={(e) => {
+                    field.onChange(e.target.value);
+                  }}
+                  label="Admin Email"
+                  placeholder="Admin Email"
+                  errMessage={errors.shopAdminEmail?.message}
+                />
+              )}
+            />
 
+            <Controller
+              control={control}
+              name="shopAdminPhone"
+              rules={{ required: "This field is required" }}
+              render={({ field }) => (
+                <Input
+                  label="Admin Phone"
+                  placeholder="Admin Phone"
+                  onChange={(e) => {
+                    field.onChange(e.target.value);
+                  }}
+                  defaultValue={Shop?.admin.phoneNumber || ""}
+                  errMessage={errors.shopAdminPhone?.message}
+                />
+              )}
+            />
+            {!isEditSession && (
               <Controller
                 control={control}
                 name="shopAdminPassword"
@@ -203,21 +225,22 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
                   />
                 )}
               />
-            </div>
+            )}
+          </div>
 
-            <Controller
-              control={control}
-              name="shopAdminImage"
-              render={({ field }) => (
-                <FileUploader
-                  label="Admin Image"
-                  onFileUpload={(url) => field.onChange(url)}
-                  errorMessage={errors.shopAdminImage?.message}
-                />
-              )}
-            />
-          </>
-        )}
+          <Controller
+            control={control}
+            name="shopAdminImage"
+            render={({ field }) => (
+              <FileUploader
+                label="Admin Image"
+                onFileUpload={(url) => field.onChange(url)}
+                errorMessage={errors.shopAdminImage?.message}
+              />
+            )}
+          />
+        </>
+
         <Button isLoading={isLoading} type="submit">
           {t("Submit")}
         </Button>

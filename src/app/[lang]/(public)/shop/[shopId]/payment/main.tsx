@@ -57,7 +57,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
       ? JSON.parse(localStorage.getItem("songs") || "[]")
       : [];
 
-    getMultipleSongs(songsIds).then((songs) => {
+    getMultipleSongs({ shopId, songsIds }).then((songs) => {
       setSongs(songs);
       const total = songs.reduce((acc, song) => acc + song.price, 0);
       setTotalAmount(total);
@@ -138,7 +138,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
         onPaymentSuccess={async () => {
           await createTransaction({
             shopId,
-            songsIds: songs.map((song) => song.id),
+            songsIds: songs.map((song) => song.song.id),
             tableNumber: 20,
           });
           localStorage.removeItem("songs");

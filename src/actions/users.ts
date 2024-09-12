@@ -5,17 +5,23 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
 export const updateUserData = async (data: {
+  id: string;
   name: string;
   email: string;
   phoneNumber: string;
   image?: string | undefined;
+  password?: string;
 }) => {
+  const hashedPassword =
+    data.password && (await bcrypt.hash(data.password, 10));
   const user = await prisma.user.update({
-    where: { email: data.email },
+    where: { id: data.id },
     data: {
       name: data.name,
+      email: data.email,
       phoneNumber: data.phoneNumber,
       image: data.image || undefined,
+      password: data.password ? hashedPassword : undefined,
     },
   });
   revalidatePath("/coffee-shop/settings");

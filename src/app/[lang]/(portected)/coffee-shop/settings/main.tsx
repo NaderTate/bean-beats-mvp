@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 
 type Props = {
   shopAdminData: {
+    id: string;
     name: string | null | undefined;
     email: string | undefined;
     phoneNumber: string | null | undefined;
@@ -24,7 +25,7 @@ const SettingsMain = ({ shopAdminData }: Props) => {
 
   const handleSave = async () => {
     setIsLoading(true);
-    await updateUserData({ name, email, phoneNumber });
+    await updateUserData({ id: shopAdminData.id, name, email, phoneNumber });
     setIsLoading(false);
   };
 

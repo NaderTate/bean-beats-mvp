@@ -136,7 +136,7 @@ export default function Table({
                         className="aspect-square w-12 object-cover rounded-full border border-gray-200 overflow-hidden"
                       />
                     ) : (
-                      item?.[key]
+                      item?.[key] || "-"
                     )}
                   </td>
                 ))}

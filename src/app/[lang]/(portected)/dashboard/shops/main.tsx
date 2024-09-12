@@ -34,12 +34,14 @@ const ShopsMain = ({ shops }: Props) => {
           number: i + 1,
           adminName: shop.admin.name,
           adminEmail: shop.admin.email,
+          AdaminPhone: shop.admin.phoneNumber,
         }))}
         fields={{
           number: "#",
           name: "Shop Name",
           adminName: "Admin Name",
           adminEmail: "Admin Email",
+          AdaminPhone: "Admin Phone",
         }}
       />
 

@@ -152,5 +152,15 @@
   "Song updated successfully": "تم تحديث الأغنية بنجاح",
   "Song created successfully": "تم إنشاء الأغنية بنجاح",
   "Unable to create employee at the moment": "غير قادر على إنشاء الموظف في الوقت الحالي",
-  "A User with this email already exists": "يوجد مستخدم بهذا البريد الإلكتروني بالفعل"
+  "A User with this email already exists": "يوجد مستخدم بهذا البريد الإلكتروني بالفعل",
+  "Item deleted successfully": "تم حذف العنصر بنجاح",
+  "An artist with this name already exists": "يوجد فنان بهذا الاسم بالفعل",
+  "New here?": "جديد هنا؟",
+  "Create an account": "إنشاء  حساب",
+  "Create Account": "إنشاء حساب",
+  "Account created successfully": "تم إنشاء الحساب بنجاح",
+  "Phone": "الهاتف",
+  "Add New Employee": "إضافة موظف جديد",
+  "Profile": "الملف الشخصي",
+  "Edit profile": "تعديل الملف الشخصي"
 }

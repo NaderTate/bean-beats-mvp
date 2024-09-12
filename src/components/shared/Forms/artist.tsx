@@ -2,10 +2,9 @@
 import { Controller, useForm } from "react-hook-form";
 import { Artist } from "@prisma/client";
 
-import { updateArtist } from "@/actions/artists";
+import { updateArtist, isArtistExisting } from "@/actions/artists";
 import { useTranslations } from "next-intl";
 import Input from "../Input";
-import { uploadFile } from "@/utils/upload-files";
 import FileUploader from "@/components/file-dropzone";
 import Button from "@/components/button";
 import toast from "react-hot-toast";
@@ -41,12 +40,31 @@ export default function ArtistForm({
     <form
       onSubmit={handleSubmit(async (data) => {
         if (id) {
+          const isExisting = await isArtistExisting({
+            artistName: data.name,
+            artistId: id,
+          });
+
+          if (isExisting) {
+            toast.error("An artist with this name already exists");
+            return;
+          }
+
           await updateArtist({
             id,
             data,
           });
+
           toast.success(t("Artist updates successfully"));
         } else {
+          const isExisting = await isArtistExisting({
+            artistName: data.name,
+          });
+
+          if (isExisting) {
+            toast.error("An artist with this name already exists");
+            return;
+          }
           await fetch("/api/artists", {
             method: "POST",
             headers: {

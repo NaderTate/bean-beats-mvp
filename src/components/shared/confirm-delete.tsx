@@ -5,6 +5,7 @@ import Spinner from "./spinner";
 
 import { MdDeleteForever } from "react-icons/md";
 import { useTranslations } from "next-intl";
+import toast from "react-hot-toast";
 
 interface ConfirmDeleteProps {
   deleteFn: () => Promise<void>;
@@ -14,15 +15,16 @@ const ConfirmDelete = ({ deleteFn }: ConfirmDeleteProps) => {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const t = useTranslations();
+
   const toggleModal = () => setOpen(!open);
 
   const handleDelete = async () => {
     setIsLoading(true);
     await deleteFn();
+    toast.success(t("Item deleted successfully"));
     setOpen(false);
   };
-
-  const t = useTranslations();
 
   return (
     <div>

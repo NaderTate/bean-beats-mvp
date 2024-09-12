@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
+
+import Modal from "./Modal";
 
 import {
   FcNext,
@@ -14,9 +16,11 @@ import {
   FcMoneyTransfer,
   FcConferenceCall,
 } from "react-icons/fc";
+import { FcBusinessman } from "react-icons/fc";
 import { HiOutlineLogout } from "react-icons/hi";
 
 import useGetLang from "@/hooks/use-get-lang";
+import LanguageToggle from "../language-toggle";
 
 const links = [
   {
@@ -51,9 +55,14 @@ export default function Dashboard() {
   const { lang } = useGetLang();
   const pathname = usePathname();
 
-  const [isOpened, setIsOpened] = useState(true);
-  const [isPending, startTransition] = useTransition();
   const t = useTranslations();
+  const [isOpened, setIsOpened] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   return (
     <>
       <div
@@ -86,24 +95,19 @@ export default function Dashboard() {
                   </li>
                 ))}
                 <div className="mt-4">
+                  <LanguageToggle />
+                </div>
+                <li>
                   <button
-                    onClick={() => {
-                      startTransition(() => {
-                        const newPath = pathname.replace(
-                          lang,
-                          lang === "en" ? "ar" : "en"
-                        );
-                        push(newPath, { scroll: false });
-                      });
-                    }}
+                    onClick={() => setIsModalOpen(true)}
                     className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                   >
-                    {lang === "en" ? "AR" : "EN"}
+                    <FcBusinessman className="h-5 w-5 opacity-75" />
                     <span className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white -translate-x-20 opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
-                      {lang === "en" ? "عربي" : "English"}
+                      {t("Profile")}
                     </span>
                   </button>
-                </div>
+                </li>
                 <li>
                   <button
                     onClick={() => {
@@ -135,6 +139,9 @@ export default function Dashboard() {
           />
         </button>
       </div>
+      {/* <Modal open={isModalOpen} title="Edit profile" setOpen={toggleModal}>
+        <EmployeeForm shopId={shopId} onSubmit={() => setIsOpen(false)} />
+      </Modal> */}
     </>
   );
 }

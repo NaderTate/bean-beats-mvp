@@ -10,8 +10,13 @@ import Spinner from "../shared/spinner";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Button from "../button";
 
-export default function SignWith() {
+export default function SignWith({
+  setSection,
+}: {
+  setSection: (section: string) => void;
+}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -134,12 +139,12 @@ export default function SignWith() {
             </div>
           </label>
 
-          <Link
-            href="/forgot-password"
+          <button
+            onClick={() => setSection("forget-password")}
             className="text-orange-900 hover:text-blue-800"
           >
             {t("Forgot password?")}
-          </Link>
+          </button>
         </div>
         <p
           className={`text-red-600 h-5 mb-3 mt-6 ${
@@ -149,18 +154,24 @@ export default function SignWith() {
           {error}
         </p>
       </section>
-      <p className="text-center mb-4">
+
+      <Button
+        onClick={handleSignIn}
+        isLoading={isLoading}
+        className="w-full py-3 font-medium"
+      >
+        {t("Sign in")}
+      </Button>
+
+      <div className="mt-5 flex items-center justify-center">
+        <span className="text-gray-600">{t("New here?")}</span>
         <button
-          onClick={handleSignIn}
-          className=" bg-[#341E0C] font-bold text-white rounded-md h-14 w-full text-center"
+          onClick={() => setSection("signup")}
+          className="text-primary-500 ms-2 font-medium"
         >
-          {isLoading ? (
-            <Spinner className="flex justify-center" />
-          ) : (
-            t("Sign in")
-          )}
+          {t("Create an account")}
         </button>
-      </p>
+      </div>
     </div>
   );
 }

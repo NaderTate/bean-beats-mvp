@@ -9,8 +9,11 @@ import useGetLang from "@/hooks/use-get-lang";
 import SignInWith from "@/components/auth/sign-in";
 import NewPasswordForm from "@/components/auth/new-password";
 import ForgotPasswordForm from "@/components/auth/forget-password";
+import { useState } from "react";
+import LanguageToggle from "@/components/language-toggle";
+import CreateAccount from "@/components/auth/create-account";
 
-type section = "login" | "forget-password" | "create-new-password";
+type section = "login" | "forget-password" | "create-new-password" | "signup";
 
 export default function Main() {
   const t = useTranslations();
@@ -19,18 +22,22 @@ export default function Main() {
   const userId = searchParams.get("userid");
   const section: section = (searchParams.get("section") as section) || "login";
 
+  const [currentSection, setCurrentSection] = useState<section>(section);
+
   return (
     <section className="dark:bg-gray-900 lg:h-screen overflow-hidden relative">
       {/* Logo Link with dynamic positioning */}
-      <Link
-        className={`inline-flex h-20 w-20 items-center justify-center rounded-full bg-white text-blue-600 dark:bg-gray-900 sm:h-20 sm:w-20 absolute top-4 ${
+      <div
+        className={`z-20 inline-flex items-center justify-center rounded-full bg-white text-blue-600 dark:bg-gray-900  absolute top-4 ${
           lang === "ar" ? "left-4" : "right-4"
         }`}
-        href="/"
       >
-        <span className="sr-only">Home</span>
-        <Image src="/images/Logo.png" alt="icon" width={80} height={80} />
-      </Link>
+        <LanguageToggle />
+        <Link href="/">
+          <Image src="/images/Logo.png" alt="icon" width={80} height={80} />
+        </Link>
+      </div>
+
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12 gap-10 relative">
         <section className="relative lg:flex flex-col hidden lg:h-full lg:col-span-6">
           <Image
@@ -43,7 +50,6 @@ export default function Main() {
               lang === "ar" ? "rounded-l-[70px]" : "rounded-r-[70px]"
             }`}
           />
-
           {/* Overlay gradient for shadow effect */}
           <div
             className={`absolute inset-0 bg-gradient-to-t from-[#341E0C]/80 to-transparent z-10 ${
@@ -64,19 +70,36 @@ export default function Main() {
           </div>
         </section>
 
-        <main className="flex items-center justify-center px-1 sm:px-8 py-8 lg:py-12 lg:col-span-6 relative">
+        <main className="flex items-center justify-center px-1 sm:px-8 py-8 lg:py-12 lg:col-span-6 relative max-h-screen overflow-auto ">
           <div className="w-full px-3 sm:px-8 relative">
             <div className="max-w-lg mx-auto relative flex flex-col-reverse sm:flex-col gap-5 mt-10">
-              {section === "login" && (
+              {currentSection === "login" && (
                 <>
                   <h2 className="text-xl text-center font-bold sm:text-2xl md:text-3xl">
                     {t("Welcome back to Bean Beats")}
                   </h2>
-                  <SignInWith />
+                  <SignInWith
+                    setSection={(section) =>
+                      setCurrentSection(section as section)
+                    }
+                  />
                 </>
               )}
-              {section === "forget-password" && <ForgotPasswordForm />}
-              {section === "create-new-password" && <NewPasswordForm />}
+              {currentSection === "forget-password" && <ForgotPasswordForm />}
+              {currentSection === "signup" && (
+                <CreateAccount
+                  onSubmit={() => {
+                    setCurrentSection("login");
+                  }}
+                />
+              )}
+              {currentSection === "create-new-password" && (
+                <NewPasswordForm
+                  setSection={(section) =>
+                    setCurrentSection(section as section)
+                  }
+                />
+              )}
             </div>
           </div>
         </main>
