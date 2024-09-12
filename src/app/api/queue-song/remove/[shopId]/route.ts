@@ -3,10 +3,6 @@ import prisma from '@/lib/prisma'
 
 export async function PATCH(request: NextRequest, { params: { shopId } }: { params: { shopId: string } }) {
   try {
-    // get the first song in the queue
-    const body = await request.json()
-    const { method } = body
-
     const song = await prisma.queueSong.findFirst({
       where: {
         coffeeShopId: shopId,
@@ -21,27 +17,13 @@ export async function PATCH(request: NextRequest, { params: { shopId } }: { para
     }
 
     // remove the song from the queue
-    if (method === 'remove') {
-      await prisma.queueSong.delete({
-        where: {
-          id: song.id,
-        },
-      })
-    }
-    // get the updated queue
-    const queue = await prisma.queueSong.findMany({
+    await prisma.queueSong.delete({
       where: {
-        coffeeShopId: shopId,
-      },
-      include: {
-        song: true,
+        id: song.id,
       },
     })
 
-    // return the next 2 songs in the queue
-    const nextSongs = queue.slice(0, 2)
-
-    return NextResponse.json(nextSongs)
+    return NextResponse.json('Song removed from queue')
   } catch (error) {
     console.error('Error fetching or processing the queue:', error)
     return NextResponse.json({ message: 'An error occurred while processing the queue' }, { status: 500 })
