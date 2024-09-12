@@ -9,9 +9,9 @@ const TransactionPage = async ({
     where: {
       id: transactionId,
     },
-    include: {
-      songs: { include: { artist: { select: { name: true, image: true } } } },
-    },
+    // include: {
+    //   songs: { include: { artist: { select: { name: true, image: true } } } },
+    // },
   });
 
   if (!transaction) {

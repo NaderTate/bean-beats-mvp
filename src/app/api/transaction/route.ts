@@ -55,9 +55,7 @@ export async function POST(request: Request) {
             id: shopId,
           },
         },
-        songs: {
-          connect: songs.map((song) => ({ id: song.id })),
-        },
+
         tableNumber,
       },
     });

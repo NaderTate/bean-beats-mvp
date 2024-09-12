@@ -159,7 +159,7 @@ const Navbar = () => {
                   </div>
                 </>
               ) : (
-                <SignIn />
+                <SignIn setSection={() => {}} />
               )}
             </motion.div>
           )}

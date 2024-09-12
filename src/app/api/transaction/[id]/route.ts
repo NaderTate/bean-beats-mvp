@@ -12,9 +12,6 @@ export async function GET(
       where: {
         id,
       },
-      include: {
-        songs: true,
-      },
     });
 
     return NextResponse.json(transaction);

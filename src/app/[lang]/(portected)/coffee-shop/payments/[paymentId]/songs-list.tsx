@@ -14,7 +14,7 @@ const SongsList = ({ songs }: Props) => {
         data={songs.map((song, i) => ({
           ...song,
           number: i + 1,
-          artistName: song.artist?.name,
+          artistName: song.artist,
         }))}
         fields={{
           number: "#",
