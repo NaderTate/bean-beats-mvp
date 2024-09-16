@@ -12,7 +12,7 @@ import ForgotPasswordForm from "@/components/auth/forget-password";
 import { useState } from "react";
 import LanguageToggle from "@/components/language-toggle";
 import CreateAccount from "@/components/auth/create-account";
-
+import { FaChevronLeft } from "react-icons/fa";
 type section = "login" | "forget-password" | "create-new-password" | "signup";
 
 export default function Main() {
@@ -37,7 +37,6 @@ export default function Main() {
           <Image src="/images/Logo.png" alt="icon" width={80} height={80} />
         </Link>
       </div>
-
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12 gap-10 relative">
         <section className="relative lg:flex flex-col hidden lg:h-full lg:col-span-6">
           <Image
@@ -85,7 +84,17 @@ export default function Main() {
                   />
                 </>
               )}
-              {currentSection === "forget-password" && <ForgotPasswordForm />}
+
+              {currentSection === "forget-password" && (
+                <>
+                  <FaChevronLeft
+                    onClick={() => setCurrentSection("login")}
+                    className="text-primary-500 cursor-pointer"
+                    size={25}
+                  />
+                  <ForgotPasswordForm />
+                </>
+              )}
               {currentSection === "signup" && (
                 <CreateAccount
                   onSubmit={() => {
