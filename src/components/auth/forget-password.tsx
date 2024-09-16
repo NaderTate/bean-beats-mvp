@@ -2,66 +2,98 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-
-import Spinner from "@/components/shared/spinner";
 import { useTranslations } from "next-intl";
+import { useForm, Controller } from "react-hook-form";
+
+import Button from "../button";
+import Input from "../shared/Input";
+import Spinner from "@/components/shared/spinner";
 
 type Props = {};
 
 const ForgotPasswordForm = ({}: Props) => {
   const t = useTranslations();
 
-  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const [error, setError] = useState<string | null>(null);
 
-    await fetch("/api/auth/reset-password", {
+  type Inputs = {
+    email: string;
+  };
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
+
+  const submitHandler = async (data: Inputs) => {
+    setIsLoading(true);
+    setError(null);
+
+    const res = await fetch("/api/auth/reset-password", {
       method: "POST",
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email: data.email }),
       headers: {
         "Content-Type": "application/json",
       },
     });
+    if (res.status === 404) {
+      setError("User not found");
+      setIsLoading(false);
+      return;
+    }
+
     toast.success(t("Password reset link sent successfully"));
     setIsLoading(false);
     setIsEmailSent(true);
   };
   return (
-    <form className="space-y-4">
+    <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
       <h2 className="text-2xl font-semibold">Forget Password</h2>
       <h4 className="text-[#989898] font-medium">
         Don&apos;t worry! It occurs. Please enter the email address linked with
         your account.
       </h4>
-      <div>
-        <input
-          required
-          id="password"
-          type="email"
-          name="email"
-          value={email}
-          placeholder="Enter your email address"
-          onChange={(e) => setEmail(e.target.value)}
-          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-        />
-      </div>
+      <Controller
+        control={control}
+        name="email"
+        rules={{
+          required: "This field is required",
+          pattern: {
+            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            message: "Please enter a valid email address",
+          },
+        }}
+        render={({ field }) => (
+          <Input
+            required
+            type="email"
+            label="Email"
+            placeholder="Enter your email address"
+            onChange={(e) => {
+              field.onChange(e.target.value);
+            }}
+            errMessage={errors.email?.message}
+          />
+        )}
+      />
+
       {isEmailSent && (
         <p className="text-start text-sm text-gray-500">
           If the email exists in our system, you will receive a password reset
           link shortly.
         </p>
       )}
-      <button
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      <Button
         type="submit"
-        onClick={handleSubmit}
-        disabled={isLoading || !email}
+        disabled={isLoading}
         className="transition w-full bg-[#341E0C] text-white py-2 px-4 rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex justify-center"
       >
         {isLoading ? <Spinner /> : "Reset Password"}
-      </button>
+      </Button>
     </form>
   );
 };

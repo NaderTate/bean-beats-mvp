@@ -184,8 +184,8 @@ const SongForm = ({
         render={({ field }) => (
           <FileUploader
             accept="audio/mpeg"
-            defaultAudioUrl={song?.fileURL || ""}
             label="Song File"
+            defaultAudioUrl={song?.fileURL || ""}
             onFileUpload={(url, type, duration) => {
               field.onChange(url);
               setValue("duration", duration || 0);
