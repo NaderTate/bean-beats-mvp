@@ -165,5 +165,20 @@
   "Edit profile": "تعديل الملف الشخصي",
   "Data updated successfully": "تم تحديث البيانات بنجاح",
   "Failed to update data": "فشل تحديث البيانات",
-  "Create a new account": "إنشاء حساب جديد"
+  "Create a new account": "إنشاء حساب جديد",
+  "Add New Song": "إضافة أغنية جديدة",
+  "Add New Artist": "إضافة فنان جديد",
+  "Add New Album": "إضافة ألبوم جديد",
+  "Add New Playlist": "إضافة قائمة تشغيل جديدة",
+  "Sign in with Google": "تسجيل الدخول بواسطة جوجل",
+  "Forget Password": "نسيت كلمة المرور",
+  "Don't worry! It occurs": "لا تقلق! يحدث",
+  "Please enter the email address linked withyour account": "الرجاء إدخال عنوان البريد الإلكتروني المرتبط بحسابك",
+  "Reset Password": "إعادة تعيين كلمة المرور",
+  "Employees": "الموظفين",
+  "Profile updated successfully": "تم تحديث الملف الشخصي بنجاح",
+  "Confirm Password": "تأكيد كلمة المرور",
+  "No songs selected": "لم يتم تحديد أي أغاني",
+  "Thank You!": "شكرا لك!",
+  "Your payment was successful": "تم الدفع بنجاح"
 }

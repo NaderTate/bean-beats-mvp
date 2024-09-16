@@ -1,9 +1,10 @@
 "use client";
 
+import { Song } from "@prisma/client";
+
+import Table from "@/components/shared/table";
 import { deletePlaylist } from "@/actions/playlists";
 import PlaylistForm from "@/components/shared/Forms/playlist";
-import Table from "@/components/shared/table";
-import { Song } from "@prisma/client";
 
 type Props = {
   playlists: {
@@ -31,7 +32,7 @@ const Playlists = ({ playlists, setOpen, allSongs, onSubmit }: Props) => {
         id: playlists.id,
         number: i + 1,
         name: playlists.name,
-        songs: playlists._count.songs,
+        songs: playlists.songsIds.length,
         songsIds: playlists.songsIds,
       }))}
       fields={{

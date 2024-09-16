@@ -135,8 +135,10 @@ export default function Table({
                         src={item?.[key] || "/images/unkown.jpeg"}
                         className="aspect-square w-12 object-cover rounded-full border border-gray-200 overflow-hidden"
                       />
+                    ) : item?.[key] !== null || item?.[key] !== undefined ? (
+                      item?.[key]
                     ) : (
-                      item?.[key] || "-"
+                      "-"
                     )}
                   </td>
                 ))}

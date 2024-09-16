@@ -32,6 +32,8 @@ function getDayOfWeek() {
 type PaymentMainProps = { shopId: string };
 
 export const PaymentMain = ({ shopId }: PaymentMainProps) => {
+  const t = useTranslations();
+
   const [songs, setSongs] = useState<
     | {
         song: {
@@ -64,7 +66,6 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
     });
   }, []);
 
-  const t = useTranslations();
   if (!songs) {
     return (
       <div className="flex justify-center items-center">
@@ -77,7 +78,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
     return (
       <div className="flex justify-center items-center min-h-[80vh]">
         <div className="bg-gray-100 py-5 px-10 rounded-lg flex flex-col items-center border-gray-300 border">
-          <h1 className="text-2xl font-medium">No songs selected</h1>
+          <h1 className="text-2xl font-medium">{t("No songs selected")}</h1>
           <Link href={`/shop/${shopId}/music`}>
             <button className="bg-primary text-white rounded-lg px-5 py-2 mt-5">
               {t("Browse Songs")}

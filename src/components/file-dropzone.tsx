@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { BsCloudUpload } from "react-icons/bs";
-import { RxCross2 } from "react-icons/rx"; // Importing the cross icon
-import Spinner from "@/components/shared/spinner"; // Assuming Spinner is already implemented
-import { uploadFile } from "@/utils/upload-files"; // Function to handle file upload
+import React, { useState } from "react";
 import { useTranslations } from "next-intl";
+
+import Spinner from "@/components/shared/spinner";
+
+import { RxCross2 } from "react-icons/rx";
+import { BsCloudUpload } from "react-icons/bs";
+
+import { uploadFile } from "@/utils/upload-files";
 
 interface FileUploaderProps {
   label?: string;

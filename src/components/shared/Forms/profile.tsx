@@ -28,18 +28,22 @@ const ProfileForm = ({ itemToEdit: User, onSubmit }: Props) => {
     phone: string;
     image?: string;
     password: string;
+    confirmPassword: string;
   };
 
   const {
     control,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm<Inputs>({
     defaultValues: {
       name: User?.name || "",
       email: User?.email,
       phone: User?.phoneNumber || "",
       image: User?.image || "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
@@ -53,9 +57,10 @@ const ProfileForm = ({ itemToEdit: User, onSubmit }: Props) => {
         email: data.email,
         image: data.image,
         phoneNumber: data.phone,
+        ...(data.password && { password: data.password }),
       });
       if (res) {
-        toast.success("Data updated successfully");
+        toast.success(t("Data updated successfully"));
         onSubmit();
       } else {
         toast.error(t("Failed to update data"));
@@ -71,7 +76,7 @@ const ProfileForm = ({ itemToEdit: User, onSubmit }: Props) => {
   return (
     <div>
       <form onSubmit={handleSubmit(submitHandler)} className="space-y-5">
-        <div className="grid gird-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <Controller
             control={control}
             name="name"
@@ -112,9 +117,9 @@ const ProfileForm = ({ itemToEdit: User, onSubmit }: Props) => {
             rules={{ required: "This field is required" }}
             render={({ field }) => (
               <Input
-                defaultValue={User?.phoneNumber || ""}
                 label="Phone"
                 placeholder="Phone"
+                defaultValue={User?.phoneNumber || ""}
                 onChange={(e) => {
                   field.onChange(e.target.value);
                 }}
@@ -122,35 +127,55 @@ const ProfileForm = ({ itemToEdit: User, onSubmit }: Props) => {
               />
             )}
           />
-          {!isEditSession && (
-            <Controller
-              control={control}
-              name="password"
-              rules={{ required: !isEditSession && "This field is required" }}
-              render={({ field }) => (
-                <Input
-                  defaultValue={User?.password || ""}
-                  label="Password"
-                  placeholder="Password"
-                  onChange={(e) => {
-                    field.onChange(e.target.value);
-                  }}
-                  errMessage={errors.password?.message}
-                />
-              )}
-            />
-          )}
+
+          <Controller
+            name="password"
+            control={control}
+            rules={{ required: !isEditSession && "This field is required" }}
+            render={({ field }) => (
+              <Input
+                label="New Password"
+                placeholder="Password"
+                type="password"
+                onChange={(e) => {
+                  field.onChange(e.target.value);
+                }}
+                errMessage={errors.password?.message}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="confirmPassword"
+            rules={{
+              required: !isEditSession && "This field is required",
+              validate: (value) =>
+                value === getValues("password") || "Passwords do not match",
+            }}
+            render={({ field }) => (
+              <Input
+                label="Confirm Password"
+                placeholder="Password"
+                type="password"
+                onChange={(e) => {
+                  field.onChange(e.target.value);
+                }}
+                errMessage={errors.confirmPassword?.message}
+              />
+            )}
+          />
         </div>
 
         <Controller
-          control={control}
           name="image"
+          control={control}
           render={({ field }) => (
             <FileUploader
-              defaultImageUrl={User?.image || ""}
               label="Image"
-              onFileUpload={(url) => field.onChange(url)}
+              accept="image/*"
+              defaultImageUrl={User?.image || ""}
               errorMessage={errors.image?.message}
+              onFileUpload={(url) => field.onChange(url)}
             />
           )}
         />

@@ -51,10 +51,12 @@ const ForgotPasswordForm = ({}: Props) => {
   };
   return (
     <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
-      <h2 className="text-2xl font-semibold">Forget Password</h2>
+      <h2 className="text-2xl font-semibold">{t("Forget Password")}</h2>
       <h4 className="text-[#989898] font-medium">
-        Don&apos;t worry! It occurs. Please enter the email address linked with
-        your account.
+        {t("Don't worry! It occurs")}
+      </h4>
+      <h4 className="text-[#989898] font-medium">
+        {t("Please enter the email address linked withyour account")}
       </h4>
       <Controller
         control={control}
@@ -92,7 +94,7 @@ const ForgotPasswordForm = ({}: Props) => {
         disabled={isLoading}
         className="transition w-full bg-[#341E0C] text-white py-2 px-4 rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex justify-center"
       >
-        {isLoading ? <Spinner /> : "Reset Password"}
+        {isLoading ? <Spinner /> : t("Reset Password")}
       </Button>
     </form>
   );

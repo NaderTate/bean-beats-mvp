@@ -8,6 +8,7 @@ interface pageProps {
 }
 export default async function page({ params: { lang } }: pageProps) {
   const transactions = await prisma.transaction.findMany({
+    orderBy: { createdAt: "desc" },
     select: {
       id: true,
       amount: true,

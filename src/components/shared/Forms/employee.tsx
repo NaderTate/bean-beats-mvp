@@ -55,7 +55,7 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
           image: data.image,
         });
         if (res) {
-          toast.success("Employee updated successfully");
+          toast.success(t("Employee updated successfully"));
           onSubmit();
         } else {
           toast.error(t("Failed to update employee"));
@@ -116,7 +116,6 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
             rules={{ required: "This field is required" }}
             render={({ field }) => (
               <Input
-                disabled={!!isEditSession}
                 defaultValue={Employee?.email}
                 onChange={(e) => {
                   field.onChange(e.target.value);

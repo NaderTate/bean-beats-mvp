@@ -34,21 +34,23 @@ const links = [
     href: "settings",
   },
   {
-    title: "Emplyees",
+    title: "Employees",
     icon: IoPeopleSharp,
     href: "employees",
   },
 ];
 
 export default function Sidebar() {
-  const pathname = usePathname();
   const [isOpened, setIsOpened] = useState(true);
-  const { lang } = useGetLang();
+
   const { push } = useRouter();
+  const { lang } = useGetLang();
+  const pathname = usePathname();
 
   const [isPending, startTransition] = useTransition();
 
   const t = useTranslations();
+
   return (
     <>
       <div

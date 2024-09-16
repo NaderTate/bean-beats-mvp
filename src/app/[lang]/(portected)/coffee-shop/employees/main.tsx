@@ -42,7 +42,7 @@ const EmployeesMain = ({ employees, shopId }: Props) => {
         }}
       />
 
-      <Modal open={isOpen} title="Create new shop" setOpen={toggleModal}>
+      <Modal open={isOpen} title="Add New Employee" setOpen={toggleModal}>
         <EmployeeForm shopId={shopId} onSubmit={() => setIsOpen(false)} />
       </Modal>
     </div>

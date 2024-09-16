@@ -114,12 +114,12 @@ export default function SignWith({
           >
             <FcGoogle size={25} /> {t("Sign in with Google")}
           </button>
-          <button
+          {/* <button
             onClick={() => signIn("facebook", { callbackUrl: "/" })}
             className={"text-blue-700   " + sharedClasses}
           >
             <FaFacebook size={25} /> {t("Sign in with Facebook")}
-          </button>
+          </button> */}
         </div>
         <div className="flex justify-between items-center my-5">
           <label

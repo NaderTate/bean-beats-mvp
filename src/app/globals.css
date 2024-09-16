@@ -35,3 +35,11 @@
   ); /* Adjusted to match your image */
   pointer-events: none; /* Make sure the overlay does not block interactions with the video */
 }
+@layer base {
+  input[type="password"]::-ms-reveal,
+  input[type="password"]::-ms-clear,
+  input[type="password"]::-webkit-password-toggle-button,
+  input[type="password"]::-webkit-textfield-decoration-container {
+    display: none;
+  }
+}

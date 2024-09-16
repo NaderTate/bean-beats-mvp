@@ -2,7 +2,9 @@
 
 import { NextPage } from "next";
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+
 import { FaCircleCheck } from "react-icons/fa6";
 
 type PaymentSuccessPageProps = { params: { shopId: string } };
@@ -11,7 +13,7 @@ const PaymentSuccessPage: NextPage<PaymentSuccessPageProps> = ({
   params: { shopId },
 }) => {
   const router = useRouter();
-
+  const t = useTranslations();
   useEffect(() => {
     const timer = setTimeout(() => {
       router.push(`/shop/${shopId}/queue`);
@@ -24,8 +26,8 @@ const PaymentSuccessPage: NextPage<PaymentSuccessPageProps> = ({
     <div className="flex items-center justify-center min-h-screen">
       <div className="flex flex-col items-center justify-center p-10 gap-5">
         <FaCircleCheck className="text-green-500" size={45} />
-        <h1 className="text-3xl font-semibold">Thank You!</h1>
-        <p className="text-gray-500">Your payment was successful</p>
+        <h1 className="text-3xl font-semibold">{t("Thank You!")}</h1>
+        <p className="text-gray-500">{t("Your payment was successful")}</p>
       </div>
     </div>
   );

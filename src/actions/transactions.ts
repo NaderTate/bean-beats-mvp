@@ -23,7 +23,12 @@ export const createTransaction = async ({
         id: true,
         price: true,
         song: {
-          select: { id: true, title: true, artist: { select: { name: true } } },
+          select: {
+            id: true,
+            title: true,
+            thumbnail: true,
+            artist: { select: { name: true } },
+          },
         },
       },
     });
@@ -45,6 +50,7 @@ export const createTransaction = async ({
             title: song.song.title,
             artist: song.song.artist?.name,
             price: song.price,
+            image: song.song.thumbnail,
           })),
         },
         tableNumber,

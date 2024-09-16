@@ -12,6 +12,7 @@ export const updateUserData = async (data: {
   image?: string | undefined;
   password?: string;
 }) => {
+  console.log(data);
   const hashedPassword =
     data.password && (await bcrypt.hash(data.password, 10));
   const user = await prisma.user.update({
@@ -20,7 +21,7 @@ export const updateUserData = async (data: {
       name: data.name,
       email: data.email,
       phoneNumber: data.phoneNumber,
-      image: data.image || undefined,
+      image: data.image,
       password: data.password ? hashedPassword : undefined,
     },
   });
