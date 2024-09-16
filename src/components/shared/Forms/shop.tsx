@@ -236,13 +236,14 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
                 label="Admin Image"
                 onFileUpload={(url) => field.onChange(url)}
                 errorMessage={errors.shopAdminImage?.message}
+                defaultImageUrl={Shop?.admin.image || undefined}
               />
             )}
           />
         </>
 
         <Button isLoading={isLoading} type="submit">
-          {t("Submit")}
+          {isEditSession ? t("Save") : t("Submit")}
         </Button>
       </form>
     </div>

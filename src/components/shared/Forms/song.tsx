@@ -196,7 +196,7 @@ const SongForm = ({
       />
 
       <Button className="mt-4" isLoading={isSubmitting || isLoading}>
-        {t("Submit")}
+        {song ? t("Save") : t("Submit")}
       </Button>
     </form>
   );

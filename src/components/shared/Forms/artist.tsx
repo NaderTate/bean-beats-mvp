@@ -111,7 +111,7 @@ export default function ArtistForm({
       />
 
       <Button className="mt-4" isLoading={isSubmitting || isLoading}>
-        {t("Submit")}
+        {artist ? t("Save") : t("Submit")}
       </Button>
     </form>
   );

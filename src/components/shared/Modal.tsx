@@ -16,6 +16,7 @@ export default function Modal({
   title: string;
 }) {
   const t = useTranslations();
+
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -34,8 +35,6 @@ export default function Modal({
       document.removeEventListener("keydown", handleEscape);
     };
   }, [open, setOpen]);
-
-  if (!open) return null; // Added null check
 
   const handleBackgroundClick = (e: React.MouseEvent) => {
     e.stopPropagation();

@@ -137,7 +137,7 @@ export default function AlbumForm({
       />
 
       <Button className="mt-4" isLoading={isSubmitting || isLoading}>
-        Submit
+        {album ? t("Save") : t("Submit")}
       </Button>
     </form>
   );

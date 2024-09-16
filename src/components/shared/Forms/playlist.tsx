@@ -90,7 +90,7 @@ function PlaylistForm({
         selectedSongIds={playlist ? playlist.songsIds : []}
       />
       <Button className="mt-4" isLoading={isSubmitting || isLoading}>
-        {t("Submit")}
+        {playlist ? t("Save") : t("Submit")}
       </Button>
     </form>
   );

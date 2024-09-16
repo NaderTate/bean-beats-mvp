@@ -178,7 +178,7 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
         />
 
         <Button type="submit" isLoading={isLoading}>
-          {t("Submit")}
+          {isEditSession ? t("Save") : t("Submit")}
         </Button>
       </form>
     </div>

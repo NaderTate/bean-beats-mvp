@@ -89,7 +89,7 @@ function GenreForm({ onSubmit, itemToEdit: genre }: GenreFormProps) {
       />
 
       <Button className="mt-4" isLoading={isSubmitting || isLoading}>
-        {t("Submit")}
+        {genre ? t("Save") : t("Submit")}
       </Button>
     </form>
   );
