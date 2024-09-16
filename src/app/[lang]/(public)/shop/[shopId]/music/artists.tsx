@@ -1,3 +1,4 @@
+import Image from "next/image";
 import ArtistCard from "./artist-card";
 
 type Props = {
@@ -6,6 +7,19 @@ type Props = {
 };
 
 const Artrists = ({ artists, shopId }: Props) => {
+  if (!artists || artists.length === 0) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center">
+        <Image
+          src="/images/not-found.svg"
+          width={200}
+          height={200}
+          alt="not-found"
+        />
+        <h1>No artists found</h1>
+      </div>
+    );
+  }
   return (
     <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-5 justify-start">
       {artists.map((artist) => (

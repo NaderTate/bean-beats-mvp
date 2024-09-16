@@ -12,6 +12,9 @@ export async function GET(
       where: {
         shopId: id,
       },
+      orderBy: {
+        id: "desc",
+      },
     });
     return NextResponse.json(transaction);
   } catch (error) {

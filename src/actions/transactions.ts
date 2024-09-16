@@ -50,7 +50,7 @@ export const createTransaction = async ({
             title: song.song.title,
             artist: song.song.artist?.name,
             price: song.price,
-            image: song.song.thumbnail,
+            thumbnail: song.song.thumbnail,
           })),
         },
         tableNumber,

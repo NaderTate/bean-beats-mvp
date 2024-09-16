@@ -1,6 +1,7 @@
 import { Song } from "@prisma/client";
 
 import SongCard from "./song-card";
+import Image from "next/image";
 
 type Props = {
   songs: {
@@ -12,7 +13,13 @@ type Props = {
 const Songs = ({ songs }: Props) => {
   if (songs.length === 0) {
     return (
-      <div className="mt-24">
+      <div className="h-screen flex flex-col items-center justify-center">
+        <Image
+          src="/images/not-found.svg"
+          width={200}
+          height={200}
+          alt="not-found"
+        />
         <h1>No songs found</h1>
       </div>
     );
