@@ -1,4 +1,7 @@
+"use client";
+
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
 interface TooltipProps {
@@ -13,6 +16,7 @@ const Tooltip: React.FC<TooltipProps> = ({
   children,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const t = useTranslations();
 
   const getPositionClasses = () => {
     switch (direction) {
@@ -72,7 +76,7 @@ const Tooltip: React.FC<TooltipProps> = ({
           {...getMotionDirection()}
           className={`absolute px-4 py-2 rounded-lg bg-gray-700 text-white text-sm shadow-lg ${getPositionClasses()}`}
         >
-          {label}
+          {t(label)}
         </motion.div>
       )}
     </div>
