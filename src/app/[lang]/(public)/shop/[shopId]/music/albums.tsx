@@ -7,6 +7,8 @@ import React from "react";
 type Props = { albums: ExtendedAlbum[]; shopId: string };
 
 const Albums = ({ albums, shopId }: Props) => {
+  const t = useTranslations();
+
   if (!albums || albums.length === 0) {
     return (
       <div className="h-screen flex flex-col items-center justify-center">
@@ -16,7 +18,7 @@ const Albums = ({ albums, shopId }: Props) => {
           height={200}
           alt="not-found"
         />
-        <h1>No albums found</h1>
+        <h1>{t("No albums found")}</h1>
       </div>
     );
   }

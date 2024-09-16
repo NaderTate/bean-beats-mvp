@@ -6,7 +6,6 @@ type ArtistPageProps = { params: { shopId: string; artistId: string } };
 const ArtistPage = async ({
   params: { artistId, shopId },
 }: ArtistPageProps) => {
-  console.log({ artistId, shopId });
   // const songs = await prisma.song.findMany({
   //   where: {
   //     AND: [

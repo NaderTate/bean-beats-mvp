@@ -1,5 +1,6 @@
 import Image from "next/image";
 import ArtistCard from "./artist-card";
+import { useTranslations } from "next-intl";
 
 type Props = {
   shopId: string;
@@ -7,6 +8,7 @@ type Props = {
 };
 
 const Artrists = ({ artists, shopId }: Props) => {
+  const t = useTranslations();
   if (!artists || artists.length === 0) {
     return (
       <div className="h-screen flex flex-col items-center justify-center">
@@ -16,7 +18,7 @@ const Artrists = ({ artists, shopId }: Props) => {
           height={200}
           alt="not-found"
         />
-        <h1>No artists found</h1>
+        <h1>{t("No artists found")}</h1>
       </div>
     );
   }

@@ -83,7 +83,6 @@ const MusicPage: NextPage = async ({}: MusicPageProps) => {
         orderBy: { id: "desc" },
       }))) ||
     [];
-  console.log(allPlaylists);
   return (
     <>
       {coffeeShop && (

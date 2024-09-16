@@ -17,7 +17,6 @@ type Props = {
 
 const MainArtist = ({ songs, albums, shopId }: Props) => {
   const [selectedTab, setSelectedTab] = React.useState("albums");
-  console.log({ shopId });
   return (
     <div>
       <div className="flex justify-start gap-2 items-center">

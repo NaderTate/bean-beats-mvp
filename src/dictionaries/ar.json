@@ -182,5 +182,8 @@
   "Thank You!": "شكرا لك!",
   "Your payment was successful": "تم الدفع بنجاح",
   "New Password": "كلمة مرور جديدة",
-  "View as customer": "عرض كعميل"
+  "View as customer": "عرض كعميل",
+  "No songs found": "لم يتم العثور على أغاني",
+  "No artists found": "لم يتم العثور على فنانين",
+  "No albums found": "لم يتم العثور على ألبومات"
 }
