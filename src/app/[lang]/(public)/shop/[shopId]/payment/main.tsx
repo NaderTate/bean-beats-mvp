@@ -12,6 +12,7 @@ import { createTransaction } from "@/actions/transactions";
 import { useSongsCart } from "@/store/songs-cart";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import useGetLang from "@/hooks/use-get-lang";
 
 function getDayOfWeek() {
   const daysOfWeek = [
@@ -33,6 +34,7 @@ type PaymentMainProps = { shopId: string };
 
 export const PaymentMain = ({ shopId }: PaymentMainProps) => {
   const t = useTranslations();
+  const { lang } = useGetLang();
 
   const [songs, setSongs] = useState<
     | {
@@ -144,7 +146,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
           });
           localStorage.removeItem("songs");
           setLocalSongs([]);
-          push(`/shop/${shopId}/payment/success`);
+          push(`/${lang}/shop/${shopId}/payment/success`);
         }}
       />
     </div>
