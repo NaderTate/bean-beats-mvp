@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 export default function useGetLang() {
   const pathname = usePathname();
 
-  const lang: Lang = (pathname.split("/")[1] as Lang) || "en";
+  const lang: Lang = (pathname.split("/")[1] as Lang) || "ar";
 
   return { lang };
 }
