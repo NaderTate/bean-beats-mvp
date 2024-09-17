@@ -50,7 +50,7 @@ const SongCard = ({ song }: Props) => {
         <div>
           <h3 className="text-primary">{song.title}</h3>
           <span>{t("Price")}: </span>
-          <span>{song.price}</span>
+          <span>${song.price}</span>
         </div>
       </div>
       <button

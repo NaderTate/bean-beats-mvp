@@ -33,11 +33,11 @@ const links = [
     icon: FaGear,
     href: "settings",
   },
-  {
-    title: "Employees",
-    icon: IoPeopleSharp,
-    href: "employees",
-  },
+  // {
+  //   title: "Employees",
+  //   icon: IoPeopleSharp,
+  //   href: "employees",
+  // },
 ];
 
 export default function Sidebar() {
