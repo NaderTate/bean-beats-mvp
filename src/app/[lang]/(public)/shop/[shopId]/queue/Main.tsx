@@ -1,5 +1,6 @@
 import { convertSecondsToTime } from "@/utils/conver-seconds-to-time";
 import { Artist, QueueSong, Song } from "@prisma/client";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import React from "react";
 
@@ -17,6 +18,20 @@ type SongProps = {
 type Props = { queue: (QueueSong & SongProps)[] };
 
 function MainQueue({ queue }: Props) {
+  const t = useTranslations();
+  if (!queue || queue.length === 0) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center">
+        <Image
+          src="/images/not-found.svg"
+          width={200}
+          height={200}
+          alt="not-found"
+        />
+        <h1>{t("Nothing in queue")}</h1>
+      </div>
+    );
+  }
   return (
     <>
       {queue.map((q) => (
