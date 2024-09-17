@@ -9,7 +9,7 @@ type props = {
 const SubscribeComponent = ({ priceId, price, description }: props) => {
   const handleSubmit = async () => {
     const stripe = await loadStripe(
-      process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
     );
     if (!stripe) {
       return;

@@ -13,6 +13,7 @@ import { useSongsCart } from "@/store/songs-cart";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import useGetLang from "@/hooks/use-get-lang";
+import SubscribeComponent from "@/components/subscribe-component";
 
 function getDayOfWeek() {
   const daysOfWeek = [
@@ -78,15 +79,24 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
 
   if (songs.length === 0) {
     return (
-      <div className="flex justify-center items-center min-h-[80vh]">
-        <div className="bg-gray-100 py-5 px-10 rounded-lg flex flex-col items-center border-gray-300 border">
-          <h1 className="text-2xl font-medium">{t("No songs selected")}</h1>
-          <Link href={`/shop/${shopId}/music`}>
-            <button className="bg-primary text-white rounded-lg px-5 py-2 mt-5">
-              {t("Browse Songs")}
-            </button>
-          </Link>
-        </div>
+      // <div className="flex justify-center items-center min-h-[80vh]">
+      //   <div className="bg-gray-100 py-5 px-10 rounded-lg flex flex-col items-center border-gray-300 border">
+      //     <h1 className="text-2xl font-medium">{t("No songs selected")}</h1>
+      //     <Link href={`/shop/${shopId}/music`}>
+      //       <button className="bg-primary text-white rounded-lg px-5 py-2 mt-5">
+      //         {t("Browse Songs")}
+      //       </button>
+      //     </Link>
+      //   </div>
+      // </div>
+      <div className="h-screen flex flex-col items-center justify-center">
+        <Image
+          src="/images/not-found.svg"
+          width={200}
+          height={200}
+          alt="not-found"
+        />
+        <h1>{t("No songs selected")}</h1>
       </div>
     );
   }
@@ -135,6 +145,11 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
           </div>
         </div>
       </div>
+      <SubscribeComponent
+        priceId="price_1234"
+        price="10"
+        description="Premium"
+      />
       <PayPalBtn
         action="order"
         amount={totalAmount}
