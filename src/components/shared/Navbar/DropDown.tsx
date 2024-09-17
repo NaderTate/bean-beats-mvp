@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
 import { GoChevronDown } from "react-icons/go";
 import { signOut } from "next-auth/react";
 import useGetLang from "@/hooks/use-get-lang";

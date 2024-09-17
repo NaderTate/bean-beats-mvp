@@ -1,20 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
 
-import Drawer from "./Drawer";
-import DropDown from "./DropDown";
+import Drawer from "@/components/shared/Navbar/Drawer";
+import DropDown from "@/components/shared/Navbar/DropDown";
 import SignIn from "@/components/auth/sign-in";
 
 import { FiShoppingCart } from "react-icons/fi";
-import { useSongsCart } from "@/store/songs-cart";
+
 import useGetLang from "@/hooks/use-get-lang";
-import { useTranslations } from "next-intl";
+import { useSongsCart } from "@/store/songs-cart";
+import { navData } from "./nav-data";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -55,71 +57,90 @@ const Navbar = () => {
   }, [prevScrollPos, visible, isScrolled, handleScroll]);
 
   const t = useTranslations();
-  const [isPending, startTransition] = useTransition();
   const { lang } = useGetLang();
-  const { push } = useRouter();
   if (pathname === "/signin") {
     return null;
   }
 
-  const navItems = [
-    { link: "payment", name: "Payment" },
-    { link: "queue", name: "Queue" },
-    { link: "music", name: "Music" },
-  ];
-
   return (
     <nav
       style={{ top: visible ? "0" : "-100px", transition: "top 0.6s" }}
-      className="flex items-center justify-between text-gray-600 right-0 fixed w-full shadow-sm dark:shadow-slate-800 z-10 bg-white/90 dark:bg-gray-900 h-16"
+      className="flex items-center justify-between text-gray-600 fixed w-full shadow-sm dark:shadow-slate-800 z-10 bg-white/90 dark:bg-gray-900 h-16"
     >
-      <div className="py-2 sm:py-1 px-2 sm:p-8 flex items-center gap-x-5">
-        <Link
-          href={`/shop/${shopId}`}
-          className="flex items-end justify-center "
-        >
-          <Image
-            className="hidden sm:block w-14"
-            src="/images/only-logo.png"
-            width={150}
-            height={150}
-            alt="logo"
+      {/* Left side content */}
+      <div className="flex items-center">
+        {/* Mobile menu (Drawer), visible only on mobile */}
+        <div className="p-2 sm:hidden">
+          <Drawer
+            user={session?.user as any}
+            navItems={navData}
+            shopId={shopId}
           />
-          <Image
-            className="p-1 h-12"
-            src="/images/logo-title.png"
-            width={150}
-            height={50}
-            alt="logo"
-          />
-        </Link>
-        {navItems.map((item, index) => (
+        </div>
+
+        {/* Logo and nav links, visible only on desktop */}
+        <div className="hidden sm:flex items-center">
           <Link
-            key={index}
-            href={`/${lang}/shop/${shopId}/${item.link}`}
-            className={`hidden sm:flex items-center justify-center gap-2 font-semibold ${
-              pathname.includes(item.link) ? "text-primary" : "text-gray-600"
-            } hover:text-gray-800`}
+            href={`/shop/${shopId}`}
+            className="flex items-end justify-center"
           >
-            {t(item.name)}
+            <Image
+              className="w-14"
+              src="/images/only-logo.png"
+              width={150}
+              height={150}
+              alt="logo"
+            />
+            <Image
+              className="p-1 h-12"
+              src="/images/logo-title.png"
+              width={150}
+              height={50}
+              alt="logo"
+            />
           </Link>
-        ))}
-        <button
-          onClick={() => {
-            startTransition(() => {
-              const newPath = pathname.replace(
-                lang,
-                lang === "en" ? "ar" : "en"
+          <div className="flex items-center gap-x-5">
+            {navData.map((item) => {
+              const href = `/${lang}/shop/${shopId}${
+                item.link ? `/${item.link}` : ""
+              }`;
+
+              return (
+                <Link
+                  key={item.name}
+                  href={href}
+                  className={`transition items-center justify-center gap-2 font-semibold ${
+                    pathname === href ? "text-primary" : "text-gray-600"
+                  } hover:text-gray-800`}
+                >
+                  <div className="flex items-center gap-x-3">
+                    <item.icon />
+                    {t(item.name)}
+                  </div>
+                </Link>
               );
-              push(newPath, { scroll: false });
-            });
-          }}
-          className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-        >
-          {lang === "en" ? "AR" : "EN"}
-        </button>
+            })}
+          </div>
+        </div>
       </div>
-      <div className="inline-flex">
+
+      {/* Centered logo, visible only on mobile */}
+      <Link
+        href={`/shop/${shopId}`}
+        className="flex-grow sm:hidden flex items-center justify-center"
+      >
+        <Image
+          className="p-1 h-12"
+          src="/images/logo-title.png"
+          width={150}
+          height={50}
+          alt="logo"
+        />
+      </Link>
+
+      {/* Right side content */}
+      <div className="flex items-center">
+        {/* Cart Icon */}
         <div className="relative p-3 m-3">
           <Link
             href={`/${lang}/shop/${shopId}/payment`}
@@ -131,28 +152,30 @@ const Navbar = () => {
             </span>
           </Link>
         </div>
+
+        {/* User dropdown, visible only on desktop */}
         <AnimatePresence mode="wait">
           {session?.user && (
             <motion.div
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 50 }}
-              className="flex items-center gap-4 justify-between pr-2 sm:pr-12 lg:px-4 col-span-2"
+              className="hidden sm:flex items-center gap-4 pr-2 sm:pr-12 lg:px-4"
             >
               {session?.user ? (
                 <>
-                  <div className="group hidden sm:flex shrink-0 items-center rounded-lg transition ">
+                  <div className="group hidden sm:flex shrink-0 items-center rounded-lg transition">
                     <span className="sr-only">Menu</span>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    {/* User Profile Image */}
                     <img
                       alt="Profile"
                       src={
-                        session.user?.image as string | "/images/unkown.jpeg"
+                        (session.user?.image as string) || "/images/unkown.jpeg"
                       }
                       className="h-10 w-10 md:h-12 md:w-12 rounded-full object-cover"
                       onError={(e: any) => {
-                        e.target.onerror = null;
-                        e.target.src = "/images/unkown.jpeg";
+                        e.currentTarget.onerror = null; // Prevents infinite loop
+                        e.currentTarget.src = "/images/placeholder-profile.png"; // Valid fallback image
                       }}
                     />
                     <DropDown user={session.user as any} />
@@ -163,11 +186,6 @@ const Navbar = () => {
               )}
             </motion.div>
           )}
-          <Drawer
-            user={session?.user as any}
-            navItems={navItems}
-            shopId={shopId}
-          />
         </AnimatePresence>
       </div>
     </nav>

@@ -1,9 +1,16 @@
 "use client";
-import { useState, useEffect } from "react";
+
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { BiMenuAltRight } from "react-icons/bi";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+
+import { navData } from "@/app/[lang]/(public)/navbar/nav-data";
+
+import { BiMenuAltLeft } from "react-icons/bi";
+import LanguageToggle from "@/components/language-toggle";
+import useGetLang from "@/hooks/use-get-lang";
+import { usePathname } from "next/navigation";
 
 export default function Drawer({
   user,
@@ -16,7 +23,7 @@ export default function Drawer({
     image: string;
     role: string;
   } | null;
-  navItems: { link: string; name: string }[];
+  navItems: typeof navData;
   shopId: string;
 }>) {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,36 +42,47 @@ export default function Drawer({
   });
 
   const t = useTranslations();
+  const { lang } = useGetLang();
+  const pathname = usePathname();
   return (
     <div id="drawer" className="sm:hidden w-10">
-      <BiMenuAltRight
+      <BiMenuAltLeft
         onClick={() => {
           setIsOpen(!isOpen);
         }}
-        className="h-8 w-8 text-gray-400 group-hover:text-gray-500 m-4 fixed right-0 top-0 z-10"
+        className="text-black h-8 w-8 group-hover:text-gray-500 m-4 fixed left-0 top-0 z-10 cursor-pointer"
       />
       <div
-        className={` fixed right-0 top-0 h-screen w-72 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
+        className={` fixed left-0 top-0 h-screen w-72 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col justify-between h-full">
           <div className="px-4 py-10">
-            <ul className="mt-6 space-y-1">
-              {navItems.map((item) => (
-                <li key={item.link}>
+            <ul className="mt-6 space-y-2">
+              {navData.map((item) => {
+                const href = `/${lang}/shop/${shopId}${
+                  item.link ? `/${item.link}` : ""
+                }`;
+
+                return (
                   <Link
-                    onClick={() => setIsOpen(false)}
-                    href={`${shopId ? `/shop/${shopId}` : ""}${item.link}`}
-                    className="block px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                    key={item.name}
+                    href={href}
+                    className={`my-5 block transition items-center justify-center gap-2 font-semibold ${
+                      pathname === href ? "text-primary" : "text-gray-600"
+                    } hover:text-gray-800`}
                   >
-                    {item.name}
+                    <div className="flex items-center gap-x-3">
+                      <item.icon />
+                      {t(item.name)}
+                    </div>
                   </Link>
-                </li>
-              ))}
+                );
+              })}
               <li>
                 <details className="group [&_summary::-webkit-details-marker]:hidden">
-                  <summary className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+                  <summary className="flex cursor-pointer items-center justify-between rounded-lg px-2 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
                     <span className="text-sm font-medium"> Account </span>
                     <span className="shrink-0 transition duration-300 group-open:-rotate-180">
                       <svg
@@ -100,6 +118,7 @@ export default function Drawer({
                 </details>
               </li>
             </ul>
+            <LanguageToggle />
           </div>
           {user && (
             <div className="sticky inset-x-0 bottom-0 border-t border-gray-100">
