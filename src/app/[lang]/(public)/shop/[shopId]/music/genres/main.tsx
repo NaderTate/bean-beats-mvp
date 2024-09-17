@@ -4,6 +4,7 @@ import { Genre } from "@prisma/client";
 import React, { useState, useEffect } from "react";
 import GenreCard from "./genre-card";
 import Input from "@/components/shared/Input";
+import { useTranslations } from "next-intl";
 
 type Props = { genres: Genre[]; shopId: string };
 
@@ -13,7 +14,7 @@ const GenresMain = ({ genres, shopId }: Props) => {
 
   // State for the debounced search term
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
-
+  const t = useTranslations();
   // useEffect for debouncing the search term
   useEffect(() => {
     // Set a timeout to update the debounced search term after 300ms
@@ -44,13 +45,13 @@ const GenresMain = ({ genres, shopId }: Props) => {
       />
 
       {/* Display filtered genres */}
-      <div className="flex flex-wrap gap-5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
         {filteredGenres.length > 0 ? (
           filteredGenres.map((genre) => (
             <GenreCard key={genre.id} genre={genre} shopId={shopId} />
           ))
         ) : (
-          <p>No genres found.</p>
+          <p>{t("No genres found")}</p>
         )}
       </div>
     </div>

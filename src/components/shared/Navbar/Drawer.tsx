@@ -75,6 +75,9 @@ export default function Drawer({
 
                 return (
                   <Link
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
                     key={item.name}
                     href={href}
                     className={`my-5 block transition items-center justify-center gap-2 font-semibold ${

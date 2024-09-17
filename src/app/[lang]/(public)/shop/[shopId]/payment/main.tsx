@@ -154,7 +154,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
         description="Checkout"
         price={totalAmount.toString()}
         tableNumber={Number(tableNumber)}
-        songsIds={songs.map((song) => song.id)}
+        songsIds={songs.map((song) => song.song.id)}
       />
       {/* <PayPalBtn
         action="order"

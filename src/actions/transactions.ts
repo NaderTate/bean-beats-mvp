@@ -12,6 +12,7 @@ export const createTransaction = async ({
   tableNumber: number;
 }) => {
   try {
+    console.log({ shopId, songsIds, tableNumber });
     const songs = await prisma.songCoffeeShop.findMany({
       where: {
         coffeeShopId: shopId,

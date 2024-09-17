@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { createTransaction } from "@/actions/transactions";
 import useGetLang from "@/hooks/use-get-lang";
 import { useState } from "react";
+import { useSongsCart } from "@/store/songs-cart";
 type props = {
   price: string;
   description: string;
@@ -24,6 +25,13 @@ const SubscribeComponent = ({
   const t = useTranslations();
   const { lang } = useGetLang();
   const [isLoading, setIsLoading] = useState(false);
+  console.log({
+    songsIds,
+    description,
+    price,
+    shopId,
+    tableNumber,
+  });
   const handleSubmit = async () => {
     const stripe = await loadStripe(
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
@@ -38,17 +46,15 @@ const SubscribeComponent = ({
         description,
         shopId,
         lang,
+        tableNumber,
+        songsIds,
       });
       const data = response.data;
       if (!data.ok) {
         setIsLoading(false);
         throw new Error("Something went wrong");
       }
-      await createTransaction({
-        shopId,
-        songsIds,
-        tableNumber,
-      });
+
       await stripe.redirectToCheckout({
         sessionId: data.result.id,
       });

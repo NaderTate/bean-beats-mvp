@@ -8,6 +8,9 @@ import "swiper/css/pagination";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { Navigation } from "swiper/modules";
+
+import "swiper/css/navigation";
 type Props = { genres: Genre[]; shopId: string; lang: string };
 
 const Genres = ({ genres, shopId, lang }: Props) => {
@@ -29,6 +32,8 @@ const Genres = ({ genres, shopId, lang }: Props) => {
         )}
       </div>
       <Swiper
+        navigation={true}
+        modules={[Navigation]}
         spaceBetween={20} // Adjust space between slides as needed
         slidesPerView="auto"
         onSlideChange={() => console.log("slide change")}

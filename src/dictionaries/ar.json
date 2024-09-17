@@ -191,5 +191,8 @@
   "Home": "الرئيسية",
   "Table number": "رقم الطاولة",
   "Current playing song": "الأغنية التي تعمل حاليًا",
-  "Checkout": "الدفع"
+  "Checkout": "الدفع",
+  "Search genres": "ابحث عن الأنواع",
+  "See All": "عرض الكل",
+  "No genres found": "لم يتم العثور على أنواع"
 }

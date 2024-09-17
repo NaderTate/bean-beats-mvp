@@ -3,9 +3,11 @@
 import { NextPage } from "next";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { FaCircleCheck } from "react-icons/fa6";
+import { createTransaction } from "@/actions/transactions";
+import { useSongsCart } from "@/store/songs-cart";
 
 type PaymentSuccessPageProps = { params: { shopId: string } };
 
@@ -14,13 +16,25 @@ const PaymentSuccessPage: NextPage<PaymentSuccessPageProps> = ({
 }) => {
   const router = useRouter();
   const t = useTranslations();
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push(`/shop/${shopId}/queue`);
-    }, 3000);
+  const searchParams = useSearchParams();
+  const tableNumber = Number(searchParams.get("tableNumber")) || 0;
+  const songsIds = searchParams.get("songsIds") || "";
+  const arrayOfSongs = songsIds.split(",");
+  console.log({ arrayOfSongs });
+  const { setSongs: setLocalSongs } = useSongsCart();
 
-    return () => clearTimeout(timer); // Cleanup the timer if the component unmounts
-  }, [router, shopId]);
+  const handleTransaction = async () => {
+    await createTransaction({
+      shopId,
+      songsIds: arrayOfSongs,
+      tableNumber,
+    });
+    router.push(`/shop/${shopId}/queue`);
+    setLocalSongs([]);
+  };
+  useEffect(() => {
+    handleTransaction();
+  }, [shopId, songsIds, tableNumber, setLocalSongs]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">

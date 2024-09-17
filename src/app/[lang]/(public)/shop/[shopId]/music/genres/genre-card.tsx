@@ -11,7 +11,7 @@ type Props = { genre: Genre; shopId: string };
 const GenreCard = ({ genre, shopId }: Props) => {
   const { lang } = useGetLang();
   return (
-    <div className="relative w-[200px] h-[200px]">
+    <div className="relative w-full h-full">
       <Link href={`/${lang}/shop/${shopId}/music/genres/${genre.id}`}>
         {/* Back card 2 */}
         <div className="absolute top-3 left-3 w-full h-full bg-gray-100 rounded-lg border"></div>

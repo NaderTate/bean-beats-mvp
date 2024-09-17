@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await request.json();
-    const { price, description, lang, shopId } = data;
+    const { price, description, lang, shopId, songsIds, tableNumber } = data;
     console.log({ lang, shopId, price, description });
     const checkoutSession = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -30,7 +30,11 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.APP_URL}/${lang}/shop/${shopId}/payment/success`,
+      success_url: `${
+        process.env.APP_URL
+      }/${lang}/shop/${shopId}/payment/success?shopId=${shopId}&tableNumber=${tableNumber}&songsIds=${songsIds.join(
+        ","
+      )}`,
       cancel_url: `${process.env.APP_URL}/${lang}/shop/${shopId}/payment`,
       metadata: {
         userId: user.id,
