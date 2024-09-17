@@ -131,7 +131,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
             <span className="text-primary-500 font-semibold">
               {t("Total cost")}:
             </span>
-            <span>{totalAmount} SAR</span>
+            <span>{totalAmount} USD</span>
           </div>
         </div>
       </div>
