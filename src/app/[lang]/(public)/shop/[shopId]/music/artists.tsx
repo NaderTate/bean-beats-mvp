@@ -11,7 +11,7 @@ const Artrists = ({ artists, shopId }: Props) => {
   const t = useTranslations();
   if (!artists || artists.length === 0) {
     return (
-      <div className="h-screen flex flex-col items-center justify-center">
+      <div className="h-[80vh] flex flex-col items-center justify-center">
         <Image
           src="/images/not-found.svg"
           width={200}

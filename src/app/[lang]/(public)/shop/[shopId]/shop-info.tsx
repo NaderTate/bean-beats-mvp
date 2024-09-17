@@ -15,7 +15,7 @@ const ShopInfo = async ({ name, address, table }: Props) => {
   const t = await getTranslations();
 
   return (
-    <div className="flex flex-wrap gap-x-5 items-center">
+    <div className="flex flex-col sm:flex-wrap gap-5 items-center">
       <h1 className="text-2xl font-semibold">{name}</h1>
       <div className="flex items-center gap-x-2">
         <CiLocationOn className="text-primary" />

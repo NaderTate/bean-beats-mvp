@@ -11,14 +11,14 @@ const Albums = ({ albums, shopId }: Props) => {
 
   if (!albums || albums.length === 0) {
     return (
-      <div className="h-screen flex flex-col items-center justify-center">
+      <div className="h-[80vh] flex flex-col items-center justify-center">
         <Image
           src="/images/not-found.svg"
           width={200}
           height={200}
           alt="not-found"
         />
-        <h1>{t("No albums found")}</h1>
+        <h1>{t("No artists found")}</h1>
       </div>
     );
   }

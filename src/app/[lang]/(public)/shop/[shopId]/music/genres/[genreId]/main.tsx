@@ -15,14 +15,14 @@ const GenreMain = ({ genre, SongCoffeeShop }: Props) => {
 
   if (!genre) {
     return (
-      <div className="h-screen flex flex-col items-center justify-center">
+      <div className="h-[80vh] flex flex-col items-center justify-center">
         <Image
           src="/images/not-found.svg"
           width={200}
           height={200}
           alt="not-found"
         />
-        <h1>{t("Genre not found")}</h1>
+        <h1>{t("No artists found")}</h1>
       </div>
     );
   }
