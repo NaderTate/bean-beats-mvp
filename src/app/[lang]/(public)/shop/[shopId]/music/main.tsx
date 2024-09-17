@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Song } from "@prisma/client";
+import { Genre, Playlist, Song } from "@prisma/client";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import Songs from "./songs";
@@ -9,6 +9,8 @@ import Albums from "./albums";
 import Artrists from "./artists";
 import { useTranslations } from "next-intl";
 import useGetLang from "@/hooks/use-get-lang";
+import Generes from "./genres";
+import Playlists from "./playlists";
 
 type Props = {
   songs: {
@@ -18,10 +20,22 @@ type Props = {
   shopId: string;
   albums: ExtendedAlbum[];
   artists: { name: string; image: string; id: string }[];
+  genres: Genre[];
+  // playlists: (Playlist & Song[])[]
+  playlists: ({
+    songs: Song[];
+  } & Playlist)[];
 };
 
-type Section = "artists" | "songs" | "albums";
-const MusicMain = ({ shopId, songs, albums, artists }: Props) => {
+type Section = "artists" | "songs" | "albums" | "playlists";
+const MusicMain = ({
+  shopId,
+  songs,
+  albums,
+  artists,
+  genres,
+  playlists,
+}: Props) => {
   const { push } = useRouter();
   const searchParams = useSearchParams();
   const section = searchParams.get("section");
@@ -30,12 +44,13 @@ const MusicMain = ({ shopId, songs, albums, artists }: Props) => {
     (section as Section) || "artists"
   );
 
-  const sectionsData = ["Artists", "Songs", "Albums"];
+  const sectionsData = ["Artists", "Songs", "Albums", "Playlists"];
   const t = useTranslations();
   const { lang } = useGetLang();
   return (
     <div className="md:p-20 p-5 pt-20 ">
-      <h3 className="font-semibold text-xl mb-5">{t("Music List")}</h3>
+      <Generes genres={genres} shopId={shopId} lang={lang} />
+      <h3 className="font-semibold text-xl mt-5 mb-3">{t("Music List")}</h3>
       {/* <div>
         <input
           type="text"
@@ -69,6 +84,9 @@ const MusicMain = ({ shopId, songs, albums, artists }: Props) => {
       )}
       {currentSesction === "artists" && (
         <Artrists artists={artists} shopId={shopId} />
+      )}
+      {currentSesction === "playlists" && (
+        <Playlists playlists={playlists} lang={lang} shopId={shopId} />
       )}
     </div>
   );

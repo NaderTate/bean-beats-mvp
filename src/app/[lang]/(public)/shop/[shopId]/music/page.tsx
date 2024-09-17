@@ -20,6 +20,7 @@ async function page({ params: { shopId } }: Props) {
         },
       },
       Artists: { select: { name: true, image: true, id: true } },
+      Playlist: { include: { songs: { take: 1 } } },
     },
   });
 
@@ -31,8 +32,15 @@ async function page({ params: { shopId } }: Props) {
     );
   }
 
+  const genres = await prisma.genre.findMany({
+    take: 10,
+    orderBy: { id: "desc" },
+  });
+
   return (
     <MusicMain
+      playlists={shop.Playlist}
+      genres={genres}
       shopId={shopId}
       albums={shop.Albums}
       artists={shop.Artists}

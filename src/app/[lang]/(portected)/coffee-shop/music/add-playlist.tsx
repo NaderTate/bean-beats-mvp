@@ -53,7 +53,7 @@ const AddPlaylist = ({ onSubmit, allSongs, allPlaylists, shopId }: Props) => {
       shopId,
     });
     setIsSubmitting(false);
-    toast.success(t("Artist added successfully"));
+    toast.success(t("Playlist added successfully"));
     onSubmit();
   };
   return (
