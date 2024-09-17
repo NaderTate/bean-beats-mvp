@@ -30,6 +30,7 @@ const PaymentSuccessPage: NextPage<PaymentSuccessPageProps> = ({
       tableNumber,
     });
     router.push(`/shop/${shopId}/queue`);
+    localStorage.removeItem("songs");
     setLocalSongs([]);
   };
   useEffect(() => {

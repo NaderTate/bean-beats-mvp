@@ -10,6 +10,7 @@ const PaymentsPage: NextPage = async ({}: PaymentsPageProps) => {
   const user = await getUser();
   const coffeeShop = user
     ? await prisma.coffeeShop.findFirst({
+        orderBy: { id: "desc" },
         where: { adminId: user?.id },
         select: {
           Transactions: {

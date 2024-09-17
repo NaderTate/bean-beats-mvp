@@ -24,7 +24,11 @@ const Main = ({ transaction }: Props) => {
           disabled
           label="Date"
         />
-        <Input value={transaction.amount} disabled label="Total Cost" />
+        <Input
+          value={transaction.amount + " USD"}
+          disabled
+          label="Total Cost"
+        />
       </div>
       {/* @ts-ignore */}
       <SongsList songs={transaction.songs} />
