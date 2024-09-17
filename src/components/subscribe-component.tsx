@@ -69,7 +69,7 @@ const SubscribeComponent = ({
       <Button
         isLoading={isLoading}
         className="w-full mb-5"
-        startIcon={<FaCreditCard />}
+        startIcon={<FaCreditCard className="mx-2" />}
         onClick={handleSubmit}
       >
         {t("Checkout")}

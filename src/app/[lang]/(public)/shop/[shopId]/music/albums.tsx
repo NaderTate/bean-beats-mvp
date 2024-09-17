@@ -18,7 +18,7 @@ const Albums = ({ albums, shopId }: Props) => {
           height={200}
           alt="not-found"
         />
-        <h1>{t("No artists found")}</h1>
+        <h1>{t("No albums found")}</h1>
       </div>
     );
   }

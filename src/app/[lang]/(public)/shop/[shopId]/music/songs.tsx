@@ -22,7 +22,7 @@ const Songs = ({ songs }: Props) => {
           height={200}
           alt="not-found"
         />
-        <h1>{t("No artists found")}</h1>
+        <h1>{t("No songs found")}</h1>
       </div>
     );
   }
