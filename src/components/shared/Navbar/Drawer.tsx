@@ -61,8 +61,8 @@ export default function Drawer({
           isOpen
             ? "translate-x-0"
             : lang === "ar"
-            ? "translate-x-full"
-            : "-translate-x-full"
+            ? "translate-x-[200%]"
+            : "-translate-x-[200%]"
         }`}
       >
         <div className="flex flex-col justify-between h-full">
