@@ -50,11 +50,19 @@ export default function Drawer({
         onClick={() => {
           setIsOpen(!isOpen);
         }}
-        className="text-black h-8 w-8 group-hover:text-gray-500 m-4 fixed left-0 top-0 z-10 cursor-pointer"
+        className={`text-black h-8 w-8 group-hover:text-gray-500 m-4 fixed ${
+          lang === "ar" ? "right-0" : "left-0"
+        } top-0 z-10 cursor-pointer`}
       />
       <div
-        className={` fixed left-0 top-0 h-screen w-72 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+        className={` fixed ${
+          lang === "ar" ? "right-0" : "left-0"
+        } top-0 h-screen w-72 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
+          isOpen
+            ? "translate-x-0"
+            : lang === "ar"
+            ? "translate-x-full"
+            : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col justify-between h-full">

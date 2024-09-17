@@ -78,9 +78,8 @@ const DashboardPage: NextPage = async ({}: DashboardPageProps) => {
       <LineChart data={data} />
       {songsQueue.length > 0 && (
         <>
-          <h1 className="text-2xl font-semibold mt-5">Current playing song</h1>
           <SongCard song={songsQueue[0].song} />
-          <h1 className="text-2xl font-semibold -mb-10 mt-10">Music Queue</h1>
+
           <Table
             hideSearch
             data={songsQueue.map(({ song }, i) => ({

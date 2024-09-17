@@ -187,5 +187,9 @@
   "No artists found": "لم يتم العثور على فنانين",
   "No albums found": "لم يتم العثور على ألبومات",
   "Playlist added successfully": "تمت إضافة قائمة التشغيل بنجاح",
-  "Nothing in queue": "لا شيء في قائمة الانتظار"
+  "Nothing in queue": "لا شيء في قائمة الانتظار",
+  "Home": "الرئيسية",
+  "Table number": "رقم الطاولة",
+  "Current playing song": "الأغنية التي تعمل حاليًا",
+  "Checkout": "الدفع"
 }

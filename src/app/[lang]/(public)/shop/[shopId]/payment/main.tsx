@@ -10,10 +10,10 @@ import { getMultipleSongs } from "@/actions/songs";
 import { PayPalBtn } from "./paypal-btn";
 import { createTransaction } from "@/actions/transactions";
 import { useSongsCart } from "@/store/songs-cart";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import useGetLang from "@/hooks/use-get-lang";
 import SubscribeComponent from "@/components/subscribe-component";
+import Input from "@/components/shared/Input";
 
 function getDayOfWeek() {
   const daysOfWeek = [
@@ -36,7 +36,7 @@ type PaymentMainProps = { shopId: string };
 export const PaymentMain = ({ shopId }: PaymentMainProps) => {
   const t = useTranslations();
   const { lang } = useGetLang();
-
+  const [tableNumber, setTableNumber] = useState<string>("");
   const [songs, setSongs] = useState<
     | {
         song: {
@@ -131,10 +131,14 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
         <div className="flex flex-col gap-4 text-gray-500 ">
           <span>{t(getDayOfWeek())}</span>
           <span>{new Date().toLocaleTimeString()}</span>
-          <span>20</span>
+          <input
+            value={tableNumber}
+            placeholder={t("Table number")}
+            onChange={(e) => setTableNumber(e.target.value)}
+          />
           <span>{songs.length}</span>
         </div>
-        <span className="border-b-4 my-4 border-dashed col-span-2 "></span>
+        <span className="border-b-4 my-4 border-dashed col-span-2"></span>
         <div>
           <h3 className="text-primary font-semibold text-xl">{t("summary")}</h3>
           <div className="flex justify-between pt-6">
@@ -146,11 +150,13 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
         </div>
       </div>
       <SubscribeComponent
-        priceId="price_1234"
-        price="10"
-        description="Premium"
+        shopId={shopId}
+        description="Checkout"
+        price={totalAmount.toString()}
+        tableNumber={Number(tableNumber)}
+        songsIds={songs.map((song) => song.id)}
       />
-      <PayPalBtn
+      {/* <PayPalBtn
         action="order"
         amount={totalAmount}
         onPaymentSuccess={async () => {
@@ -163,7 +169,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
           setLocalSongs([]);
           push(`/${lang}/shop/${shopId}/payment/success`);
         }}
-      />
+      /> */}
     </div>
   );
 };

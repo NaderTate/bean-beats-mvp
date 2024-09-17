@@ -21,11 +21,11 @@ const SongPlayer = async ({ song }: Props) => {
     <div className="rounded-lg bg-gray-100 border-2 p-5 mx-auto w-fit mt-10">
       <h4 className="text-xl font-medium">{t("Current Playing Song")}</h4>
       <Image
-        width={400}
-        height={300}
+        width={2000}
+        height={1000}
         alt="Album Image"
         src={song.thumbnail}
-        className="rounded-lg my-5 aspect-square object-cover object-top"
+        className="rounded-lg my-5 aspect-square object-cover object-top h-96 w-full"
       />
       <h5 className="text-lg font-semibold text-primary">{song.title}</h5>
       <h5 className="font-semibold text-gray-500">{song.Artist?.name}</h5>
