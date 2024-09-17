@@ -39,8 +39,8 @@ const PalylistPage = async ({
       <Image
         src={playlist.songs[0].thumbnail}
         className="w-full h-72 object-cover rounded-lg"
-        width={700}
-        height={500}
+        width={2000}
+        height={1000}
         alt={playlist.name}
       />
       <div className="flex justify-between">

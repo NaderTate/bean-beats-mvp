@@ -29,8 +29,8 @@ const GenrePage = async ({ params: { genreId, shopId } }: GenrePageProps) => {
       <Image
         src={genre.image}
         className="w-full h-72 object-cover rounded-lg"
-        width={700}
-        height={500}
+        width={2000}
+        height={1000}
         alt={genre.name}
       />
       <div className="flex justify-between">
