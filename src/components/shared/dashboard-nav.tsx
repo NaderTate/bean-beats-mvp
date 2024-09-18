@@ -77,10 +77,11 @@ export default function Dashboard({ user }: { user: User }) {
           isOpened ? "w-16" : "w-0 opacity-0 -translate-x-28"
         }`}
       >
+        {/* Top Section */}
         <div>
           <div className="border-t border-gray-100">
             <div className="px-2">
-              <ul className="space-y-1 sm:space-y-5  border-gray-100 pt-4 flex flex-col items-center">
+              <ul className="space-y-1 sm:space-y-5 border-gray-100 pt-4 flex flex-col items-center">
                 {links.map((link) => (
                   <li key={link.href + "dashboardLink"}>
                     <Link
@@ -99,37 +100,45 @@ export default function Dashboard({ user }: { user: User }) {
                 <div className="mt-4">
                   <LanguageToggle />
                 </div>
-                <li>
-                  <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                  >
-                    <FcBusinessman className="h-5 w-5 opacity-75" />
-                    <span className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white -translate-x-20 opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
-                      {t("Profile")}
-                    </span>
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => {
-                      signOut({ callbackUrl: "/signin" });
-                      push("/signin");
-                    }}
-                    className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                  >
-                    <HiOutlineLogout className="h-5 w-5 opacity-75 text-primary" />
-                    <span className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white -translate-x-20 opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
-                      {t("Logout")}
-                    </span>
-                  </button>
-                </li>
               </ul>
             </div>
           </div>
         </div>
+        {/* Bottom Section */}
+        <div className="mb-20">
+          <ul className="space-y-1 sm:space-y-5 flex flex-col items-center">
+            <li>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+              >
+                <FcBusinessman className="h-5 w-5 opacity-75" />
+                <span className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white -translate-x-20 opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
+                  {t("Profile")}
+                </span>
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => {
+                  signOut({ callbackUrl: "/signin" });
+                  push("/signin");
+                }}
+                className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+              >
+                <HiOutlineLogout className="h-5 w-5 opacity-75 text-primary" />
+                <span className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white -translate-x-20 opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
+                  {t("Logout")}
+                </span>
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div className="fixed bottom-[20px] left-0 w-12 rounded-r-full bg-gray-100/70">
+      {/* Toggle Button */}
+      <div
+        className={`fixed bottom-[20px] start-0  w-12 rounded-r-full bg-gray-100/70`}
+      >
         <button
           onClick={() => setIsOpened(!isOpened)}
           className="w-full h-10 flex justify-center items-center rounded-r-full"

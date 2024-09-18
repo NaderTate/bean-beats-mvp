@@ -38,12 +38,21 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   const [uploadedAudioUrl, setUploadedAudioUrl] = useState<string | undefined>(
     defaultAudioUrl
   ); // State for uploaded audio URL
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
 
-  // Handle file upload
   const handleFileUpload = async (file: File) => {
     setIsUploading(true);
+    setUploadProgress(0); // Reset progress
     try {
-      const url = await uploadFile(file); // Assuming uploadFile returns the file URL
+      const url = await uploadFile(file, (progressEvent) => {
+        if (progressEvent.lengthComputable) {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setUploadProgress(percentCompleted);
+        }
+      });
+
       const fileType = file.type.startsWith("image")
         ? "image"
         : file.type.startsWith("audio")
@@ -51,18 +60,19 @@ const FileUploader: React.FC<FileUploaderProps> = ({
         : null;
 
       if (fileType === "image") {
-        setUploadedImageUrl(url.url); // Set the uploaded image URL
-        setUploadedAudioUrl(undefined); // Clear any audio URL
-        onFileUpload(url.url, "image"); // Pass the URL and file type to the parent
+        setUploadedImageUrl(url.url);
+        setUploadedAudioUrl(undefined);
+        onFileUpload(url.url, "image");
       } else if (fileType === "audio") {
-        setUploadedAudioUrl(url.url); // Set the uploaded audio URL
-        setUploadedImageUrl(undefined); // Clear any image URL
-        getAudioDuration(url.url); // Get the audio duration and pass it to the parent
+        setUploadedAudioUrl(url.url);
+        setUploadedImageUrl(undefined);
+        getAudioDuration(url.url);
       }
     } catch (error) {
       console.error("File upload failed", error);
     } finally {
       setIsUploading(false);
+      setUploadProgress(0);
     }
   };
 
@@ -159,8 +169,17 @@ const FileUploader: React.FC<FileUploaderProps> = ({
             onDrop={handleDrop}
           >
             {isUploading ? (
-              <div className="flex justify-center">
+              <div className="flex flex-col items-center">
                 <Spinner />
+                <p className="mt-2 text-teal-600">
+                  {t("Uploading...")} {uploadProgress}%
+                </p>
+                <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                  <div
+                    className="bg-teal-600 h-2.5 rounded-full transition-all duration-200"
+                    style={{ width: `${uploadProgress}%` }}
+                  ></div>
+                </div>
               </div>
             ) : (
               <div>
