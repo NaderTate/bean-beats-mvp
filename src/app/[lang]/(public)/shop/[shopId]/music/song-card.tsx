@@ -7,10 +7,13 @@ import { MdAddCircleOutline } from "react-icons/md";
 import { useSongsCart } from "@/store/songs-cart";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
+import toast from "react-hot-toast";
 
 type Props = { song: Song & { price: number | string } };
 
 const SongCard = ({ song }: Props) => {
+  const t = useTranslations();
+
   const storedSongs = localStorage.getItem("songs");
 
   const { songs, addSong, removeSong, setSongs } = useSongsCart();
@@ -20,6 +23,7 @@ const SongCard = ({ song }: Props) => {
     songs.push(song.id);
     localStorage.setItem("songs", JSON.stringify(songs));
     addSong(songId);
+    toast.success(t("Song added to cart"));
   };
 
   const handleRemoveSong = (songId: string) => {
@@ -27,6 +31,7 @@ const SongCard = ({ song }: Props) => {
     const updatedSongs = songs.filter((s: string) => s !== song.id);
     localStorage.setItem("songs", JSON.stringify(updatedSongs));
     removeSong(songId);
+    toast.success(t("Song removed from cart"));
   };
 
   useEffect(() => {
@@ -35,7 +40,6 @@ const SongCard = ({ song }: Props) => {
     }
   }, [setSongs, storedSongs]);
 
-  const t = useTranslations();
   return (
     <div className="flex justify-between shadow-lg rounded-md p-5">
       <div className="flex flex-row gap-4">

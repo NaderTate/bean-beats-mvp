@@ -17,6 +17,8 @@ import { FiShoppingCart } from "react-icons/fi";
 import useGetLang from "@/hooks/use-get-lang";
 import { useSongsCart } from "@/store/songs-cart";
 import { navData } from "./nav-data";
+import Tooltip from "@/components/tooltip";
+import LanguageToggle from "@/components/language-toggle";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -120,6 +122,12 @@ const Navbar = () => {
                 </Link>
               );
             })}
+            <Tooltip
+              label={lang === "en" ? "عربي" : "English"}
+              direction="bottom"
+            >
+              <LanguageToggle />
+            </Tooltip>
           </div>
         </div>
       </div>

@@ -14,6 +14,7 @@ import { useTranslations } from "next-intl";
 import useGetLang from "@/hooks/use-get-lang";
 import SubscribeComponent from "@/components/subscribe-component";
 import Input from "@/components/shared/Input";
+import NotFound from "@/components/not-found";
 
 function getDayOfWeek() {
   const daysOfWeek = [
@@ -35,7 +36,6 @@ type PaymentMainProps = { shopId: string };
 
 export const PaymentMain = ({ shopId }: PaymentMainProps) => {
   const t = useTranslations();
-  const { lang } = useGetLang();
   const [tableNumber, setTableNumber] = useState<string>("");
   const [songs, setSongs] = useState<
     | {
@@ -53,9 +53,6 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
     | null
   >(null);
   const [totalAmount, setTotalAmount] = useState<number>(0);
-  const { setSongs: setLocalSongs } = useSongsCart();
-
-  const { push } = useRouter();
 
   useEffect(() => {
     const songsIds = localStorage.getItem("songs")
@@ -89,15 +86,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
       //     </Link>
       //   </div>
       // </div>
-      <div className="h-[80vh] flex flex-col items-center justify-center">
-        <Image
-          src="/images/not-found.svg"
-          width={200}
-          height={200}
-          alt="not-found"
-        />
-        <h1>{t("No artists found")}</h1>
-      </div>
+      <NotFound label="No songs selected" />
     );
   }
   return (
@@ -105,7 +94,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
       {songs.map((song) => (
         <div
           key={song.id}
-          className="inline-flex w-full gap-3 bg-slate-50 p-5 rounded-lg border"
+          className="inline-flex w-full gap-3 bg-slate-50 p-5 rounded-lg border my-2"
         >
           <Image
             src={song.song.thumbnail}

@@ -92,12 +92,32 @@ interface MainProps {
     title: string;
     thumbnail: string;
   }[];
+  transactions: {
+    amount: number;
+    createdAt: Date;
+  }[];
 }
-const Main = ({ topSongs }: MainProps) => {
+const Main = ({ topSongs, transactions }: MainProps) => {
   const t = useTranslations();
   const { lang } = useGetLang();
   const { push } = useRouter();
+  const currentYear = new Date().getFullYear();
+  const monthlyRevenue = new Array(12).fill(0);
 
+  transactions.forEach((transaction) => {
+    const date = new Date(transaction.createdAt);
+    if (date.getFullYear() === currentYear) {
+      const month = date.getMonth();
+      // Convert amount to cents
+      const amountInCents = Math.round(transaction.amount * 100);
+      monthlyRevenue[month] += amountInCents;
+    }
+  });
+
+  // Convert back to dollars with two decimal places
+  for (let i = 0; i < monthlyRevenue.length; i++) {
+    monthlyRevenue[i] = monthlyRevenue[i] / 100;
+  }
   return (
     <main className="flex flex-col flex-1 w-full px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
       <section className=" grid col-span-1 gap-4  lg:grid-cols-3">
@@ -129,18 +149,8 @@ const Main = ({ topSongs }: MainProps) => {
               ],
               datasets: [
                 {
-                  label: t("Shops"),
-                  data: [0, 3, 8, 8, 12, 13, 25, 30, 35, 40, 45, 50],
-                  fill: false,
-                  backgroundColor: "#10B981",
-                  borderColor: "#10B981",
-                  cubicInterpolationMode: "monotone",
-                },
-                {
                   label: t("Revenue"),
-                  data: [
-                    5, 122, 100, 90, 50, 230, 200, 300, 250, 400, 350, 500,
-                  ],
+                  data: monthlyRevenue,
                   fill: false,
                   backgroundColor: "#3B82F6",
                   borderColor: "#3B82F6",

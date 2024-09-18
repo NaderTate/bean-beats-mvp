@@ -1,26 +1,17 @@
+import NotFound from "@/components/not-found";
 import useGetLang from "@/hooks/use-get-lang";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-type Props = { albums: ExtendedAlbum[]; shopId: string };
+type Props = { albums: ExtendedAlbum[]; shopId: string; height?: height };
 
-const Albums = ({ albums, shopId }: Props) => {
+const Albums = ({ albums, shopId, height }: Props) => {
   const t = useTranslations();
 
   if (!albums || albums.length === 0) {
-    return (
-      <div className="h-[80vh] flex flex-col items-center justify-center">
-        <Image
-          src="/images/not-found.svg"
-          width={200}
-          height={200}
-          alt="not-found"
-        />
-        <h1>{t("No albums found")}</h1>
-      </div>
-    );
+    return <NotFound label="No albums found" height={height} />;
   }
   return (
     <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-5">

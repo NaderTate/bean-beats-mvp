@@ -42,7 +42,16 @@ type DashboardPageProps = {};
 
 const DashboardPage: NextPage = async ({}: DashboardPageProps) => {
   const coffeeShop = await getCoffeeShop();
-
+  const transactions = await prisma.transaction.findMany({
+    where: {
+      status: "COMPLETED",
+      shopId: coffeeShop?.id,
+    },
+    select: {
+      amount: true,
+      createdAt: true,
+    },
+  });
   const songsQueue = await prisma.queueSong.findMany({
     where: { coffeeShopId: coffeeShop?.id },
     include: {
@@ -50,6 +59,24 @@ const DashboardPage: NextPage = async ({}: DashboardPageProps) => {
     },
     orderBy: { id: "asc" },
   });
+
+  const currentYear = new Date().getFullYear();
+  const monthlyRevenue = new Array(12).fill(0);
+
+  transactions.forEach((transaction) => {
+    const date = new Date(transaction.createdAt);
+    if (date.getFullYear() === currentYear) {
+      const month = date.getMonth();
+      // Convert amount to cents
+      const amountInCents = Math.round(transaction.amount * 100);
+      monthlyRevenue[month] += amountInCents;
+    }
+  });
+
+  // Convert back to dollars with two decimal places
+  for (let i = 0; i < monthlyRevenue.length; i++) {
+    monthlyRevenue[i] = monthlyRevenue[i] / 100;
+  }
 
   return (
     <div className="p-5">
@@ -75,7 +102,34 @@ const DashboardPage: NextPage = async ({}: DashboardPageProps) => {
           },
         ]}
       />
-      <LineChart data={data} />
+      <LineChart
+        data={{
+          labels: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ],
+          datasets: [
+            {
+              label: "Revenue",
+              data: monthlyRevenue,
+              fill: false,
+              backgroundColor: "#3B82F6",
+              borderColor: "#3B82F6",
+              cubicInterpolationMode: "monotone",
+            },
+          ],
+        }}
+      />
       {songsQueue.length > 0 && (
         <>
           <SongCard song={songsQueue[0].song} />

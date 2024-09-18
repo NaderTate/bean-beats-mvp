@@ -10,6 +10,8 @@ import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { FaCreditCard, FaGear, FaMusic } from "react-icons/fa6";
 
 import useGetLang from "@/hooks/use-get-lang";
+import Tooltip from "@/components/tooltip";
+import LanguageToggle from "@/components/language-toggle";
 
 const links = [
   {
@@ -68,19 +70,23 @@ export default function Sidebar() {
             <div className="px-2">
               <ul className="space-y-1 sm:space-y-5 pt-4 flex flex-col items-center">
                 {links.map((link) => (
-                  <li key={link.href + "dashboardLink"}>
-                    <Link
-                      href={`/${lang}/coffee-shop/${link.href}`}
-                      className={`group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700 ${
-                        pathname.includes(link.href) && "text-primary"
-                      }`}
-                    >
-                      <link.icon className="h-5 w-5 opacity-75" />
-                      <span className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white -translate-x-20 opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
-                        {t(link.title)}
-                      </span>
-                    </Link>
-                  </li>
+                  <Tooltip
+                    label={t(link.title)}
+                    direction={lang === "en" ? "right" : "left"}
+                    key={link.href + "dashboardLink"}
+                  >
+                    <li>
+                      <Link
+                        href={`/${lang}/${link.href}`}
+                        className={`group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700 ${
+                          pathname.split("/").at(-1) ===
+                            link.href.split("/").at(-1) && "bg-blue-100/60"
+                        }`}
+                      >
+                        <link.icon className="h-5 w-5 opacity-75" />
+                      </Link>
+                    </li>
+                  </Tooltip>
                 ))}
               </ul>
             </div>
@@ -90,23 +96,12 @@ export default function Sidebar() {
         <div className="mb-20">
           <ul className="space-y-1 sm:space-y-5 pt-4 flex flex-col items-center">
             <li>
-              <button
-                onClick={() => {
-                  startTransition(() => {
-                    const newPath = pathname.replace(
-                      lang,
-                      lang === "en" ? "ar" : "en"
-                    );
-                    push(newPath, { scroll: false });
-                  });
-                }}
-                className="w-full group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+              <Tooltip
+                label={lang === "en" ? "عربي" : "English"}
+                direction={lang === "en" ? "right" : "left"}
               >
-                {lang === "en" ? "AR" : "EN"}
-                <span className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white -translate-x-20 opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
-                  {lang === "en" ? "عربي" : "English"}
-                </span>
-              </button>
+                <LanguageToggle />
+              </Tooltip>
             </li>
           </ul>
         </div>

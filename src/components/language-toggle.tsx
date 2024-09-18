@@ -1,6 +1,7 @@
 import useGetLang from "@/hooks/use-get-lang";
 import { usePathname, useRouter } from "next/navigation";
 import { useTransition } from "react";
+import { CiGlobe } from "react-icons/ci";
 
 type Props = {};
 
@@ -21,10 +22,7 @@ const LanguageToggle = (props: Props) => {
       }}
       className="w-fit group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
     >
-      {lang === "en" ? "AR" : "EN"}
-      <span className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white -translate-x-20 opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
-        {lang === "en" ? "عربي" : "English"}
-      </span>
+      <CiGlobe size={25} />
     </button>
   );
 };

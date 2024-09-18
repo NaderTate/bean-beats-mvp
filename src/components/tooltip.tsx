@@ -25,7 +25,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       case "bottom":
         return "top-full mt-2 left-1/2 transform -translate-x-1/2";
       case "left":
-        return "right-full mr-2 top-1/2 transform -translate-y-1/2";
+        return "right-full mr-2 top-1/2 transform -translate-y-1/2 -translate-x-full";
       case "right":
         return "left-full ml-2 top-1/2 transform -translate-y-1/2";
       default:
@@ -66,7 +66,7 @@ const Tooltip: React.FC<TooltipProps> = ({
 
   return (
     <div
-      className="relative inline-block"
+      className="relative inline-block overflow-visible"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -74,7 +74,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       {isHovered && (
         <motion.div
           {...getMotionDirection()}
-          className={`absolute px-4 py-2 rounded-lg bg-gray-700 text-white text-sm shadow-lg ${getPositionClasses()}`}
+          className={`absolute z-50 px-4 py-2 rounded-lg bg-gray-700 text-white text-sm shadow-lg whitespace-nowrap max-w-max ${getPositionClasses()}`}
         >
           {t(label)}
         </motion.div>

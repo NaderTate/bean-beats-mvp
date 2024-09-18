@@ -15,3 +15,5 @@ type ExtendedAlbum = {
 };
 
 type Lang = "en" | "ar";
+
+type height = "sm" | "md" | "lg" | "screen";

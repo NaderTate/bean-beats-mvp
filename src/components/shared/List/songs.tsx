@@ -25,7 +25,7 @@ export default function SongsList({
     <div className=" col-span-1 flex flex-col gap-2 p-2 md:p-4 justify-between bg-white border-gray-200 border md:col-span-1 lg:col-span-3 rounded-xl shadow-md">
       <div className="flex justify-center items-center">
         <h2 className="text-sm font-semibold text-gray-600">
-          {t("Top performing songs")}
+          {t("Top Songs")}
         </h2>
       </div>
       {topSongs.map((song) => (

@@ -26,43 +26,43 @@ ChartJS.register(
 );
 
 export default function CustomLineChart({ data }: any) {
-  const chartData = {
-    labels: [
-      "JAN",
-      "FEB",
-      "MAR",
-      "APR",
-      "MAY",
-      "JUN",
-      "JUL",
-      "AUG",
-      "SEP",
-      "OCT",
-      "NOV",
-      "DEC",
-    ],
-    datasets: [
-      {
-        label: "Monthly Stats",
-        data: [
-          1000, 1200, 1500, 1300, 1600, 1400, 1800, 405, 2000, 1700, 1900, 2100,
-        ],
-        fill: "start", // Enable area fill under the line
-        backgroundColor: "rgba(217, 162, 132, 0.3)", // Light brown color with transparency
-        borderColor: "#D97333", // Line color matching brownish orange
-        borderWidth: 2,
-        tension: 0.4, // Make the line smooth
-        pointRadius: 5, // Increase point size for visibility
-        pointBackgroundColor: "#D97333", // Same as the line color
-        pointBorderColor: "#FFF",
-        pointHoverRadius: 6,
-        pointHoverBackgroundColor: "#000", // Tooltip point color
-        pointHoverBorderColor: "#FFF",
-        hoverBackgroundColor: "#000",
-        pointHitRadius: 10, // Increase hitbox for easier hover
-      },
-    ],
-  };
+  // const chartData = {
+  //   labels: [
+  //     "JAN",
+  //     "FEB",
+  //     "MAR",
+  //     "APR",
+  //     "MAY",
+  //     "JUN",
+  //     "JUL",
+  //     "AUG",
+  //     "SEP",
+  //     "OCT",
+  //     "NOV",
+  //     "DEC",
+  //   ],
+  //   datasets: [
+  //     {
+  //       label: "Monthly Stats",
+  //       data: [
+  //         1000, 1200, 1500, 1300, 1600, 1400, 1800, 405, 2000, 1700, 1900, 2100,
+  //       ],
+  //       fill: "start", // Enable area fill under the line
+  //       backgroundColor: "rgba(217, 162, 132, 0.3)", // Light brown color with transparency
+  //       borderColor: "#D97333", // Line color matching brownish orange
+  //       borderWidth: 2,
+  //       tension: 0.4, // Make the line smooth
+  //       pointRadius: 5, // Increase point size for visibility
+  //       pointBackgroundColor: "#D97333", // Same as the line color
+  //       pointBorderColor: "#FFF",
+  //       pointHoverRadius: 6,
+  //       pointHoverBackgroundColor: "#000", // Tooltip point color
+  //       pointHoverBorderColor: "#FFF",
+  //       hoverBackgroundColor: "#000",
+  //       pointHitRadius: 10, // Increase hitbox for easier hover
+  //     },
+  //   ],
+  // };
 
   const chartOptions = {
     responsive: true,
@@ -107,7 +107,7 @@ export default function CustomLineChart({ data }: any) {
   return (
     <div style={{ height: "300px", width: "100%" }}>
       {/* @ts-ignore */}
-      <Line data={chartData} options={chartOptions} />
+      <Line data={data} options={chartOptions} />
     </div>
   );
 }

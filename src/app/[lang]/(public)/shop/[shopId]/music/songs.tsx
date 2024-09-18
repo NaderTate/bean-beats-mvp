@@ -1,30 +1,21 @@
 import { Song } from "@prisma/client";
 
 import SongCard from "./song-card";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
+import NotFound from "@/components/not-found";
 
 type Props = {
   songs: {
     song: Song;
     price: number | string;
   }[];
+  height?: height;
 };
 
-const Songs = ({ songs }: Props) => {
+const Songs = ({ songs, height }: Props) => {
   const t = useTranslations();
   if (songs.length === 0) {
-    return (
-      <div className="h-[80vh] flex flex-col items-center justify-center">
-        <Image
-          src="/images/not-found.svg"
-          width={200}
-          height={200}
-          alt="not-found"
-        />
-        <h1>{t("No songs found")}</h1>
-      </div>
-    );
+    return <NotFound label="No songs found" height={height} />;
   }
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">

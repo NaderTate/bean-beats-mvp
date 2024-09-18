@@ -17,7 +17,7 @@
   "Monthly stats": "إحصائيات شهرية",
   "Shops": "محلات",
   "Revenue": "إيرادات",
-  "Top performing songs": "أفضل الأغاني الأدائية",
+  "Top Songs": "أفضل الأغاني",
   "Dashboard": "لوحة القيادة",
   "Users": "المستخدمين",
   "music": "الموسيقى",
@@ -194,5 +194,12 @@
   "Checkout": "الدفع",
   "Search genres": "ابحث عن الأنواع",
   "See All": "عرض الكل",
-  "No genres found": "لم يتم العثور على أنواع"
+  "No genres found": "لم يتم العثور على أنواع",
+  "Song added to cart": "تمت إضافة الأغنية إلى السلة",
+  "Song removed from cart": "تمت إزالة الأغنية من السلة",
+  "Search artists": "ابحث عن الفنانين",
+  "Search albums": "ابحث عن الألبومات",
+  "Search playlists": "ابحث عن قوائم التشغيل",
+  "No playlists found": "لم يتم العثور على قوائم التشغيل",
+  "Loading": "جاري التحميل"
 }

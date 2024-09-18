@@ -1,3 +1,4 @@
+import NotFound from "@/components/not-found";
 import { Playlist, Song } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,9 +10,13 @@ type Props = {
   } & Playlist)[];
   shopId: string;
   lang: string;
+  height?: height;
 };
 
-const Playlists = ({ playlists, lang, shopId }: Props) => {
+const Playlists = ({ playlists, lang, shopId, height }: Props) => {
+  if (playlists.length === 0) {
+    return <NotFound label="No playlists found" height={height} />;
+  }
   return (
     <div>
       {playlists.map((playlist) => {
