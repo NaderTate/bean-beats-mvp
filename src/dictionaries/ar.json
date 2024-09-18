@@ -201,5 +201,8 @@
   "Search albums": "ابحث عن الألبومات",
   "Search playlists": "ابحث عن قوائم التشغيل",
   "No playlists found": "لم يتم العثور على قوائم التشغيل",
-  "Loading": "جاري التحميل"
+  "Loading": "جاري التحميل",
+  "Quantity": "الكمية",
+  "Total": "الإجمالي",
+  "Summary": "ملخص"
 }

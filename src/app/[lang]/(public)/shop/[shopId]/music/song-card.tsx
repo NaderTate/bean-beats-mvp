@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { Song } from "@prisma/client";
 import { FiMinusCircle } from "react-icons/fi";
@@ -11,34 +9,54 @@ import toast from "react-hot-toast";
 
 type Props = { song: Song & { price: number | string } };
 
+const getStoredSongs = () => {
+  if (typeof window !== "undefined") {
+    const storedSongs = localStorage.getItem("songs");
+    return storedSongs ? JSON.parse(storedSongs) : {};
+  }
+  return {};
+};
+
+const setStoredSongs = (songs: string[]) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("songs", JSON.stringify(songs));
+  }
+};
+
 const SongCard = ({ song }: Props) => {
   const t = useTranslations();
 
-  const storedSongs = localStorage.getItem("songs");
-
   const { songs, addSong, removeSong, setSongs } = useSongsCart();
-  const isSongInCart = songs.includes(song.id);
+
+  const isSongInCart = song.id in songs;
+  const songQuantity = songs[song.id] || 0;
+
   const handleAddSong = (songId: string) => {
-    const songs = storedSongs ? JSON.parse(storedSongs || "[]") : [];
-    songs.push(song.id);
-    localStorage.setItem("songs", JSON.stringify(songs));
+    const songs = getStoredSongs();
+    const quantity = songs[songId] || 0;
+    songs[songId] = quantity + 1;
+    setStoredSongs(songs);
     addSong(songId);
     toast.success(t("Song added to cart"));
   };
 
   const handleRemoveSong = (songId: string) => {
-    const songs = storedSongs ? JSON.parse(storedSongs || "[]") : [];
-    const updatedSongs = songs.filter((s: string) => s !== song.id);
-    localStorage.setItem("songs", JSON.stringify(updatedSongs));
+    const songs = getStoredSongs();
+    const quantity = songs[songId];
+    if (quantity <= 1) {
+      delete songs[songId];
+    } else {
+      songs[songId] = quantity - 1;
+    }
+    setStoredSongs(songs);
     removeSong(songId);
     toast.success(t("Song removed from cart"));
   };
 
   useEffect(() => {
-    if (storedSongs) {
-      setSongs(JSON.parse(storedSongs || "[]"));
-    }
-  }, [setSongs, storedSongs]);
+    const storedSongs = getStoredSongs();
+    setSongs(storedSongs);
+  }, [setSongs]);
 
   return (
     <div className="flex justify-between shadow-lg rounded-md p-5">
@@ -48,31 +66,34 @@ const SongCard = ({ song }: Props) => {
             fill
             alt={song.title}
             src={song.thumbnail}
-            className=" object-top object-cover rounded-lg"
+            className="object-top object-cover rounded-lg"
           />
         </div>
         <div>
           <h3 className="text-primary">{song.title}</h3>
           <span>{t("Price")}: </span>
           <span>${song.price}</span>
+          {isSongInCart && (
+            <div>
+              {t("Quantity")}: {songQuantity}
+            </div>
+          )}
         </div>
       </div>
-      <button
-        onClick={
-          isSongInCart
-            ? () => handleRemoveSong(song.id)
-            : () => handleAddSong(song.id)
-        }
-      >
-        {isSongInCart ? (
-          <FiMinusCircle size={25} className="text-primary cursor-pointer" />
-        ) : (
-          <MdAddCircleOutline
-            size={24}
+      <div className="flex items-center">
+        {isSongInCart && (
+          <FiMinusCircle
+            size={25}
             className="text-primary cursor-pointer"
+            onClick={() => handleRemoveSong(song.id)}
           />
         )}
-      </button>
+        <MdAddCircleOutline
+          size={24}
+          className="text-primary cursor-pointer"
+          onClick={() => handleAddSong(song.id)}
+        />
+      </div>
     </div>
   );
 };

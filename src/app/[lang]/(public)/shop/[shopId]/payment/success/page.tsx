@@ -18,24 +18,26 @@ const PaymentSuccessPage: NextPage<PaymentSuccessPageProps> = ({
   const t = useTranslations();
   const searchParams = useSearchParams();
   const tableNumber = Number(searchParams.get("tableNumber")) || 0;
-  const songsIds = searchParams.get("songsIds") || "";
-  const arrayOfSongs = songsIds.split(",");
-  console.log({ arrayOfSongs });
+  // const songsIds = searchParams.get("songsIds") || "";
+  // const arrayOfSongs = songsIds.split(",");
+
   const { setSongs: setLocalSongs } = useSongsCart();
 
   const handleTransaction = async () => {
+    const storedSongs = localStorage.getItem("songs");
+    const songs = storedSongs ? JSON.parse(storedSongs) : {};
     await createTransaction({
       shopId,
-      songsIds: arrayOfSongs,
+      songsQuantities: songs,
       tableNumber,
     });
     router.push(`/shop/${shopId}/queue`);
     localStorage.removeItem("songs");
-    setLocalSongs([]);
+    setLocalSongs({});
   };
   useEffect(() => {
     handleTransaction();
-  }, [shopId, songsIds, tableNumber, setLocalSongs]);
+  }, [shopId, tableNumber, setLocalSongs]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">

@@ -156,7 +156,10 @@ const Navbar = () => {
           >
             <FiShoppingCart size={20} />
             <span className="text-sm absolute right-0 bottom-0 bg-gray-200 rounded-full aspect-square w-4 h-4 flex items-center justify-center font-semibold">
-              {songs.length}
+              {Object.values(songs)?.reduce(
+                (total, quantity) => total + quantity,
+                0
+              ) || 0}
             </span>
           </Link>
         </div>
