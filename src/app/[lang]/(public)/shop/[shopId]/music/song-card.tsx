@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { Song } from "@prisma/client";
 import { FiMinusCircle } from "react-icons/fi";
