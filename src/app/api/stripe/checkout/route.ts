@@ -7,11 +7,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await getUser();
-    if (!user) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
     const data = await request.json();
     const { price, description, lang, shopId, songsIds, tableNumber } = data;
     console.log({ lang, shopId, price, description });
@@ -36,9 +31,6 @@ export async function POST(request: NextRequest) {
         ","
       )}`,
       cancel_url: `${process.env.APP_URL}/${lang}/shop/${shopId}/payment`,
-      metadata: {
-        userId: user.id,
-      },
     });
 
     return NextResponse.json({ result: checkoutSession, ok: true });
