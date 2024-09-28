@@ -3,6 +3,50 @@
 import bcrypt from "bcrypt";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { AdminPermission, UserRole } from "@prisma/client";
+
+export const createUser = async (data: {
+  name: string;
+  email: string;
+  image?: string;
+  password: string;
+  phoneNumber: string;
+  permissions: AdminPermission[];
+  role: UserRole;
+}) => {
+  try {
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+
+    const existingUser = await prisma.user.findUnique({
+      where: { email: data.email },
+    });
+    if (existingUser) {
+      revalidatePath("/coffee-shop/settings");
+      return { error: "A User with this email already exists" };
+    }
+
+    const user = await prisma.user.create({
+      data: {
+        name: data.name,
+        email: data.email,
+        image: data.image,
+        password: hashedPassword,
+        phoneNumber: data.phoneNumber,
+        permissions: {
+          set: data.permissions,
+        },
+        role: data.role,
+      },
+    });
+
+    revalidatePath("/coffee-shop/settings");
+    return { created: true, user };
+  } catch (error) {
+    revalidatePath("/coffee-shop/settings");
+    console.error("Error creating dashboard employee:", error);
+    return { error: "Unable to create dashboard employee at the moment." };
+  }
+};
 
 export const updateUserData = async (data: {
   id: string;
@@ -11,6 +55,7 @@ export const updateUserData = async (data: {
   phoneNumber: string;
   image?: string | undefined;
   password?: string;
+  permissions?: AdminPermission[];
 }) => {
   console.log(data);
   const hashedPassword =
@@ -23,6 +68,7 @@ export const updateUserData = async (data: {
       phoneNumber: data.phoneNumber,
       image: data.image,
       password: data.password ? hashedPassword : undefined,
+      permissions: data.permissions ? { set: data.permissions } : undefined,
     },
   });
   revalidatePath("/coffee-shop/settings");

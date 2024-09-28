@@ -33,57 +33,6 @@ const list = [
   },
 ];
 
-const songs = [
-  {
-    title: "Sky fall",
-    price: "$2",
-    singer: "Adele",
-    image: "/images/only-logo.png",
-  },
-  {
-    title: "Hello",
-    price: "$1.5",
-    singer: "Adele",
-    image: "/images/only-logo.png",
-  },
-  {
-    title: "Believer",
-    price: "$3",
-    singer: "Imagine Dragons",
-    image: "/images/only-logo.png",
-  },
-  {
-    title: "Thunder",
-    price: "$2.5",
-    singer: "Imagine Dragons",
-    image: "/images/only-logo.png",
-  },
-  {
-    title: "Demons",
-    price: "$2",
-    singer: "Imagine Dragons",
-    image: "/images/only-logo.png",
-  },
-  {
-    title: "Radioactive",
-    price: "$2",
-    singer: "Imagine Dragons",
-    image: "/images/only-logo.png",
-  },
-  {
-    title: "Bad Liar",
-    price: "$2.5",
-    singer: "Imagine Dragons",
-    image: "/images/only-logo.png",
-  },
-  {
-    title: "Natural",
-    price: "$2",
-    singer: "Imagine Dragons",
-    image: "/images/only-logo.png",
-  },
-];
-
 interface MainProps {
   topSongs: {
     artist: {

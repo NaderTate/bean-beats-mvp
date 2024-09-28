@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { User } from "@prisma/client";
+import { AdminPermission, User } from "@prisma/client";
 import { useTranslations } from "next-intl";
 import { useForm, Controller } from "react-hook-form";
 
@@ -10,18 +10,25 @@ import Input from "../Input";
 import Button from "@/components/button";
 import FileUploader from "@/components/file-dropzone";
 
-import { updateUserData } from "@/actions/users";
-import { createEmployee } from "@/actions/employee";
+import { createUser, updateUserData } from "@/actions/users";
+import Checkbox from "../checkbox";
+import { getReadablePermission } from "@/utils/permission-to-text";
 
-type Props = { shopId: string; itemToEdit?: User; onSubmit: () => void };
+type Props = { itemToEdit?: User; onSubmit: () => void };
 
-const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
+const DashboardEmployeeForm = ({ itemToEdit: Employee, onSubmit }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
-  Employee;
+  const [permissions, setPermissions] = useState<AdminPermission[]>(
+    Employee?.permissions || []
+  );
+
   const id = Employee?.id;
   const isEditSession = !!id;
 
   const t = useTranslations();
+
+  // Create an array of all AdminPermission values
+  const allPermissions = Object.values(AdminPermission);
 
   type Inputs = {
     name: string;
@@ -29,19 +36,39 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
     phone: string;
     password: string;
     image?: string;
+    permissions: AdminPermission[];
   };
 
   const {
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<Inputs>({
     defaultValues: {
       name: Employee?.name || "",
       email: Employee?.email,
       phone: Employee?.phoneNumber || "",
+      permissions: Employee?.permissions || [],
     },
   });
+
+  useEffect(() => {
+    if (Employee?.permissions) {
+      setPermissions(Employee.permissions);
+      setValue("permissions", Employee.permissions);
+    }
+  }, [Employee, setValue]);
+
+  const handlePermissionChange = (permission: AdminPermission) => {
+    setPermissions((prevPermissions) => {
+      if (prevPermissions.includes(permission)) {
+        return prevPermissions.filter((p) => p !== permission);
+      } else {
+        return [...prevPermissions, permission];
+      }
+    });
+  };
 
   const submitHandler = async (data: Inputs) => {
     try {
@@ -53,6 +80,7 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
           email: data.email,
           phoneNumber: data.phone,
           image: data.image,
+          permissions: permissions,
         });
         if (res) {
           toast.success(t("Employee updated successfully"));
@@ -62,15 +90,14 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
         }
         return;
       }
-      const res = await createEmployee({
-        employee: {
-          name: data.name,
-          email: data.email,
-          phoneNumber: data.phone,
-          password: data.password,
-          image: data.image,
-        },
-        shopId,
+      const res = await createUser({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        phoneNumber: data.phone,
+        image: data.image,
+        permissions: permissions,
+        role: "PLATFORM_ADMIN",
       });
       if (res.error) {
         toast.error(t(res.error));
@@ -89,6 +116,7 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
       setIsLoading(false);
     }
   };
+
   return (
     <div>
       <form onSubmit={handleSubmit(submitHandler)} className="space-y-5">
@@ -176,6 +204,24 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
           )}
         />
 
+        <div>
+          <label className="block mb-2 font-medium">{t("Permissions")}</label>
+          <div className="flex flex-wrap gap-2">
+            {allPermissions.map((permission) => {
+              if (permission === "ALL") return null;
+              const readablePermission = getReadablePermission(permission);
+              return (
+                <Checkbox
+                  key={permission}
+                  label={readablePermission}
+                  checked={permissions.includes(permission)}
+                  onChange={() => handlePermissionChange(permission)}
+                />
+              );
+            })}
+          </div>
+        </div>
+
         <Button type="submit" isLoading={isLoading}>
           {isEditSession ? t("Save") : t("Submit")}
         </Button>
@@ -184,4 +230,4 @@ const EmployeeForm = ({ itemToEdit: Employee, onSubmit, shopId }: Props) => {
   );
 };
 
-export default EmployeeForm;
+export default DashboardEmployeeForm;

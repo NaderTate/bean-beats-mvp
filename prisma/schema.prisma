@@ -13,6 +13,12 @@ enum UserRole {
   EMPLOYEE
 }
 
+enum AdminPermission {
+  ALL
+  UPLOAD_MUSIC
+  VIEW_TRANSACTIONS
+}
+
 enum PlaylistType {
   PUBLIC
   PRIVATE
@@ -33,6 +39,7 @@ model User {
   image         String?
   password      String?
   role          UserRole               @default(SHOP_ADMIN)
+  permissions   AdminPermission[]      @default([ALL])
   accounts      Account[]
   sessions      Session[]
   coffeeShops   CoffeeShop[]           @relation("UserCoffeeShops") // For the admin relation

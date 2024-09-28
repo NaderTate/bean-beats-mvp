@@ -12,6 +12,8 @@ import { CiSearch } from "react-icons/ci";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoMdAddCircle } from "react-icons/io";
 import { useTranslations } from "next-intl";
+import { AdminPermission } from "@prisma/client";
+import { getReadablePermission } from "@/utils/permission-to-text";
 
 interface TableProps {
   fields: any;
@@ -46,6 +48,9 @@ export default function Table({
   const [openEdit, setOpenEdit] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Create an array of all AdminPermission values
+  const allPermissions = Object.values(AdminPermission);
+
   useEffect(() => {
     setModifiedData(data);
   }, [data]);
@@ -70,6 +75,7 @@ export default function Table({
   };
 
   const t = useTranslations();
+
   return (
     <div className="mt-5 rounded-lg">
       <div className="flex justify-between items-center gap-2 py-4">
@@ -135,10 +141,20 @@ export default function Table({
                         src={item?.[key] || "/images/unkown.jpeg"}
                         className="aspect-square w-12 object-cover rounded-full border border-gray-200 overflow-hidden"
                       />
-                    ) : item?.[key] !== null || item?.[key] !== undefined ? (
-                      item?.[key]
+                    ) : Array.isArray(item?.[key]) ? (
+                      t(
+                        item[key]
+                          .map((value) =>
+                            allPermissions.includes(value)
+                              ? getReadablePermission(value)
+                              : value
+                          )
+                          .join(", ") || "-"
+                      )
+                    ) : allPermissions.includes(item?.[key]) ? (
+                      t(getReadablePermission(item[key]))
                     ) : (
-                      "-"
+                      t(item?.[key] ?? "-")
                     )}
                   </td>
                 ))}

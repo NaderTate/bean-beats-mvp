@@ -4,54 +4,20 @@ import Link from "next/link";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import { User, AdminPermission } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
 
 import Modal from "./Modal";
+import ProfileForm from "./Forms/profile";
+import Tooltip from "@/components/tooltip";
+import LanguageToggle from "../language-toggle";
 
-import {
-  FcNext,
-  FcShop,
-  FcMusic,
-  FcBarChart,
-  FcMoneyTransfer,
-  FcConferenceCall,
-} from "react-icons/fc";
+import { FcNext } from "react-icons/fc";
 import { FcBusinessman } from "react-icons/fc";
 import { HiOutlineLogout } from "react-icons/hi";
 
 import useGetLang from "@/hooks/use-get-lang";
-import LanguageToggle from "../language-toggle";
-import ProfileForm from "./Forms/profile";
-import { User } from "@prisma/client";
-import Tooltip from "@/components/tooltip";
-
-const links = [
-  {
-    title: "Dashboard",
-    icon: FcBarChart,
-    href: "/dashboard",
-  },
-  {
-    title: "Users",
-    icon: FcConferenceCall,
-    href: "/dashboard/users",
-  },
-  {
-    title: "music",
-    icon: FcMusic,
-    href: "/dashboard/music",
-  },
-  {
-    title: "Transactions",
-    icon: FcMoneyTransfer,
-    href: "/dashboard/transactions",
-  },
-  {
-    title: "Shops",
-    icon: FcShop,
-    href: "/dashboard/shops",
-  },
-];
+import { adminNavLinks } from "@/admin-nav-links";
 
 export default function Dashboard({ user }: { user: User }) {
   const { push } = useRouter();
@@ -66,15 +32,21 @@ export default function Dashboard({ user }: { user: User }) {
     setIsModalOpen(!isModalOpen);
   };
 
+  const filteredLinks = adminNavLinks.filter(
+    (link) =>
+      user.permissions.includes(AdminPermission.ALL) ||
+      user.permissions.includes(link.requiredPermission)
+  );
+
   return (
     <>
       <div
-        className={` transition-all duration-300 ${
+        className={`transition-all duration-300 ${
           isOpened ? "w-16" : "w-0 opacity-0 -translate-x-28"
         }`}
       ></div>
       <div
-        className={` fixed top-0 start-0 flex h-screen flex-col justify-between border-e bg-white transition-all duration-300 ${
+        className={`fixed top-0 start-0 flex h-screen flex-col justify-between border-e bg-white transition-all duration-300 ${
           isOpened ? "w-16" : "w-0 opacity-0 -translate-x-28"
         }`}
       >
@@ -83,7 +55,7 @@ export default function Dashboard({ user }: { user: User }) {
           <div className="border-t border-gray-100">
             <div className="px-2">
               <ul className="space-y-1 sm:space-y-5 border-gray-100 pt-4 flex flex-col items-center">
-                {links.map((link) => (
+                {filteredLinks.map((link) => (
                   <Tooltip
                     label={t(link.title)}
                     direction={lang === "en" ? "right" : "left"}

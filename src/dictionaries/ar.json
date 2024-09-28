@@ -204,5 +204,13 @@
   "Loading": "جاري التحميل",
   "Quantity": "الكمية",
   "Total": "الإجمالي",
-  "Summary": "ملخص"
+  "Summary": "ملخص",
+  "You are not allowed to view this page": "غير مسموح لك بعرض هذه الصفحة",
+  "You don't have the required permissions to access this page": "ليس لديك الصلاحيات اللازمة للوصول إلى هذه الصفحة",
+  "Permissions": "الصلاحيات",
+  "Upload Music": " رفع الموسيقى",
+  "View Transactions": "عرض المعاملات",
+  "Upload Music, View Transactions": "رفع الموسيقى، عرض المعاملات",
+  "View Transactions, Upload Music": "عرض المعاملات، رفع الموسيقى",
+  "All": "الكل"
 }

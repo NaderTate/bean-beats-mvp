@@ -1,18 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { User } from "@prisma/client";
-
 import Table from "@/components/shared/table";
-import Modal from "@/components/shared/Modal";
-import EmployeeForm from "@/components/shared/Forms/shop-employee";
+import { User, AdminPermission } from "@prisma/client";
 import { useTranslations } from "next-intl";
-import { removeEmployeeFromShop } from "@/actions/employee";
+import { useState } from "react";
+import { getReadablePermission } from "@/utils/permission-to-text";
+import { useRouter } from "next/navigation";
+import DashboardEmployeeForm from "@/components/shared/Forms/dashboard-empoyee";
+import Modal from "@/components/shared/Modal";
 
-type Props = { shopId: string; employees: User[] };
+type Props = { employees: User[] };
 
-const EmployeesMain = ({ employees, shopId }: Props) => {
+const EmployeesMain = ({ employees }: Props) => {
   const { refresh } = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations();
@@ -27,8 +26,7 @@ const EmployeesMain = ({ employees, shopId }: Props) => {
   return (
     <div className="w-full">
       <Table
-        deleteFn={removeEmployeeFromShop}
-        editForm={<EmployeeForm shopId={shopId} onSubmit={toggleModal} />}
+        editForm={<DashboardEmployeeForm onSubmit={toggleModal} />}
         addBtnLabel={t("Add New Employee")}
         add={() => setIsOpen(true)}
         data={employees.map((employee, i) => ({
@@ -39,11 +37,13 @@ const EmployeesMain = ({ employees, shopId }: Props) => {
           number: "#",
           name: "Name",
           email: "Email",
+          phoneNumber: "Phone",
+          permissions: "Permissions",
         }}
       />
 
-      <Modal open={isOpen} title="Add New Employee" setOpen={toggleModal}>
-        <EmployeeForm shopId={shopId} onSubmit={() => setIsOpen(false)} />
+      <Modal open={isOpen} title="Create new shop" setOpen={toggleModal}>
+        <DashboardEmployeeForm onSubmit={() => setIsOpen(false)} />
       </Modal>
     </div>
   );

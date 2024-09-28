@@ -1,11 +1,11 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
+import { AdminPermission, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcrypt";
 
-export const createEmployee = async (data: {
+export const createShopEmployee = async (data: {
   shopId: string;
   employee: Prisma.Without<
     Prisma.UserCreateInput,

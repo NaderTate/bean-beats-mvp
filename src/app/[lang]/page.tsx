@@ -11,10 +11,14 @@ interface HomePageProps {
 export default async function Home({ params: { lang } }: HomePageProps) {
   const sessionUser = await getUser();
 
+  if (!sessionUser) {
+    redirect(`/${lang}/signin`);
+  }
+
   const user = sessionUser
     ? await prisma.user.findUnique({
         where: { id: sessionUser?.id },
-        select: { role: true, password: true, id: true },
+        select: { role: true, password: true, id: true, permissions: true },
       })
     : null;
 
@@ -23,7 +27,15 @@ export default async function Home({ params: { lang } }: HomePageProps) {
   }
 
   if (user?.role === "PLATFORM_ADMIN") {
-    redirect(`/${lang}/dashboard`);
+    if (user.permissions.includes("ALL")) {
+      redirect(`/${lang}/dashboard`);
+    }
+    if (user.permissions.includes("UPLOAD_MUSIC")) {
+      redirect(`/${lang}/dashboard/music`);
+    }
+    if (user.permissions.includes("VIEW_TRANSACTIONS")) {
+      redirect(`/${lang}/dashboard/transactions`);
+    }
   }
 
   if (user?.role === "EMPLOYEE") {
