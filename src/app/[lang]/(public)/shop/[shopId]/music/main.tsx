@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import Songs from "./songs";
 import Albums from "./albums";
-import Artists from "./artists";
+// import Artists from "./artists";
 import { useTranslations } from "next-intl";
 import useGetLang from "@/hooks/use-get-lang";
 import Genres from "./genres";
@@ -14,50 +14,57 @@ import Playlists from "./playlists";
 import Input from "@/components/shared/Input";
 
 type Props = {
-  songs: {
-    song: Song;
-    price: number;
-  }[];
+  // songs: {
+  //   song: Song;
+  //   price: number;
+  // }[];
   shopId: string;
   albums: ExtendedAlbum[];
-  artists: { name: string; image: string; id: string }[];
+  // artists: { name: string; image: string; id: string }[];
   genres: Genre[];
   playlists: ({
     songs: Song[];
   } & Playlist)[];
+  songPrice: number;
 };
 
 type Section = "artists" | "songs" | "albums" | "playlists";
 
 const MusicMain = ({
   shopId,
-  songs,
+  // songs,
   albums,
-  artists,
+  // artists,
   genres,
   playlists,
+  songPrice,
 }: Props) => {
   const { push } = useRouter();
   const searchParams = useSearchParams();
   const section = searchParams.get("section");
 
   const [currentSection, setCurrentSection] = useState<Section>(
-    (section as Section) || "artists"
+    (section as Section) || "songs"
   );
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  const sectionsData = ["Artists", "Songs", "Albums", "Playlists"];
+  const sectionsData = [
+    // "Artists",
+    "Songs",
+    "Albums",
+    "Playlists",
+  ];
   const t = useTranslations();
   const { lang } = useGetLang();
 
   // Filtered data based on the current section and search query
-  const filteredSongs = useMemo(() => {
-    if (currentSection !== "songs") return songs;
-    return songs.filter((songData) =>
-      songData.song.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [songs, searchQuery, currentSection]);
+  // const filteredSongs = useMemo(() => {
+  //   if (currentSection !== "songs") return songs;
+  //   return songs.filter((songData) =>
+  //     songData.song.title.toLowerCase().includes(searchQuery.toLowerCase())
+  //   );
+  // }, [songs, searchQuery, currentSection]);
 
   const filteredAlbums = useMemo(() => {
     if (currentSection !== "albums") return albums;
@@ -66,12 +73,12 @@ const MusicMain = ({
     );
   }, [albums, searchQuery, currentSection]);
 
-  const filteredArtists = useMemo(() => {
-    if (currentSection !== "artists") return artists;
-    return artists.filter((artist) =>
-      artist.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [artists, searchQuery, currentSection]);
+  // const filteredArtists = useMemo(() => {
+  //   if (currentSection !== "artists") return artists;
+  //   return artists.filter((artist) =>
+  //     artist.name.toLowerCase().includes(searchQuery.toLowerCase())
+  //   );
+  // }, [artists, searchQuery, currentSection]);
 
   const filteredPlaylists = useMemo(() => {
     if (currentSection !== "playlists") return playlists;
@@ -79,6 +86,42 @@ const MusicMain = ({
       playlist.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [playlists, searchQuery, currentSection]);
+
+  const albumSongs = useMemo(() => {
+    const songs: Song[] = [];
+    albums.forEach((album) => {
+      album.Song.forEach((song) => {
+        songs.push(song);
+      });
+    });
+    return songs;
+  }, [albums]);
+
+  const playlistSongs = useMemo(() => {
+    const songs: Song[] = [];
+    playlists.forEach((playlist) => {
+      playlist.songs.forEach((song) => {
+        songs.push(song);
+      });
+    });
+    return songs;
+  }, [playlists]);
+
+  // remove duplicates
+  const allSongs = useMemo(() => {
+    const songs: Song[] = [];
+    albumSongs.forEach((song) => {
+      if (!songs.find((s) => s.id === song.id)) {
+        songs.push(song);
+      }
+    });
+    playlistSongs.forEach((song) => {
+      if (!songs.find((s) => s.id === song.id)) {
+        songs.push(song);
+      }
+    });
+    return songs;
+  }, [albumSongs, playlistSongs]);
 
   return (
     <div className="md:p-20 p-5 pt-20 ">
@@ -112,14 +155,14 @@ const MusicMain = ({
         onChange={(e) => setSearchQuery(e.target.value)}
       />
       {currentSection === "songs" && (
-        <Songs songs={filteredSongs} height="sm" />
+        <Songs songs={allSongs} height="sm" songPrice={songPrice} />
       )}
       {currentSection === "albums" && (
         <Albums albums={filteredAlbums} shopId={shopId} height="sm" />
       )}
-      {currentSection === "artists" && (
+      {/* {currentSection === "artists" && (
         <Artists artists={filteredArtists} shopId={shopId} height="sm" />
-      )}
+      )} */}
       {currentSection === "playlists" && (
         <Playlists
           playlists={filteredPlaylists}

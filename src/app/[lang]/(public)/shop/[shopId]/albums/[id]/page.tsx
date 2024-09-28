@@ -6,14 +6,22 @@ type AlbumPageProps = {
 };
 
 const AlbumPage = async ({ params: { id, shopId } }: AlbumPageProps) => {
-  const songs = await prisma.songCoffeeShop.findMany({
-    where: { AND: [{ coffeeShopId: shopId }, { song: { artistId: id } }] },
-    include: { song: true },
+  const shop = await prisma.coffeeShop.findUnique({
+    where: { id: shopId },
+    select: {
+      songPrice: true,
+    },
   });
 
+  const album = await prisma.album.findUnique({
+    where: { id },
+    include: {
+      Song: true,
+    },
+  });
   return (
     <>
-      <Songs songs={songs} />
+      <Songs songs={album?.Song || []} songPrice={shop?.songPrice || 1} />
     </>
   );
 };

@@ -19,30 +19,30 @@ const MusicPage: NextPage = async ({}: MusicPageProps) => {
     where: { id: coffeeShop.id },
     select: {
       id: true,
-      SongCoffeeShop: {
-        select: {
-          id: true,
-          price: true,
-          song: {
-            select: {
-              id: true,
-              title: true,
-              thumbnail: true,
-              artist: { select: { name: true, image: true } },
-            },
-          },
-        },
-        orderBy: { id: "desc" },
-      },
-      Artists: {
-        select: {
-          id: true,
-          name: true,
-          image: true,
-          _count: { select: { Song: true } },
-        },
-        orderBy: { id: "desc" },
-      },
+      // SongCoffeeShop: {
+      //   select: {
+      //     id: true,
+      //     price: true,
+      //     song: {
+      //       select: {
+      //         id: true,
+      //         title: true,
+      //         thumbnail: true,
+      //         artist: { select: { name: true, image: true } },
+      //       },
+      //     },
+      //   },
+      //   orderBy: { id: "desc" },
+      // },
+      // Artists: {
+      //   select: {
+      //     id: true,
+      //     name: true,
+      //     image: true,
+      //     _count: { select: { Song: true } },
+      //   },
+      //   orderBy: { id: "desc" },
+      // },
       Albums: {
         select: {
           id: true,
@@ -83,6 +83,21 @@ const MusicPage: NextPage = async ({}: MusicPageProps) => {
         orderBy: { id: "desc" },
       }))) ||
     [];
+
+  const isShopDataComplete =
+    coffeeShop !== null &&
+    Boolean(
+      coffeeShop.iban &&
+        coffeeShop.name &&
+        coffeeShop.logo &&
+        coffeeShop.bankName &&
+        coffeeShop.accountNumber &&
+        coffeeShop.country &&
+        coffeeShop.city &&
+        coffeeShop.district &&
+        coffeeShop.location
+    );
+
   return (
     <>
       {coffeeShop_ && (
@@ -93,8 +108,9 @@ const MusicPage: NextPage = async ({}: MusicPageProps) => {
           allArtists={allArtists}
           allPlaylists={allPlaylists}
           albums={coffeeShop_?.Albums}
-          artists={coffeeShop_?.Artists}
-          songs={coffeeShop_?.SongCoffeeShop}
+          isShopDataComplete={isShopDataComplete}
+          // artists={coffeeShop_?.Artists}
+          // songs={coffeeShop_?.SongCoffeeShop}
         />
       )}
     </>

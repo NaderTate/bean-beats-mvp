@@ -52,7 +52,6 @@ export default async function Home({ params: { lang } }: HomePageProps) {
         data: {
           name: `${sessionUser?.name}'s Shop`,
           adminId: sessionUser?.id as string,
-          address: "My Address",
           revenueShare: 0.1,
           workingHours: {
             sunday: { open: 0, close: 0 },

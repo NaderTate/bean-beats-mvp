@@ -8,17 +8,20 @@ type PalylistPageProps = { params: { shopId: string; playlistId: string } };
 const PalylistPage = async ({
   params: { shopId, playlistId },
 }: PalylistPageProps) => {
+  const shop = await prisma.coffeeShop.findUnique({
+    where: { id: shopId },
+    select: {
+      songPrice: true,
+    },
+  });
+
   const playlist = await prisma.playlist.findUnique({
     where: {
       id: playlistId,
     },
     include: { songs: { include: { SongCoffeeShop: true } } },
   });
-  const SongCoffeeShop = await prisma.songCoffeeShop.findMany({
-    where: {
-      coffeeShopId: shopId,
-    },
-  });
+
   if (!playlist) {
     return (
       <div>
@@ -53,14 +56,7 @@ const PalylistPage = async ({
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
         {playlist.songs.map((song) => (
-          <SongCard
-            key={song.id}
-            song={{
-              ...song,
-              price:
-                SongCoffeeShop.find((s) => s.songId === song.id)?.price || 0.25,
-            }}
-          />
+          <SongCard song={song} key={song.id} price={shop?.songPrice || 1} />
         ))}
       </div>
     </div>

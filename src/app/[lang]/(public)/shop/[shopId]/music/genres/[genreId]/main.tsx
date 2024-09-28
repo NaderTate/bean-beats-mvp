@@ -7,10 +7,10 @@ import { FaMusic } from "react-icons/fa";
 
 type Props = {
   genre: ({ songs: Song[] } & Genre) | null;
-  SongCoffeeShop: SongCoffeeShop[];
+  songPrice: number;
 };
 
-const GenreMain = ({ genre, SongCoffeeShop }: Props) => {
+const GenreMain = ({ genre, songPrice }: Props) => {
   const t = useTranslations();
 
   if (!genre) {
@@ -44,14 +44,7 @@ const GenreMain = ({ genre, SongCoffeeShop }: Props) => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
         {genre.songs.map((song) => (
-          <SongCard
-            key={song.id}
-            song={{
-              ...song,
-              price:
-                SongCoffeeShop.find((s) => s.songId === song.id)?.price || 0.25,
-            }}
-          />
+          <SongCard price={songPrice} key={song.id} song={song} />
         ))}
       </div>
     </div>

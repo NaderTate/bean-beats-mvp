@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 
-type Props = { song: Song & { price: number | string } };
+type Props = { song: Song; price: number };
 
 const getStoredSongs = () => {
   if (typeof window !== "undefined") {
@@ -25,7 +25,7 @@ const setStoredSongs = (songs: string[]) => {
   }
 };
 
-const SongCard = ({ song }: Props) => {
+const SongCard = ({ song, price }: Props) => {
   const t = useTranslations();
 
   const { songs, addSong, removeSong, setSongs } = useSongsCart();
@@ -74,7 +74,7 @@ const SongCard = ({ song }: Props) => {
         <div>
           <h3 className="text-primary">{song.title}</h3>
           <span>{t("Price")}: </span>
-          <span>${song.price}</span>
+          <span>${price}</span>
           {isSongInCart && (
             <div>
               {t("Quantity")}: {songQuantity}

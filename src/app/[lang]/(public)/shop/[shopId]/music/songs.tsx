@@ -5,14 +5,12 @@ import { useTranslations } from "next-intl";
 import NotFound from "@/components/not-found";
 
 type Props = {
-  songs: {
-    song: Song;
-    price: number | string;
-  }[];
+  songs: Song[];
+  songPrice: number;
   height?: height;
 };
 
-const Songs = ({ songs, height }: Props) => {
+const Songs = ({ songs, height, songPrice }: Props) => {
   const t = useTranslations();
   if (songs.length === 0) {
     return <NotFound label="No songs found" height={height} />;
@@ -20,13 +18,7 @@ const Songs = ({ songs, height }: Props) => {
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
       {songs.map((song) => (
-        <SongCard
-          key={song.song.id}
-          song={{
-            ...song.song,
-            price: song.price,
-          }}
-        />
+        <SongCard key={song.id} song={song} price={songPrice} />
       ))}
     </div>
   );

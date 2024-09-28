@@ -6,39 +6,40 @@ import { Album, Artist, Song } from "@prisma/client";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import Albums from "./albums";
-import AddSong from "./add-song";
+// import AddSong from "./add-song";
 import AddAlbum from "./add-album";
 import Playlists from "./playlists";
-import SongsList from "./songs-list";
-import AddArtist from "./add-artist";
-import ArtistsList from "./artists-list";
+// import SongsList from "./songs-list";
+// import AddArtist from "./add-artist";
+// import ArtistsList from "./artists-list";
 import AddPlaylist from "./add-playlist";
 import Modal from "@/components/shared/Modal";
+import CompleteProfileWarning from "@/components/complete-profile-warning";
 
 import useGetLang from "@/hooks/use-get-lang";
 
 type Props = {
-  songs: {
-    song: {
-      artist: {
-        name: string;
-        image: string;
-      } | null;
-      id: string;
-      title: string;
-      thumbnail: string;
-    };
-    id: string;
-    price: number;
-  }[];
-  artists: {
-    id: string;
-    name: string;
-    _count: {
-      Song: number;
-    };
-    image: string;
-  }[];
+  // songs: {
+  //   song: {
+  //     artist: {
+  //       name: string;
+  //       image: string;
+  //     } | null;
+  //     id: string;
+  //     title: string;
+  //     thumbnail: string;
+  //   };
+  //   id: string;
+  //   price: number;
+  // }[];
+  // artists: {
+  //   id: string;
+  //   name: string;
+  //   _count: {
+  //     Song: number;
+  //   };
+  //   image: string;
+  // }[];
   albums: {
     artist: {
       name: string;
@@ -63,17 +64,19 @@ type Props = {
   allArtists: Artist[];
   allSongs: Song[];
   shopId: string;
+  isShopDataComplete: boolean;
 };
 
 const MusicMain = ({
-  songs,
+  // songs,
   shopId,
   albums,
-  artists,
+  // artists,
   allPlaylists,
   allSongs,
   allAlbums,
-  allArtists,
+  // allArtists,
+  isShopDataComplete,
 }: Props) => {
   const t = useTranslations();
   const { lang } = useGetLang();
@@ -83,7 +86,7 @@ const MusicMain = ({
   const section = searchParams.get("section");
 
   const [open, setOpen] = useState(false);
-  const [currentSection, setCurrentSection] = useState(section || "Artists");
+  const [currentSection, setCurrentSection] = useState(section || "Albums");
 
   const toggleModal = () => {
     setTimeout(() => {
@@ -93,14 +96,15 @@ const MusicMain = ({
   };
 
   const actionButtons: Array<{ label: string }> = [
-    { label: "Artists" },
+    // { label: "Artists" },
     { label: "Albums" },
-    { label: "Songs" },
+    // { label: "Songs" },
     { label: "Playlists" },
   ];
 
   return (
     <div className="p-5">
+      \
       <div className="flex justify-center gap-x-2">
         {actionButtons.map((button) => (
           <button
@@ -120,14 +124,14 @@ const MusicMain = ({
         ))}
       </div>
       <div>
-        {currentSection === "Artists" && (
+        {/* {currentSection === "Artists" && (
           <ArtistsList
             artists={artists}
             setOpen={() => {
               setOpen(true);
             }}
           />
-        )}
+        )} */}
         {currentSection === "Albums" && (
           <Albums
             shopId={shopId}
@@ -137,14 +141,14 @@ const MusicMain = ({
             }}
           />
         )}
-        {currentSection === "Songs" && (
+        {/* {currentSection === "Songs" && (
           <SongsList
             songs={songs}
             setOpen={() => {
               setOpen(true);
             }}
           />
-        )}
+        )} */}
         {currentSection === "Playlists" && (
           <Playlists
             allSongs={allSongs}
@@ -172,7 +176,7 @@ const MusicMain = ({
             : t("Add Playlist")
         }
       >
-        {currentSection === "Albums" && (
+        {/* {currentSection === "Albums" && (
           <AddAlbum
             shopId={shopId}
             allAlbums={
@@ -184,8 +188,8 @@ const MusicMain = ({
             }
             onSubmit={toggleModal}
           />
-        )}
-        {currentSection === "Songs" && (
+        )} */}
+        {/* {currentSection === "Songs" && (
           <AddSong
             allSongs={
               // filter songs that are not already in the shop
@@ -197,8 +201,8 @@ const MusicMain = ({
             onSubmit={toggleModal}
             shopId={shopId}
           />
-        )}
-        {currentSection === "Artists" && (
+        )} */}
+        {/* {currentSection === "Artists" && (
           <AddArtist
             shopId={shopId}
             onSubmit={toggleModal}
@@ -210,8 +214,8 @@ const MusicMain = ({
               )
             }
           />
-        )}
-        {currentSection === "Playlists" && (
+        )} */}
+        {/* {currentSection === "Playlists" && (
           <AddPlaylist
             shopId={shopId}
             allSongs={allSongs}
@@ -222,6 +226,26 @@ const MusicMain = ({
                 (playlist) => !playlist.shopId || playlist.shopId !== shopId
               )
             }
+          />
+        )} */}
+        {!isShopDataComplete ? (
+          <CompleteProfileWarning shopId={shopId} onSubmit={toggleModal} />
+        ) : currentSection === "Albums" ? (
+          <AddAlbum
+            shopId={shopId}
+            allAlbums={allAlbums.filter(
+              (album) => !albums.find((shopAlbum) => shopAlbum.id === album.id)
+            )}
+            onSubmit={toggleModal}
+          />
+        ) : (
+          <AddPlaylist
+            shopId={shopId}
+            allSongs={allSongs}
+            onSubmit={toggleModal}
+            allPlaylists={allPlaylists.filter(
+              (playlist) => !playlist.shopId || playlist.shopId !== shopId
+            )}
           />
         )}
       </Modal>

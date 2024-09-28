@@ -7,15 +7,13 @@ import { Song } from "@prisma/client";
 import { useTranslations } from "next-intl";
 
 type Props = {
-  songs: {
-    song: Song;
-    price: number | string;
-  }[];
+  songs: Song[];
+  songPrice: number;
   albums: ExtendedAlbum[];
   shopId: string;
 };
 
-const ArtistMain = ({ songs, albums, shopId }: Props) => {
+const ArtistMain = ({ songs, albums, shopId, songPrice }: Props) => {
   type sections = "songs" | "albums";
   const [section, setSection] = useState<sections>("songs");
   const buttons: Array<{
@@ -42,7 +40,7 @@ const ArtistMain = ({ songs, albums, shopId }: Props) => {
           {t(button.name)}
         </button>
       ))}
-      {section === "songs" && <Songs songs={songs} />}
+      {section === "songs" && <Songs songs={songs} songPrice={songPrice} />}
       {section === "albums" && <Albums albums={albums} shopId={shopId} />}
     </div>
   );

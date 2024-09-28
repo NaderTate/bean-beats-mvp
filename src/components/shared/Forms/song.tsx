@@ -40,23 +40,17 @@ const SongForm = ({
 }: Props) => {
   const id = song?.id;
 
-  const {
-    setValue,
-    register,
-    formState,
-    handleSubmit,
-
-    control,
-  } = useForm<Inputs>({
-    defaultValues: {
-      title: song?.title,
-      duration: song?.duration,
-      albumId: song?.albumId || undefined,
-      artistId: song?.artistId || undefined,
-      file: song?.fileURL || "",
-      thumbnail: song?.thumbnail || "",
-    },
-  });
+  const { setValue, register, formState, handleSubmit, watch, control } =
+    useForm<Inputs>({
+      defaultValues: {
+        title: song?.title,
+        duration: song?.duration,
+        albumId: song?.albumId || undefined,
+        artistId: song?.artistId || undefined,
+        file: song?.fileURL || "",
+        thumbnail: song?.thumbnail || "",
+      },
+    });
 
   const { errors, isLoading, isSubmitting } = formState;
 
@@ -126,18 +120,26 @@ const SongForm = ({
             id="artist"
             label="Artist"
             options={artistOptions}
+            value={watch("artistId")}
             errMessage={errors.artistId?.message}
           />
         )}
       />
-      <Select
-        errMessage={errors.albumId?.message}
-        id="album"
-        label="Album"
-        options={albumOptions}
-        {...register("albumId", {
-          required: "This field is required",
-        })}
+
+      <Controller
+        name="albumId"
+        control={control}
+        rules={{ required: "This field is required" }}
+        render={({ field }) => (
+          <Select
+            {...field}
+            id="album"
+            label="Album"
+            options={albumOptions}
+            value={watch("albumId")}
+            errMessage={errors.albumId?.message}
+          />
+        )}
       />
 
       <Controller

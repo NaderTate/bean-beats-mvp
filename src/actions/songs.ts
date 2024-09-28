@@ -8,17 +8,17 @@ export const getMultipleSongs = async (options: {
   shopId: string;
 }) => {
   console.log({ options });
-  const songs = await prisma.songCoffeeShop.findMany({
+  const songs = await prisma.song.findMany({
     where: {
-      coffeeShopId: options.shopId,
-      songId: {
+      id: {
         in: options.songsIds,
       },
     },
     select: {
       id: true,
-      price: true,
-      song: { include: { artist: true } },
+      thumbnail: true,
+      title: true,
+      artist: true,
     },
   });
   return songs;

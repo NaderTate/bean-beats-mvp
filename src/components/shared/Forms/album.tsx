@@ -32,6 +32,7 @@ export default function AlbumForm({
     control,
     register,
     handleSubmit,
+    watch,
     formState: { isLoading, isSubmitting, errors },
   } = useForm<Inputs>({
     defaultValues: {
@@ -115,6 +116,7 @@ export default function AlbumForm({
       <Select
         id="artist"
         label={t("Artist")}
+        value={watch("artistId")}
         options={artistOptions}
         {...register("artistId", {
           required: "This field is required",

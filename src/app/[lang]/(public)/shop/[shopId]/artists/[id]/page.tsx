@@ -4,14 +4,21 @@ import prisma from "@/lib/prisma";
 type ArtistPageProps = { params: { id: string; shopId: string } };
 
 const ArtistPage = async ({ params: { id, shopId } }: ArtistPageProps) => {
-  const songs = await prisma.songCoffeeShop.findMany({
-    where: { AND: [{ coffeeShopId: shopId }, { song: { artistId: id } }] },
-    include: { song: true },
+  const shop = await prisma.coffeeShop.findUnique({
+    where: { id: shopId },
+    select: {
+      songPrice: true,
+    },
+  });
+
+  const songs = await prisma.song.findMany({
+    where: { artistId: id },
   });
 
   const albums = await prisma.album.findMany({
     where: { AND: [{ coffeeShopsIds: { has: shopId } }, { artistId: id }] },
     include: {
+      Song: true,
       artist: { select: { name: true } },
       _count: { select: { Song: true } },
     },
@@ -19,7 +26,12 @@ const ArtistPage = async ({ params: { id, shopId } }: ArtistPageProps) => {
 
   return (
     <>
-      <ArtistMain albums={albums} songs={songs} shopId={shopId} />
+      <ArtistMain
+        albums={albums}
+        songs={songs}
+        shopId={shopId}
+        songPrice={shop?.songPrice || 1}
+      />
     </>
   );
 };

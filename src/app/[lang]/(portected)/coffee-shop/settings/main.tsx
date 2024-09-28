@@ -33,7 +33,7 @@ type Props = {
     city: string | null | undefined;
     district: string | null | undefined;
     location: string | null | undefined;
-    defaultSongPrice: number;
+    songPrice: number;
   };
 };
 
@@ -62,7 +62,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
     city: string;
     district: string;
     location: string;
-    defaultSongPrice: number;
+    songPrice: number;
   };
 
   const {
@@ -93,7 +93,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
       city: shopData.city || "",
       district: shopData.district || "",
       location: shopData.location || "",
-      defaultSongPrice: shopData.defaultSongPrice,
+      songPrice: shopData.songPrice,
     },
   });
 
@@ -126,7 +126,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
           city: data.city,
           district: data.district,
           location: data.location,
-          defaultSongPrice: Number(data.defaultSongPrice),
+          songPrice: Number(data.songPrice),
         },
       });
 
@@ -426,22 +426,22 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
           />
           <Controller
             control={control}
-            name="defaultSongPrice"
+            name="songPrice"
             render={({ field }) => (
               <Input
-                id="defaultSongPrice"
-                label={t("Default Song Price") + " ($)"}
+                id="songPrice"
+                label={t("Song Price") + " ($)"}
                 type="number"
                 placeholder={t("Default Song Price")}
                 defaultValue={field.value}
                 onChange={(e) => field.onChange(e.target.value)}
-                errMessage={errors.defaultSongPrice?.message}
+                errMessage={errors.songPrice?.message}
               />
             )}
           />
         </div>
 
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center mt-8 mb-10">
           <Button
             className="w-28 h-12 font-medium text-lg"
             isLoading={isLoading}

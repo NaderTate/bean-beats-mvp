@@ -12,51 +12,52 @@ export const createTransaction = async ({
   tableNumber: number;
 }) => {
   try {
-    console.log({ shopId, songsQuantities, tableNumber });
+    const coffeeShop = await prisma.coffeeShop.findUnique({
+      where: { id: shopId },
+      select: {
+        songPrice: true,
+      },
+    });
+
+    if (!coffeeShop) {
+      throw new Error("Coffee shop not found");
+    }
+
+    const songPrice = coffeeShop.songPrice;
 
     // Get the list of song IDs
     const songsIds = Object.keys(songsQuantities);
 
     // Fetch song details from the database
-    const songs = await prisma.songCoffeeShop.findMany({
+    const songs = await prisma.song.findMany({
       where: {
-        coffeeShopId: shopId,
-        songId: {
+        id: {
           in: songsIds,
         },
       },
       select: {
         id: true,
-        price: true,
-        song: {
-          select: {
-            id: true,
-            title: true,
-            thumbnail: true,
-            artist: { select: { name: true } },
-          },
-        },
+        title: true,
+        thumbnail: true,
+        artist: { select: { name: true } },
       },
     });
 
     // Calculate the total amount considering quantities
-    const amount = songs.reduce((acc, song) => {
-      const quantity = songsQuantities[song.song.id] || 1;
-      return acc + song.price * quantity;
-    }, 0);
+    const amount = Object.values(songsQuantities).reduce(
+      (acc, quantity) => acc + songPrice * quantity,
+      0
+    );
 
     // Prepare song data for the transaction, including quantities
-    const transactionSongsData = songs.map((song) => {
-      const quantity = songsQuantities[song.song.id] || 1;
-      return {
-        id: song.id,
-        title: song.song.title,
-        artist: song.song.artist?.name,
-        price: song.price,
-        thumbnail: song.song.thumbnail,
-        quantity,
-      };
-    });
+    const transactionSongsData = songs.map((song) => ({
+      id: song.id,
+      title: song.title,
+      artist: song.artist?.name,
+      price: songPrice,
+      thumbnail: song.thumbnail,
+      quantity: songsQuantities[song.id] || 1,
+    }));
 
     // Create the transaction with songs and their quantities
     const transaction = await prisma.transaction.create({
@@ -77,10 +78,10 @@ export const createTransaction = async ({
 
     // Update timesPurchased for each song based on quantity
     for (const song of songs) {
-      const quantity = songsQuantities[song.song.id] || 1;
+      const quantity = songsQuantities[song.id] || 1;
       await prisma.song.update({
         where: {
-          id: song.song.id,
+          id: song.id,
         },
         data: {
           timesPurchased: {
@@ -91,17 +92,13 @@ export const createTransaction = async ({
     }
 
     // Add songs to the queue based on their quantities
-    const queueData = [];
-    for (const song of songs) {
-      const quantity = songsQuantities[song.song.id] || 1;
-      for (let i = 0; i < quantity; i++) {
-        queueData.push({
-          songId: song.song.id,
-          coffeeShopId: shopId,
-          transactionId: transaction.id,
-        });
-      }
-    }
+    const queueData = songs.flatMap((song) =>
+      Array(songsQuantities[song.id] || 1).fill({
+        songId: song.id,
+        coffeeShopId: shopId,
+        transactionId: transaction.id,
+      })
+    );
 
     // Bulk create queue entries
     await prisma.queueSong.createMany({

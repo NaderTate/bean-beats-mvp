@@ -24,7 +24,7 @@ const SettingsPage: NextPage = async ({}: SettingsPageProps) => {
         }}
         shopData={{
           id: coffeeShop?.id as string,
-          defaultSongPrice: coffeeShop?.defaultSongPrice || 1,
+          songPrice: coffeeShop?.songPrice || 1,
           name: coffeeShop?.name,
           logo: coffeeShop?.logo,
           iban: coffeeShop?.iban,

@@ -5,6 +5,7 @@ type ExtendedAlbum = {
   _count: {
     Song: number;
   };
+  Song: Song[];
 } & {
   id: string;
   name: string;

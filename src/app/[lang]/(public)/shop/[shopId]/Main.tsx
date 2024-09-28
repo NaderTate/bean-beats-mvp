@@ -17,7 +17,7 @@ const Main = ({ shop, table, currentPlayingSong }: Props) => {
     <div className="mt-20 px-4 sm:px-6 lg:px-8 py-8">
       <ShopInfo
         name={shop.name}
-        address={shop.address}
+        address={shop.location || ""}
         table={table}
         currentPlayingSong={currentPlayingSong}
       />

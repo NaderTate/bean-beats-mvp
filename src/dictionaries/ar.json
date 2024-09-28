@@ -233,5 +233,7 @@
   "Location": "الموقع",
   "Profile Image": "صورة الملف الشخصي",
   "Profile and shop information updated successfully": "تم تحديث معلومات الملف الشخصي والمتجر بنجاح",
-  "Default Song Price": "سعر الأغنية الافتراضي"
+  "Song Price": "سعر الأغنية الافتراضي",
+  "Complete your data": "أكمل بياناتك",
+  "You need to complete your shop data before taking this action": "تحتاج إلى استكمال بيانات متجرك قبل اتخاذ هذا الإجراء"
 }

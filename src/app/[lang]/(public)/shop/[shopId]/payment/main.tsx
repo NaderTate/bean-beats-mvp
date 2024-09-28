@@ -27,24 +27,23 @@ function getDayOfWeek() {
   return dayName;
 }
 
-type PaymentMainProps = { shopId: string };
+type PaymentMainProps = { shopId: string; songPrice: number };
 
-export const PaymentMain = ({ shopId }: PaymentMainProps) => {
+export const PaymentMain = ({ shopId, songPrice }: PaymentMainProps) => {
   const t = useTranslations();
   const [tableNumber, setTableNumber] = useState<string>("");
   const [songs, setSongs] = useState<
     | {
-        song: {
-          artist: {
-            id: string;
-            name: string;
-            image: string;
-            coffeeShopsIds: string[];
-          } | null;
-        } & Song;
+        quantity: any;
+        artist: {
+          id: string;
+          name: string;
+          image: string;
+          coffeeShopsIds: string[];
+        } | null;
         id: string;
-        price: number;
-        quantity: number;
+        title: string;
+        thumbnail: string;
       }[]
     | null
   >(null);
@@ -72,21 +71,21 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
     getMultipleSongs({ shopId, songsIds }).then((songsData) => {
       const songsWithQuantities = songsData.map((song) => ({
         ...song,
-        quantity: storedSongs[song.song.id] || 1,
+        quantity: storedSongs[song.id] || 1,
       }));
       setSongs(songsWithQuantities);
 
-      const total = songsWithQuantities.reduce(
-        (acc, song) => acc + song.price * song.quantity,
+      const totalSongs = songsWithQuantities.reduce(
+        (acc, song) => acc + song.quantity,
         0
       );
-      setTotalAmount(total);
+      setTotalAmount(totalSongs * songPrice);
     });
-  }, [shopId]);
+  }, [shopId, songPrice]);
 
   const handleIncreaseQuantity = (songId: string) => {
     const updatedSongs = songs?.map((song) => {
-      if (song.song.id === songId) {
+      if (song.id === songId) {
         return { ...song, quantity: song.quantity + 1 };
       }
       return song;
@@ -101,17 +100,17 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
     setStoredSongs(storedSongs);
 
     // Recalculate total amount
-    const total = updatedSongs?.reduce(
-      (acc, song) => acc + song.price * song.quantity,
+    const totalSongs = updatedSongs?.reduce(
+      (acc, song) => acc + song.quantity,
       0
     );
-    setTotalAmount(total || 0);
+    setTotalAmount((totalSongs || 0) * songPrice);
   };
 
   const handleDecreaseQuantity = (songId: string) => {
     const updatedSongs = songs
       ?.map((song) => {
-        if (song.song.id === songId) {
+        if (song.id === songId) {
           const newQuantity = song.quantity - 1;
           return { ...song, quantity: newQuantity };
         }
@@ -132,11 +131,11 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
     setStoredSongs(storedSongs);
 
     // Recalculate total amount
-    const total = updatedSongs?.reduce(
-      (acc, song) => acc + song.price * song.quantity,
+    const totalSongs = updatedSongs?.reduce(
+      (acc, song) => acc + song.quantity,
       0
     );
-    setTotalAmount(total || 0);
+    setTotalAmount((totalSongs || 0) * songPrice);
   };
 
   if (!songs) {
@@ -159,21 +158,21 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
           className="flex w-full gap-3 bg-slate-50 p-5 rounded-lg border my-2"
         >
           <Image
-            src={song.song.thumbnail}
-            alt={song.song.title}
+            src={song.thumbnail}
+            alt={song.title}
             width={100}
             height={100}
             className="w-28 h-28 object-cover object-top rounded-lg"
           />
           <div className="flex flex-col gap-1 flex-grow">
-            <h3 className="text-primary font-semibold">{song.song.title}</h3>
-            <p className="text-gray-500">{song.song.artist?.name}</p>
+            <h3 className="text-primary font-semibold">{song.title}</h3>
+            <p className="text-gray-500">{song.artist?.name}</p>
             <span className="text-gray-500">
-              {t("Price")}: {song.price} USD
+              {t("Price")}: {songPrice} USD
             </span>
             <div className="flex items-center gap-2 mt-2">
               <button
-                onClick={() => handleDecreaseQuantity(song.song.id)}
+                onClick={() => handleDecreaseQuantity(song.id)}
                 disabled={song.quantity <= 1}
               >
                 <FiMinusCircle
@@ -188,7 +187,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
               <span className="text-gray-500">
                 {t("Quantity")}: {song.quantity}
               </span>
-              <button onClick={() => handleIncreaseQuantity(song.song.id)}>
+              <button onClick={() => handleIncreaseQuantity(song.id)}>
                 <MdAddCircleOutline
                   size={25}
                   className="text-primary cursor-pointer"
@@ -196,7 +195,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
               </button>
             </div>
             <span className="text-gray-500 mt-2">
-              {t("Total")}: {song.price * song.quantity} USD
+              {t("Total")}: {songPrice * song.quantity} USD
             </span>
           </div>
         </div>
@@ -235,9 +234,7 @@ export const PaymentMain = ({ shopId }: PaymentMainProps) => {
         description="Checkout"
         price={totalAmount.toString()}
         tableNumber={Number(tableNumber)}
-        songsIds={songs.flatMap((song) =>
-          Array(song.quantity).fill(song.song.id)
-        )}
+        songsIds={songs.flatMap((song) => Array(song.quantity).fill(song.id))}
       />
     </div>
   );

@@ -156,30 +156,30 @@ model Song {
 }
 
 model CoffeeShop {
-  id               String                 @id @default(auto()) @map("_id") @db.ObjectId
-  name             String
-  logo             String?
-  admin            User                   @relation("UserCoffeeShops", fields: [adminId], references: [id])
-  workingHours     Json
-  revenueShare     Int
-  iban             String?
-  accountNumber    String?
-  bankName         String?
-  country          String?
-  city             String?
-  district         String?
-  location         String?
-  playingQueue     QueueSong[]            @relation(name: "CoffeeShopQueueSongs")
-  adminId          String                 @db.ObjectId
-  Transactions     Transaction[]
-  Artists          Artist[]               @relation(fields: [artistsIds], references: [id])
-  artistsIds       String[]               @default([]) @db.ObjectId
-  Albums           Album[]                @relation(fields: [albumsIds], references: [id])
-  albumsIds        String[]               @default([]) @db.ObjectId
-  defaultSongPrice Float                  @default(1)
-  SongCoffeeShop   SongCoffeeShop[]
-  Playlist         Playlist[]
-  Employees        CoffeeShopOnEmployee[] // Relation to join table for employees
+  id             String                 @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  logo           String?
+  admin          User                   @relation("UserCoffeeShops", fields: [adminId], references: [id])
+  workingHours   Json
+  revenueShare   Int
+  iban           String?
+  accountNumber  String?
+  bankName       String?
+  country        String?
+  city           String?
+  district       String?
+  location       String?
+  playingQueue   QueueSong[]            @relation(name: "CoffeeShopQueueSongs")
+  adminId        String                 @db.ObjectId
+  Transactions   Transaction[]
+  Artists        Artist[]               @relation(fields: [artistsIds], references: [id])
+  artistsIds     String[]               @default([]) @db.ObjectId
+  Albums         Album[]                @relation(fields: [albumsIds], references: [id])
+  albumsIds      String[]               @default([]) @db.ObjectId
+  songPrice      Float                  @default(1)
+  SongCoffeeShop SongCoffeeShop[]
+  Playlist       Playlist[]
+  Employees      CoffeeShopOnEmployee[] // Relation to join table for employees
 }
 
 model CoffeeShopOnEmployee {
