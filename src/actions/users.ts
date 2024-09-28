@@ -53,8 +53,11 @@ export const updateUserData = async (data: {
   name: string;
   email: string;
   phoneNumber: string;
+  otherPhone?: string;
   image?: string | undefined;
   password?: string;
+  website?: string;
+  commercialRegistrationNumber?: string;
   permissions?: AdminPermission[];
 }) => {
   console.log(data);
@@ -67,6 +70,9 @@ export const updateUserData = async (data: {
       email: data.email,
       phoneNumber: data.phoneNumber,
       image: data.image,
+      otherPhone: data.otherPhone,
+      website: data.website,
+      commercialRegistrationNumber: data.commercialRegistrationNumber,
       password: data.password ? hashedPassword : undefined,
       permissions: data.permissions ? { set: data.permissions } : undefined,
     },

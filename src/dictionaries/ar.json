@@ -219,5 +219,19 @@
   "Last 30 Days": "آخر 30 يومًا",
   "Last 3 Months": "آخر 3 أشهر",
   "Last 6 Months": "آخر 6 أشهر",
-  "Last Year": "العام الماضي"
+  "Last Year": "العام الماضي",
+  "Other Phone": "هاتف آخر",
+  "Commercial Registration Number": "رقم السجل التجاري",
+  "Website": "الموقع الإلكتروني",
+  "Shop Owner Information": "معلومات مالك المتجر",
+  "Shop Information": "معلومات المتجر",
+  "Account Number": "رقم الحساب",
+  "Bank Name": "اسم البنك",
+  "Country": "الدولة",
+  "City": "المدينة",
+  "District": "الحي",
+  "Location": "الموقع",
+  "Profile Image": "صورة الملف الشخصي",
+  "Profile and shop information updated successfully": "تم تحديث معلومات الملف الشخصي والمتجر بنجاح",
+  "Default Song Price": "سعر الأغنية الافتراضي"
 }

@@ -27,7 +27,7 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
 
   type Inputs = {
     shopName: string;
-    shopAddress: string;
+    shopLocation: string;
     shopLogo: string | null;
     shopAdminName: string;
     shopAdminEmail: string;
@@ -43,7 +43,7 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
   } = useForm<Inputs>({
     defaultValues: {
       shopName: Shop?.name,
-      shopAddress: Shop?.address,
+      shopLocation: Shop?.location || "",
       shopLogo: Shop?.logo,
       shopAdminName: Shop?.admin.name || "",
       shopAdminEmail: Shop?.admin.email || "",
@@ -67,10 +67,13 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
           toast.error(t("Failed to update admin"));
           return;
         }
-        const res = await updateShop(id, {
-          name: data.shopName,
-          address: data.shopAddress,
-          logo: data.shopLogo,
+        const res = await updateShop({
+          id,
+          data: {
+            name: data.shopName,
+            location: data.shopLocation,
+            logo: data.shopLogo,
+          },
         });
         if (res.updated) {
           toast.success(t("Shop updated successfully"));
@@ -82,7 +85,7 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
         const res = await createShopWithAdmin({
           shop: {
             name: data.shopName,
-            address: data.shopAddress,
+            address: data.shopLocation,
             logo: data.shopLogo,
           },
           admin: {
@@ -129,17 +132,17 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
 
         <Controller
           control={control}
-          name="shopAddress"
+          name="shopLocation"
           rules={{ required: "This field is required" }}
           render={({ field }) => (
             <Input
               label="Shop Address"
               placeholder="Shop Address"
-              defaultValue={Shop?.address}
+              defaultValue={Shop?.location || ""}
               onChange={(e) => {
                 field.onChange(e.target.value);
               }}
-              errMessage={errors.shopAddress?.message}
+              errMessage={errors.shopLocation?.message}
             />
           )}
         />

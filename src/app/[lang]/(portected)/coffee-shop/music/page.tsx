@@ -1,22 +1,22 @@
 import { NextPage } from "next";
 import prisma from "@/lib/prisma";
 
-import { getCoffeeShop, getUser } from "@/utils/get-user";
+import { getCoffeeShop } from "@/utils/get-user";
 import MusicMain from "./main";
 
 type MusicPageProps = {};
 
 const MusicPage: NextPage = async ({}: MusicPageProps) => {
-  const coffeeShop_ = await getCoffeeShop();
-  if (!coffeeShop_) {
+  const { coffeeShop } = await getCoffeeShop();
+  if (!coffeeShop) {
     return (
       <div className="flex flex-col min-h-screen justify-center items-center">
         <h1 className="font-bold text-xl">Coffee Shop not found</h1>
       </div>
     );
   }
-  const coffeeShop = await prisma.coffeeShop.findUnique({
-    where: { id: coffeeShop_.id },
+  const coffeeShop_ = await prisma.coffeeShop.findUnique({
+    where: { id: coffeeShop.id },
     select: {
       id: true,
       SongCoffeeShop: {
@@ -85,16 +85,16 @@ const MusicPage: NextPage = async ({}: MusicPageProps) => {
     [];
   return (
     <>
-      {coffeeShop && (
+      {coffeeShop_ && (
         <MusicMain
           allSongs={allSongs}
           allAlbums={allAlbums}
-          shopId={coffeeShop.id}
+          shopId={coffeeShop_.id}
           allArtists={allArtists}
           allPlaylists={allPlaylists}
-          albums={coffeeShop?.Albums}
-          artists={coffeeShop?.Artists}
-          songs={coffeeShop?.SongCoffeeShop}
+          albums={coffeeShop_?.Albums}
+          artists={coffeeShop_?.Artists}
+          songs={coffeeShop_?.SongCoffeeShop}
         />
       )}
     </>

@@ -2,27 +2,38 @@ import { NextPage } from "next";
 
 import SettingsMain from "./main";
 
-import prisma from "@/lib/prisma";
-import { getUser } from "@/utils/get-user";
+import { getCoffeeShop } from "@/utils/get-user";
 
 type SettingsPageProps = {};
 
 const SettingsPage: NextPage = async ({}: SettingsPageProps) => {
-  const user = await getUser();
-  const userData = user
-    ? await prisma.user.findUnique({
-        where: { id: user?.id },
-      })
-    : null;
+  const { user, coffeeShop } = await getCoffeeShop();
 
   return (
     <>
       <SettingsMain
         shopAdminData={{
-          id: userData?.id as string,
-          email: userData?.email,
-          name: userData?.name,
-          phoneNumber: userData?.phoneNumber,
+          id: user?.id as string,
+          image: user?.image,
+          email: user?.email,
+          name: user?.name,
+          phoneNumber: user?.phoneNumber,
+          otherPhone: user?.otherPhone,
+          commercialRegistrationNumber: user?.commercialRegistrationNumber,
+          website: user?.website,
+        }}
+        shopData={{
+          id: coffeeShop?.id as string,
+          defaultSongPrice: coffeeShop?.defaultSongPrice || 1,
+          name: coffeeShop?.name,
+          logo: coffeeShop?.logo,
+          iban: coffeeShop?.iban,
+          accountNumber: coffeeShop?.accountNumber,
+          bankName: coffeeShop?.bankName,
+          country: coffeeShop?.country,
+          city: coffeeShop?.city,
+          district: coffeeShop?.district,
+          location: coffeeShop?.location,
         }}
       />
     </>

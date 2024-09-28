@@ -67,21 +67,15 @@ export const createShopWithAdmin = async (options: {
   }
 };
 
-export const updateShop = async (
-  id: string,
-
-  shop: {
-    name: string;
-    address: string;
-    logo: string | null;
-  }
-) => {
+export const updateShop = async (options: {
+  id: string;
+  data: Prisma.CoffeeShopUpdateInput;
+}) => {
   try {
+    const { id, data } = options;
     const updatedShop = await prisma.coffeeShop.update({
-      where: {
-        id,
-      },
-      data: shop,
+      where: { id },
+      data,
     });
 
     if (!updatedShop) {

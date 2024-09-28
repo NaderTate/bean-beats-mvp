@@ -8,7 +8,7 @@ import { getCoffeeShop } from "@/utils/get-user";
 type EmployessPageProps = {};
 
 const EmployessPage: NextPage = async ({}: EmployessPageProps) => {
-  const coffeeShop = await getCoffeeShop();
+  const { coffeeShop } = await getCoffeeShop();
   if (!coffeeShop)
     return (
       <div className="flex flex-col min-h-screen justify-center items-center">

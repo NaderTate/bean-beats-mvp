@@ -41,5 +41,6 @@ export const getCoffeeShop = async () => {
       });
     }
   }
-  return coffeeShop;
+  // retrn both coffeeShop and user
+  return { coffeeShop, user };
 };

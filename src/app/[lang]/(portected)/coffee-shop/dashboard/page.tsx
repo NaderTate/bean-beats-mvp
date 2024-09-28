@@ -41,7 +41,7 @@ const data = {
 type DashboardPageProps = {};
 
 const DashboardPage: NextPage = async ({}: DashboardPageProps) => {
-  const coffeeShop = await getCoffeeShop();
+  const { coffeeShop } = await getCoffeeShop();
   const transactions = await prisma.transaction.findMany({
     where: {
       status: "COMPLETED",
