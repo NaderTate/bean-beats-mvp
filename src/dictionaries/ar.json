@@ -212,5 +212,12 @@
   "View Transactions": "عرض المعاملات",
   "Upload Music, View Transactions": "رفع الموسيقى، عرض المعاملات",
   "View Transactions, Upload Music": "عرض المعاملات، رفع الموسيقى",
-  "All": "الكل"
+  "All": "الكل",
+  "Select Time Range": "اختر نطاق الوقت",
+  "Revenue Over Time": "الإيرادات مع مرور الوقت",
+  "Last 7 Days": "آخر 7 أيام",
+  "Last 30 Days": "آخر 30 يومًا",
+  "Last 3 Months": "آخر 3 أشهر",
+  "Last 6 Months": "آخر 6 أشهر",
+  "Last Year": "العام الماضي"
 }
