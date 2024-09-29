@@ -19,41 +19,14 @@ const Navbar = ({ shopId }: { shopId: string }) => {
   const pathname = usePathname();
   const { data: session } = useSession();
 
-  const [prevScrollPos, setPrevScrollPos] = useState(0);
-  const [visible, setVisible] = useState(true);
-  const [isScrolled, setIsScrolled] = useState(false);
-
   const { lang } = useGetLang();
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleScroll = () => {
-    if (pathname.includes("/dashboard")) return;
-    // find current scroll position
-    const currentScrollPos = window.pageYOffset;
-
-    // set state based on location info (explained in more detail below)
-    setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
-    setIsScrolled(currentScrollPos > 10);
-
-    // set state to new scroll position
-    setPrevScrollPos(currentScrollPos);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [prevScrollPos, visible, isScrolled, handleScroll]);
 
   if (pathname === "/signin") {
     return null;
   }
 
   return (
-    <nav
-      style={{ top: visible ? "0" : "-100px", transition: "top 0.6s" }}
-      className="flex items-center justify-between text-gray-600 right-0 fixed w-full shadow-sm z-10 bg-white/90 dark:bg-gray-900 h-16"
-    >
+    <nav className="flex items-center justify-between text-gray-600 right-0 fixed w-full shadow-sm z-10 bg-white/90 dark:bg-gray-900 h-16">
       <div className="py-2 sm:py-1 px-2 sm:p-8 flex items-center gap-x-5">
         <Link href="/" className="flex items-end justify-center ">
           <Image

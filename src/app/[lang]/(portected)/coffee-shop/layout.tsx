@@ -4,6 +4,7 @@ import Navbar from "./navbar";
 import Sidebar from "./sidebar";
 
 import { getCoffeeShop } from "@/utils/get-user";
+import Script from "next/script";
 
 const Layout = async ({
   children,
@@ -18,6 +19,10 @@ const Layout = async ({
 
   return (
     <div className="flex">
+      <Script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEbC_5lROtxVBF85pkfTIiTsCLDn1in7Y&libraries=places"
+        strategy="beforeInteractive"
+      />
       <Navbar shopId={coffeeShop.id} />
       <Sidebar />
       <div className="mt-20 w-full px-5">{children}</div>

@@ -43,12 +43,8 @@ const links = [
 
 export default function Sidebar() {
   const [isOpened, setIsOpened] = useState(true);
-
-  const { push } = useRouter();
   const { lang } = useGetLang();
   const pathname = usePathname();
-
-  const [isPending, startTransition] = useTransition();
 
   const t = useTranslations();
 
@@ -56,19 +52,23 @@ export default function Sidebar() {
     <>
       <div
         className={` transition-all duration-300 ${
-          isOpened ? "w-16" : "w-0 opacity-0 -translate-x-28"
+          isOpened ? "w-16" : "w-0 opacity-0 translate-x-28"
         }`}
       ></div>
       <div
         className={`fixed top-0 start-0 flex h-screen flex-col justify-between border-e bg-white transition-all duration-300 ${
-          isOpened ? "w-16" : "w-0 opacity-0 -translate-x-28"
+          isOpened
+            ? "w-16"
+            : `w-0 opacity-0 ${
+                lang === "en" ? "-translate-x-28" : "translate-x-28"
+              }`
         }`}
       >
         {/* Top Section */}
         <div>
           <div className="pt-20 border-t border-gray-100">
             <div className="px-2">
-              <ul className="space-y-1 sm:space-y-5 pt-4 flex flex-col items-center">
+              <ul className="space-y-1 sm:space-y-5 pt-4 flex flex-col items-center z-50">
                 {links.map((link) => (
                   <Tooltip
                     label={t(link.title)}

@@ -1,15 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import toast from "react-hot-toast";
+import React, { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useForm, Controller } from "react-hook-form";
-import toast from "react-hot-toast";
+import { Country, State } from "country-state-city";
 
 import Button from "@/components/button";
 import Input from "@/components/shared/Input";
-import FileUploader from "@/components/file-dropzone";
+import Select from "@/components/shared/Select";
 import { updateUserData } from "@/actions/users";
+import FileUploader from "@/components/file-dropzone";
+
 import { updateShop } from "@/actions/shops";
+import LocationMap from "@/components/location-map";
 
 type Props = {
   shopAdminData: {
@@ -32,13 +36,19 @@ type Props = {
     country: string | null | undefined;
     city: string | null | undefined;
     district: string | null | undefined;
-    location: string | null | undefined;
+    location: MapLocation | null | undefined;
     songPrice: number;
   };
 };
 
 const SettingsMain = ({ shopAdminData, shopData }: Props) => {
   const t = useTranslations();
+  const [countries, setCountries] = useState<
+    Array<{ value: string; title: string }>
+  >([]);
+  const [cities, setCities] = useState<Array<{ value: string; title: string }>>(
+    []
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   type Inputs = {
@@ -60,8 +70,9 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
     bankName: string;
     country: string;
     city: string;
+    state: string;
     district: string;
-    location: string;
+    location: MapLocation | null | undefined;
     songPrice: number;
   };
 
@@ -70,6 +81,8 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
     handleSubmit,
     formState: { errors },
     getValues,
+    watch,
+    setValue,
   } = useForm<Inputs>({
     defaultValues: {
       // Shop Owner Data
@@ -92,12 +105,36 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
       country: shopData.country || "",
       city: shopData.city || "",
       district: shopData.district || "",
-      location: shopData.location || "",
+      location: shopData.location || null,
       songPrice: shopData.songPrice,
     },
   });
+  const selectedCountry = watch("country");
 
-  const handleSave = async (data: Inputs) => {
+  useEffect(() => {
+    // Set up initial countries
+    const allCountries = Country.getAllCountries();
+    setCountries(
+      allCountries.map((country) => ({
+        value: country.isoCode,
+        title: country.name,
+      }))
+    );
+  }, []);
+
+  useEffect(() => {
+    if (selectedCountry) {
+      const countryStates = State.getStatesOfCountry(selectedCountry);
+      setCities(
+        countryStates.map((state) => ({
+          value: state.isoCode,
+          title: state.name,
+        }))
+      );
+    }
+  }, [selectedCountry]);
+
+  const onSubmit = async (data: Inputs) => {
     setIsLoading(true);
     try {
       // Update shop owner data
@@ -125,7 +162,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
           country: data.country,
           city: data.city,
           district: data.district,
-          location: data.location,
+          location: data.location as any,
           songPrice: Number(data.songPrice),
         },
       });
@@ -141,7 +178,19 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit(handleSave)}>
+      <form
+        onSubmit={handleSubmit(onSubmit, (errors) => {
+          if (Object.keys(errors).length > 0) {
+            const firstErrorKey = Object.keys(errors)[0];
+            const element = document.getElementById(firstErrorKey);
+            if (element) {
+              element.scrollIntoView({ behavior: "smooth", block: "center" });
+              toast.error(t("Please correct the errors in the form"));
+            }
+          }
+          console.log(errors); // This will log the errors to the console
+        })}
+      >
         <h2 className="text-xl font-semibold mb-4">
           {t("Shop Owner Information")}
         </h2>
@@ -251,7 +300,6 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
               />
             )}
           />
-
           <Controller
             control={control}
             name="password"
@@ -259,10 +307,10 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
               <Input
                 id="password"
                 label={t("Password")}
-                type="password"
                 placeholder={t("Password")}
                 onChange={(e) => field.onChange(e.target.value)}
                 errMessage={errors.password?.message}
+                autoComplete="new-password" // Add this line
               />
             )}
           />
@@ -278,10 +326,10 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
               <Input
                 id="confirmPassword"
                 label={t("Confirm Password")}
-                type="password"
                 placeholder={t("Confirm Password")}
                 onChange={(e) => field.onChange(e.target.value)}
                 errMessage={errors.confirmPassword?.message}
+                autoComplete="off"
               />
             )}
           />
@@ -366,61 +414,36 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
           />
 
           <Controller
-            control={control}
             name="country"
+            control={control}
+            rules={{ required: t("This field is required") }}
             render={({ field }) => (
-              <Input
+              <Select
+                enableSearch
+                {...field}
                 id="country"
                 label={t("Country")}
-                placeholder={t("Country")}
-                defaultValue={field.value}
-                onChange={(e) => field.onChange(e.target.value)}
+                options={countries}
+                value={watch("country")}
                 errMessage={errors.country?.message}
               />
             )}
           />
 
           <Controller
-            control={control}
             name="city"
+            control={control}
+            rules={{ required: t("This field is required") }}
             render={({ field }) => (
-              <Input
+              <Select
+                enableSearch
+                {...field}
                 id="city"
                 label={t("City")}
-                placeholder={t("City")}
-                defaultValue={field.value}
-                onChange={(e) => field.onChange(e.target.value)}
+                options={cities}
+                value={watch("city")}
                 errMessage={errors.city?.message}
-              />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="district"
-            render={({ field }) => (
-              <Input
-                id="district"
-                label={t("District")}
-                placeholder={t("District")}
-                defaultValue={field.value}
-                onChange={(e) => field.onChange(e.target.value)}
-                errMessage={errors.district?.message}
-              />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="location"
-            render={({ field }) => (
-              <Input
-                id="location"
-                label={t("Location")}
-                placeholder={t("Location")}
-                defaultValue={field.value}
-                onChange={(e) => field.onChange(e.target.value)}
-                errMessage={errors.location?.message}
+                disabled={!selectedCountry}
               />
             )}
           />
@@ -440,6 +463,26 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
             )}
           />
         </div>
+        <h2 className="text-xl font-semibold mb-4 mt-8">
+          {t("Shop Location")}
+        </h2>
+        <Controller
+          name="location"
+          control={control}
+          render={({ field }) => (
+            <div className="mb-5">
+              <LocationMap
+                setLocation={(value) => field.onChange(value)}
+                location={field.value || undefined}
+              />
+              {errors.location && (
+                <p className="mt-2 text-sm text-red-600">
+                  {errors.location.message}
+                </p>
+              )}
+            </div>
+          )}
+        />
 
         <div className="flex justify-center mt-8 mb-10">
           <Button

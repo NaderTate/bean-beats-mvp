@@ -1,6 +1,8 @@
-import React, { forwardRef, useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
+import React, { forwardRef, useState, useRef, useEffect } from "react";
+
+import { IoSearch } from "react-icons/io5";
 import { FaChevronDown } from "react-icons/fa6";
 
 type Option = {
@@ -12,12 +14,25 @@ interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   options: Option[];
   label: string;
   errMessage?: string;
+  enableSearch?: boolean;
 }
 
 const Select = forwardRef<HTMLSelectElement, Props>(
-  ({ options, label, errMessage, value, onChange, ...props }, ref) => {
+  (
+    {
+      options,
+      label,
+      errMessage,
+      value,
+      onChange,
+      enableSearch = false,
+      ...props
+    },
+    ref
+  ) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(value || "");
+    const [searchTerm, setSearchTerm] = useState("");
     const dropdownRef = useRef<HTMLDivElement>(null);
     const t = useTranslations();
 
@@ -30,6 +45,7 @@ const Select = forwardRef<HTMLSelectElement, Props>(
     const handleOptionChange = (newValue: string) => {
       setSelectedValue(newValue);
       setIsOpen(false);
+      setSearchTerm("");
       if (onChange) {
         const event = {
           target: { value: newValue },
@@ -45,6 +61,7 @@ const Select = forwardRef<HTMLSelectElement, Props>(
           !dropdownRef.current.contains(event.target as Node)
         ) {
           setIsOpen(false);
+          setSearchTerm("");
         }
       };
 
@@ -54,6 +71,10 @@ const Select = forwardRef<HTMLSelectElement, Props>(
     }, []);
 
     const selectedOption = options.find((opt) => opt.value === selectedValue);
+
+    const filteredOptions = options.filter((option) =>
+      t(option.title).toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
       <div ref={dropdownRef}>
@@ -86,18 +107,34 @@ const Select = forwardRef<HTMLSelectElement, Props>(
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.2 }}
-                className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg dark:bg-gray-700 dark:border-gray-600"
+                className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg dark:bg-gray-700 dark:border-gray-600 overflow-hidden"
               >
-                {options.map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onClick={() => handleOptionChange(option.value)}
-                    className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                  >
-                    {t(option.title)}
-                  </button>
-                ))}
+                {enableSearch && (
+                  <div className="p-2">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder={t("Search")}
+                        className="w-full p-2 pl-8 text-sm border rounded-md dark:bg-gray-600 dark:border-gray-500 dark:text-gray-200"
+                      />
+                      <IoSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    </div>
+                  </div>
+                )}
+                <div className="max-h-60 overflow-y-auto">
+                  {filteredOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => handleOptionChange(option.value)}
+                      className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >
+                      {t(option.title)}
+                    </button>
+                  ))}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
