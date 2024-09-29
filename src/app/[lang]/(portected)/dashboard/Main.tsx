@@ -10,28 +10,6 @@ import LineChart from "@/components/shared/Charts/line-chart";
 import { FaShop, FaMoneyBillWave, FaMusic } from "react-icons/fa6";
 import Select from "@/components/shared/Select";
 
-const list = [
-  {
-    Icon: () => <FaMoneyBillWave className="text-4xl text-green-500" />,
-    title: "Total Revenue",
-    value: 240.94,
-    percent: "67.81%",
-    href: "/dashboard/transactions",
-  },
-  {
-    Icon: () => <FaShop className="text-4xl text-blue-500" />,
-    title: "Coffee Shops",
-    value: 64,
-    href: "/dashboard/shops",
-  },
-  {
-    Icon: () => <FaMusic className="text-4xl text-yellow-500" />,
-    title: "Songs",
-    value: 1600,
-    href: "/dashboard/music?secion=Songs",
-  },
-];
-
 interface MainProps {
   topSongs: {
     artist: {
@@ -44,9 +22,16 @@ interface MainProps {
     amount: number;
     createdAt: Date;
   }[];
+  allSongs: number;
+  allCoffeeShops: number;
 }
 
-const Main = ({ topSongs, transactions }: MainProps) => {
+const Main = ({
+  topSongs,
+  transactions,
+  allSongs,
+  allCoffeeShops,
+}: MainProps) => {
   const t = useTranslations();
   const { lang } = useGetLang();
   const { push } = useRouter();
@@ -120,7 +105,7 @@ const Main = ({ topSongs, transactions }: MainProps) => {
         labels.push(
           date.toLocaleDateString("en-US", { month: "short", day: "numeric" })
         );
-        data.push(dataMap.get(key) || 0);
+        data.push(Math.round((dataMap.get(key) || 0) * 10) / 10); // Round to 1 decimal place
       }
     } else {
       // For longer time ranges, aggregate by month
@@ -135,7 +120,7 @@ const Main = ({ topSongs, transactions }: MainProps) => {
         labels.push(
           date.toLocaleDateString("en-US", { month: "short", year: "numeric" })
         );
-        data.push(dataMap.get(key) || 0);
+        data.push(Math.round((dataMap.get(key) || 0) * 10) / 10); // Round to 1 decimal place
       }
     }
 
@@ -153,6 +138,31 @@ const Main = ({ topSongs, transactions }: MainProps) => {
       ],
     };
   }, [filteredTransactions, timeRange, t]);
+
+  const totalRevenue = transactions.reduce((acc, curr) => acc + curr.amount, 0);
+
+  const list = [
+    {
+      Icon: () => <FaMoneyBillWave className="text-4xl text-green-500" />,
+      title: "Total Revenue",
+      value: `$${totalRevenue.toLocaleString()}`,
+      percent: "67.81%",
+      href: "/dashboard/transactions",
+    },
+    {
+      Icon: () => <FaShop className="text-4xl text-blue-500" />,
+      title: "Coffee Shops",
+      value: allCoffeeShops,
+      href: "/dashboard/shops",
+    },
+    {
+      Icon: () => <FaMusic className="text-4xl text-yellow-500" />,
+      title: "Songs",
+      value: allSongs,
+      href: "/dashboard/music?secion=Songs",
+    },
+  ];
+
   return (
     <main className="flex flex-col flex-1 w-full px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
       <section className="grid col-span-1 gap-4 lg:grid-cols-3">

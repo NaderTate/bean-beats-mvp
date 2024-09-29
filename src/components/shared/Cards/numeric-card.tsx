@@ -7,7 +7,7 @@ import useGetLang from "@/hooks/use-get-lang";
 
 type Item = {
   title: string;
-  value?: number;
+  value?: number | string;
   Icon?: React.FC;
   percent?: string;
 };

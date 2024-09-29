@@ -3,6 +3,9 @@ import prisma from "@/lib/prisma";
 import Main from "./Main";
 
 const Page = async () => {
+  const allSongs = await prisma.song.count();
+  const allCoffeeShops = await prisma.coffeeShop.count();
+
   const transactions = await prisma.transaction.findMany({
     where: {
       status: "COMPLETED",
@@ -29,7 +32,14 @@ const Page = async () => {
     },
   });
 
-  return <Main topSongs={topSongs} transactions={transactions} />;
+  return (
+    <Main
+      topSongs={topSongs}
+      allSongs={allSongs}
+      transactions={transactions}
+      allCoffeeShops={allCoffeeShops}
+    />
+  );
 };
 
 export default Page;
