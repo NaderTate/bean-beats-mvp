@@ -22,7 +22,6 @@ const CreateAccount = ({ onSubmit }: Props) => {
 
   type Inputs = {
     shopName: string;
-    shopAddress: string;
     shopLogo: string | null;
     shopAdminName: string;
     shopAdminEmail: string;
@@ -179,7 +178,7 @@ const CreateAccount = ({ onSubmit }: Props) => {
           )}
         />
 
-        <Controller
+        {/* <Controller
           control={control}
           name="shopAddress"
           rules={{ required: "This field is required" }}
@@ -193,7 +192,7 @@ const CreateAccount = ({ onSubmit }: Props) => {
               errMessage={errors.shopAddress?.message}
             />
           )}
-        />
+        /> */}
 
         <Controller
           control={control}
