@@ -8,6 +8,7 @@ import { CoffeeShop, User } from "@prisma/client";
 import Table from "@/components/shared/table";
 import Modal from "@/components/shared/Modal";
 import ShopForm from "@/components/shared/Forms/shop";
+import ShopData from "./shop-data";
 
 type Props = { shops: (CoffeeShop & { admin: User })[] };
 
@@ -26,6 +27,7 @@ const ShopsMain = ({ shops }: Props) => {
   return (
     <div className="w-full">
       <Table
+        viewModal={<ShopData />}
         editForm={<ShopForm onSubmit={toggleModal} />}
         addBtnLabel={t("Add New Shop")}
         add={() => setIsOpen(true)}

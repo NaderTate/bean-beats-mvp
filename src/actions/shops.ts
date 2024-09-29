@@ -8,7 +8,6 @@ import bcrypt from "bcrypt";
 export const createShopWithAdmin = async (options: {
   shop: {
     name: string;
-    address: string;
     logo: string | null;
   };
   admin: Prisma.Without<

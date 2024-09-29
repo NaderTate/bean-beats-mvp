@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 
 interface TooltipProps {
   label: string;
@@ -16,49 +16,49 @@ const Tooltip: React.FC<TooltipProps> = ({
   children,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
   const t = useTranslations();
-  const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (isHovered && containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      let top = 0;
-      let left = 0;
-
-      switch (direction) {
-        case "top":
-          top = rect.top - 10;
-          left = rect.left + rect.width / 2;
-          break;
-        case "bottom":
-          top = rect.bottom + 10;
-          left = rect.left + rect.width / 2;
-          break;
-        case "left":
-          top = rect.top + rect.height / 2;
-          left = rect.left - 10;
-          break;
-        case "right":
-          top = rect.top + rect.height / 2;
-          left = rect.right + 10;
-          break;
-      }
-
-      setPosition({ top, left });
+  const getPositionClasses = () => {
+    switch (direction) {
+      case "top":
+        return "bottom-full mb-2 left-1/2 transform -translate-x-1/2";
+      case "bottom":
+        return "top-full mt-2 left-1/2 transform -translate-x-1/2";
+      case "left":
+        return "right-full mr-2 top-1/2 transform -translate-y-1/2 -translate-x-full";
+      case "right":
+        return "left-full ml-2 top-1/2 transform -translate-y-1/2";
+      default:
+        return "";
     }
-  }, [isHovered, direction]);
+  };
 
   const getMotionDirection = () => {
     switch (direction) {
       case "top":
-        return { y: 10 };
+        return {
+          initial: { opacity: 0, y: 10 },
+          animate: { opacity: 1, y: 0 },
+          exit: { opacity: 0, y: 10 },
+        };
       case "bottom":
-        return { y: -10 };
+        return {
+          initial: { opacity: 0, y: -10 },
+          animate: { opacity: 1, y: 0 },
+          exit: { opacity: 0, y: -10 },
+        };
       case "left":
-        return { x: 10 };
+        return {
+          initial: { opacity: 0, x: 10 },
+          animate: { opacity: 1, x: 0 },
+          exit: { opacity: 0, x: 10 },
+        };
       case "right":
-        return { x: -10 };
+        return {
+          initial: { opacity: 0, x: -10 },
+          animate: { opacity: 1, x: 0 },
+          exit: { opacity: 0, x: -10 },
+        };
       default:
         return {};
     }
@@ -66,44 +66,19 @@ const Tooltip: React.FC<TooltipProps> = ({
 
   return (
     <div
-      ref={containerRef}
-      className="relative inline-block"
+      className="relative inline-block overflow-visible"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {children}
-      <AnimatePresence>
-        {isHovered && (
-          <motion.div
-            initial={{ opacity: 0, ...getMotionDirection() }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            exit={{ opacity: 0, ...getMotionDirection() }}
-            transition={{ duration: 0.2 }}
-            className="fixed px-4 py-2 rounded-lg bg-gray-700 text-white text-sm shadow-lg whitespace-nowrap max-w-max"
-            style={{
-              top: position.top,
-              left: position.left,
-              transform: `translate(${
-                direction === "left"
-                  ? "-100%"
-                  : direction === "right"
-                  ? "0"
-                  : "-50%"
-              }, ${
-                direction === "top"
-                  ? "-100%"
-                  : direction === "bottom"
-                  ? "0"
-                  : "-50%"
-              })`,
-              pointerEvents: "none",
-              zIndex: 9999,
-            }}
-          >
-            {t(label)}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {isHovered && (
+        <motion.div
+          {...getMotionDirection()}
+          className={`absolute z-50 px-4 py-2 rounded-lg bg-gray-700 text-white text-sm shadow-lg whitespace-nowrap max-w-max ${getPositionClasses()}`}
+        >
+          {t(label)}
+        </motion.div>
+      )}
     </div>
   );
 };

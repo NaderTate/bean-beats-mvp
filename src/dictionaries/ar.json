@@ -15,7 +15,7 @@
   "Coffee Shops": "مقاهي",
   "Songs": "الأغاني",
   "Monthly stats": "إحصائيات شهرية",
-  "Shops": "محلات",
+  "Shops": "متاجر",
   "Revenue": "إيرادات",
   "Top Songs": "أفضل الأغاني",
   "Dashboard": "لوحة القيادة",
@@ -238,5 +238,9 @@
   "You need to complete your shop data before taking this action": "تحتاج إلى استكمال بيانات متجرك قبل اتخاذ هذا الإجراء",
   "Please correct the errors in the form": "يرجى تصحيح الأخطاء ",
   "Search for places": "البحث عن الأماكن",
-  "Shop Location": "موقع المتجر"
+  "Shop Location": "موقع المتجر",
+  "Shop Details": "تفاصيل المتجر",
+  "Bank": "البنك",
+  "Contact Information": "معلومات الاتصال",
+  "Owner Details": "تفاصيل المالك"
 }

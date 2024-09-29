@@ -28,6 +28,7 @@ interface TableProps {
   viewModal?: any;
   hideSearch?: boolean;
   addBtnLabel?: string;
+  filters?: React.ReactNode[];
 }
 
 export default function Table({
@@ -43,9 +44,11 @@ export default function Table({
   viewModal,
   hideSearch = false,
   addBtnLabel,
+  filters,
 }: TableProps) {
   const [modifiedData, setModifiedData] = useState(data);
   const [openEdit, setOpenEdit] = useState<number | null>(null);
+  const [openView, setOpenView] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
   // Create an array of all AdminPermission values
@@ -80,24 +83,27 @@ export default function Table({
     <div className="mt-5 rounded-lg">
       <div className="flex justify-between items-center gap-2 py-4">
         {!hideSearch && (
-          <div className="mx-auto text-gray-600 border-2 border-gray-300  px-5 h-10 md:h-14  rounded-lg text-sm flex-1 flex justify-between items-center gap-5">
-            <input
-              type="search"
-              name="search"
-              value={searchTerm}
-              placeholder={t("Search") + "..."}
-              className="focus:outline-none flex-1 h-full"
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button title="search" type="submit" className="">
-              <CiSearch className="text-gray-600  text-2xl" />
-            </button>
+          <div className="flex items-end gap-4 w-full">
+            <div className=" mx-auto text-gray-600 border-2 border-gray-300  px-5 h-10 md:h-14  rounded-lg text-sm flex-1 flex justify-between items-center gap-5">
+              <input
+                type="search"
+                name="search"
+                value={searchTerm}
+                placeholder={t("Search") + "..."}
+                className="focus:outline-none flex-1 h-full"
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button title="search" type="submit" className="">
+                <CiSearch className="text-gray-600  text-2xl" />
+              </button>
+            </div>
+            <div className="">{filters}</div>
           </div>
         )}
         {add && (
           <button
             onClick={add}
-            className=" bg-primary hover:bg-primary/80 transition text-white rounded-lg py-2 px-4  md:px-10 md:py-4 flex items-center gap-2"
+            className=" bg-primary hover:bg-primary/80 transition text-white rounded-lg py-2 px-4 whitespace-nowrap md:px-10 md:py-4 flex items-center gap-2"
           >
             <IoMdAddCircle className="text-xl" size={25} />
             {addBtnLabel ? t(addBtnLabel) : t("Add")}
@@ -193,22 +199,20 @@ export default function Table({
                     )}
                     {viewModal && (
                       <>
-                        <MdEdit
+                        <FaInfoCircle
                           size={20}
                           onClick={() =>
-                            setOpenEdit(openEdit === index ? null : index)
+                            setOpenView(openEdit === index ? null : index)
                           }
                           className="text-primary cursor-pointer"
                         />
                         <Modal
-                          title="View"
-                          open={openEdit === index}
-                          setOpen={() => setOpenEdit(null)}
+                          open={openView === index}
+                          setOpen={() => setOpenView(null)}
                         >
                           {cloneElement(viewModal, {
                             key: item.id,
                             data: item,
-                            onSubmit: handleModalClose,
                           })}
                         </Modal>
                       </>

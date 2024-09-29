@@ -27,7 +27,7 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
 
   type Inputs = {
     shopName: string;
-    shopLocation: string;
+    shopLocation: MapLocation | null;
     shopLogo: string | null;
     shopAdminName: string;
     shopAdminEmail: string;
@@ -43,7 +43,7 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
   } = useForm<Inputs>({
     defaultValues: {
       shopName: Shop?.name,
-      shopLocation: Shop?.location || "",
+      shopLocation: (Shop?.location as any) || null,
       shopLogo: Shop?.logo,
       shopAdminName: Shop?.admin.name || "",
       shopAdminEmail: Shop?.admin.email || "",
@@ -71,7 +71,6 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
           id,
           data: {
             name: data.shopName,
-            location: data.shopLocation,
             logo: data.shopLogo,
           },
         });
@@ -85,7 +84,6 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
         const res = await createShopWithAdmin({
           shop: {
             name: data.shopName,
-            address: data.shopLocation,
             logo: data.shopLogo,
           },
           admin: {
@@ -126,23 +124,6 @@ const ShopForm = ({ itemToEdit: Shop, onSubmit }: Props) => {
               }}
               placeholder="Shop Name"
               errMessage={errors.shopName?.message}
-            />
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="shopLocation"
-          rules={{ required: "This field is required" }}
-          render={({ field }) => (
-            <Input
-              label="Shop Address"
-              placeholder="Shop Address"
-              defaultValue={Shop?.location || ""}
-              onChange={(e) => {
-                field.onChange(e.target.value);
-              }}
-              errMessage={errors.shopLocation?.message}
             />
           )}
         />

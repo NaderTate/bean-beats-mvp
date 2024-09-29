@@ -13,7 +13,7 @@ export default function Modal({
   children: React.ReactNode;
   open: boolean;
   setOpen: () => void;
-  title: string;
+  title?: string;
 }) {
   const t = useTranslations();
 

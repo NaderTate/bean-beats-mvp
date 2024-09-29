@@ -54,7 +54,6 @@ const CreateAccount = ({ onSubmit }: Props) => {
       const res = await createShopWithAdmin({
         shop: {
           name: data.shopName,
-          address: data.shopAddress,
           logo: data.shopLogo,
         },
         admin: {
