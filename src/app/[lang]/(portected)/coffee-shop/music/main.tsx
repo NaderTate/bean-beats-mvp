@@ -104,7 +104,6 @@ const MusicMain = ({
 
   return (
     <div className="p-5">
-      \
       <div className="flex justify-center gap-x-2">
         {actionButtons.map((button) => (
           <button
