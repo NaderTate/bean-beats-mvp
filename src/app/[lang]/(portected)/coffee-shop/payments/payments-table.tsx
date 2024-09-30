@@ -130,6 +130,7 @@ const PaymentsTable = ({
             />
             {viewShopFilter && (
               <Select
+                enableSearch
                 value={selectedShop}
                 options={shopOptions}
                 label={t("Select Shop")}

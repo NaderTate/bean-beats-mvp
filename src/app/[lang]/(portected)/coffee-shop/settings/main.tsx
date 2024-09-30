@@ -457,6 +457,23 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
               />
             )}
           />
+          {/* district input */}
+          <Controller
+            name="district"
+            control={control}
+            rules={{ required: t("This field is required") }}
+            render={({ field }) => (
+              <Input
+                id="district"
+                label={t("District")}
+                placeholder={t("District")}
+                defaultValue={field.value}
+                onChange={(e) => field.onChange(e.target.value)}
+                errMessage={errors.district?.message}
+              />
+            )}
+          />
+
           <Controller
             control={control}
             name="songPrice"
