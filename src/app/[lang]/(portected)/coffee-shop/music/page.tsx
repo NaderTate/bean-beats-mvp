@@ -94,7 +94,6 @@ const MusicPage: NextPage = async ({}: MusicPageProps) => {
         coffeeShop.accountNumber &&
         coffeeShop.country &&
         coffeeShop.city &&
-        coffeeShop.district &&
         coffeeShop.location
     );
 

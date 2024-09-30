@@ -244,6 +244,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
           <Controller
             control={control}
             name="phoneNumber"
+            rules={{ required: t("This field is required") }}
             render={({ field }) => (
               <Input
                 id="phoneNumber"
@@ -274,6 +275,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
           <Controller
             control={control}
             name="commercialRegistrationNumber"
+            rules={{ required: t("This field is required") }}
             render={({ field }) => (
               <Input
                 id="commercialRegistrationNumber"
@@ -371,6 +373,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
           <Controller
             control={control}
             name="iban"
+            rules={{ required: t("This field is required") }}
             render={({ field }) => (
               <Input
                 id="iban"
@@ -386,6 +389,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
           <Controller
             control={control}
             name="accountNumber"
+            rules={{ required: t("This field is required") }}
             render={({ field }) => (
               <Input
                 id="accountNumber"
@@ -401,6 +405,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
           <Controller
             control={control}
             name="bankName"
+            rules={{ required: t("This field is required") }}
             render={({ field }) => (
               <Input
                 id="bankName"
@@ -450,6 +455,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
           <Controller
             control={control}
             name="songPrice"
+            rules={{ required: t("This field is required") }}
             render={({ field }) => (
               <Input
                 id="songPrice"
@@ -469,6 +475,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
         <Controller
           name="location"
           control={control}
+          rules={{ required: t("This field is required") }}
           render={({ field }) => (
             <div className="mb-5">
               <LocationMap
