@@ -97,7 +97,7 @@ export default function Table({
                 <CiSearch className="text-gray-600  text-2xl" />
               </button>
             </div>
-            <div className="">{filters}</div>
+            <div className="flex gap-4">{filters}</div>
           </div>
         )}
         {add && (

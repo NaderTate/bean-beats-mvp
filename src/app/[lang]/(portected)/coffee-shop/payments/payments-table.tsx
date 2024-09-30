@@ -1,34 +1,58 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import React, { useState, useMemo } from "react";
+
 import Table from "@/components/shared/table";
 import Select from "@/components/shared/Select";
-import { useTranslations } from "next-intl";
+import PrintReceipt from "./print-receipt";
 
 type Props = {
   transactions: {
     id: string;
+    amount: number;
+    tableNumber: number;
+    createdAt: Date;
+    shop: {
+      name: string;
+      logo?: string | null;
+      country?: string | null;
+      city?: string | null;
+    };
     _count: {
       QueueSong: number;
     };
-    createdAt: Date;
-    amount: number;
-    tableNumber: number;
   }[];
   viewLink?: string;
+  viewShopFilter?: boolean;
 };
 
-const PaymentsTable = ({ transactions, viewLink }: Props) => {
+const PaymentsTable = ({
+  transactions,
+  viewLink,
+  viewShopFilter = false,
+}: Props) => {
   const t = useTranslations();
-  const [timeRange, setTimeRange] = useState("last7days");
+  const [timeRange, setTimeRange] = useState<timeInterval>("last7days");
+  const [selectedShop, setSelectedShop] = useState<string>("all");
 
-  const timeRangeOptions = [
+  const timeRangeOptions: { value: timeInterval; title: string }[] = [
     { value: "last7days", title: "Last 7 Days" },
     { value: "last30days", title: "Last 30 Days" },
     { value: "last3months", title: "Last 3 Months" },
     { value: "last6months", title: "Last 6 Months" },
     { value: "lastYear", title: "Last Year" },
   ];
+
+  const shopOptions = useMemo(() => {
+    const uniqueShops = Array.from(
+      new Set(transactions.map((t) => t.shop.name))
+    );
+    return [
+      { value: "all", title: "All Shops" },
+      ...uniqueShops.map((shop) => ({ value: shop, title: shop })),
+    ];
+  }, [transactions]);
 
   const filteredTransactions = useMemo(() => {
     const now = new Date();
@@ -55,29 +79,77 @@ const PaymentsTable = ({ transactions, viewLink }: Props) => {
     }
 
     return transactions.filter(
-      (transaction) => new Date(transaction.createdAt) >= filterDate
+      (transaction) =>
+        new Date(transaction.createdAt) >= filterDate &&
+        (selectedShop === "all" || transaction.shop.name === selectedShop)
     );
-  }, [transactions, timeRange]);
+  }, [transactions, timeRange, selectedShop]);
+
+  const receiptData = useMemo(() => {
+    if (selectedShop === "all") return null;
+
+    const shopTransactions = filteredTransactions.filter(
+      (t) => t.shop.name === selectedShop
+    );
+    const totalSongsSold = shopTransactions.reduce(
+      (sum, t) => sum + t._count.QueueSong,
+      0
+    );
+    const totalRevenue = shopTransactions.reduce((sum, t) => sum + t.amount, 0);
+    const shopInfo = shopTransactions[0]?.shop;
+
+    return {
+      shopName: selectedShop,
+      shopLogo: shopInfo?.logo || "",
+      // timeInterval: {
+      //   startDate:
+      //     filteredTransactions[
+      //       filteredTransactions.length - 1
+      //     ]?.createdAt.toLocaleDateString(),
+      //   endDate: filteredTransactions[0]?.createdAt.toLocaleDateString(),
+      // },
+      timeInterval: timeRange,
+      shopCountry: shopInfo?.country,
+      shopCity: shopInfo?.city,
+      totalSongsSold,
+      totalRevenue,
+    };
+  }, [filteredTransactions, selectedShop, timeRange]);
 
   return (
     <div className="w-full">
+      <div className="flex items-center space-x-4 mb-4"></div>
       <Table
         filters={[
-          <Select
-            key={1}
-            value={timeRange}
-            options={timeRangeOptions}
-            label={t("Select Time Range")}
-            onChange={(e) => setTimeRange(e.target.value)}
-          />,
+          <>
+            <Select
+              value={timeRange}
+              options={timeRangeOptions}
+              label={t("Select Time Range")}
+              onChange={(e) => setTimeRange(e.target.value as timeInterval)}
+            />
+            {viewShopFilter && (
+              <Select
+                value={selectedShop}
+                options={shopOptions}
+                label={t("Select Shop")}
+                onChange={(e) => setSelectedShop(e.target.value)}
+              />
+            )}
+            {receiptData && viewShopFilter && (
+              <PrintReceipt data={receiptData} />
+            )}
+          </>,
         ]}
         viewLink={viewLink}
         data={filteredTransactions.map((transaction) => ({
           ...transaction,
+          shop: transaction.shop.name,
           Songs: transaction._count.QueueSong,
           Date: new Date(transaction.createdAt).toLocaleDateString(),
         }))}
         fields={{
+          shop: "Shop",
           tableNumber: "Table No",
           Date: "Date",
           amount: "Total Cost",

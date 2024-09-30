@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
@@ -23,6 +23,7 @@ export const AutocompletePlaces: React.FC<AutocompletePlacesProps> = ({
   setPlace,
 }) => {
   const t = useTranslations();
+  const [error, setError] = useState<string | null>(null);
 
   const {
     value,
@@ -42,6 +43,12 @@ export const AutocompletePlaces: React.FC<AutocompletePlacesProps> = ({
     console.log("Suggestions data:", data);
     console.log("Suggestions loading:", loading);
     console.log("Suggestions status:", status);
+
+    if (status === "ZERO_RESULTS") {
+      setError("No results found");
+    } else if (status === "OK") {
+      setError(null);
+    }
   }, [data, loading, status]);
 
   const handleSelect = async (val: string, main_text: string) => {
@@ -65,6 +72,7 @@ export const AutocompletePlaces: React.FC<AutocompletePlacesProps> = ({
       });
     } catch (error) {
       console.error("Error in handleSelect:", error);
+      setError("Failed to get place details");
     }
   };
 
@@ -91,11 +99,13 @@ export const AutocompletePlaces: React.FC<AutocompletePlacesProps> = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             console.log("Input value changed:", e.target.value);
             setValue(e.target.value);
+            setError(null);
           }}
           placeholder={t("Search for places") + "..."}
           autoComplete="off"
         />
         {loading && <div>Loading...</div>}
+        {error && <div className="text-red-500">{error}</div>}
         {status === "OK" && (
           <ul className="absolute top-10 w-full bg-content1 rounded-lg shadow-lg z-20 flex flex-col gap-1 bg-white shadow-blue-800/10">
             {data.map((suggestion) => {

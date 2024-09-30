@@ -20,8 +20,8 @@ const Layout = async ({
   return (
     <div className="flex">
       <Script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEbC_5lROtxVBF85pkfTIiTsCLDn1in7Y&libraries=places"
         strategy="beforeInteractive"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEbC_5lROtxVBF85pkfTIiTsCLDn1in7Y&libraries=places"
       />
       <Navbar shopId={coffeeShop.id} />
       <Sidebar />

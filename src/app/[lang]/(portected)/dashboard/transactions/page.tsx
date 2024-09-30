@@ -14,12 +14,14 @@ export default async function page({ params: { lang } }: pageProps) {
       amount: true,
       createdAt: true,
       tableNumber: true,
+      shop: { select: { name: true, country: true, city: true, logo: true } },
       _count: { select: { QueueSong: true } },
     },
   });
   return (
     <div className="w-full px-5">
       <PaymentsTable
+        viewShopFilter={true}
         transactions={transactions}
         viewLink={`/${lang}/dashboard/transactions`}
       />

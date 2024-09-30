@@ -83,7 +83,6 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
     formState: { errors },
     getValues,
     watch,
-    setValue,
   } = useForm<Inputs>({
     defaultValues: {
       // Shop Owner Data
@@ -118,7 +117,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
     const filteredCountries = allCountries
       .filter((country) => arabCountries.includes(country.isoCode))
       .map((country) => ({
-        value: country.isoCode,
+        value: country.name,
         title: country.name,
       }));
     setCountries(filteredCountries);
@@ -126,11 +125,14 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
 
   useEffect(() => {
     if (selectedCountry) {
-      const countryStates = State.getStatesOfCountry(selectedCountry);
-      console.log(countryStates.map((state) => state.name));
+      const allCountries = Country.getAllCountries();
+      const countryStates = State.getStatesOfCountry(
+        allCountries.find((country) => country.name === selectedCountry)
+          ?.isoCode || ""
+      );
       setCities(
         countryStates.map((state) => ({
-          value: state.isoCode,
+          value: state.name,
           title: state.name,
         }))
       );

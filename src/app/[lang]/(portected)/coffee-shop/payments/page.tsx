@@ -20,6 +20,9 @@ const PaymentsPage: NextPage = async ({}: PaymentsPageProps) => {
               createdAt: true,
               tableNumber: true,
               _count: { select: { QueueSong: true } },
+              shop: {
+                select: { name: true },
+              },
             },
           },
         },

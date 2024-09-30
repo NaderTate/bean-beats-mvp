@@ -23,6 +23,7 @@
     "country-state-city": "^3.2.1",
     "framer-motion": "^11.3.19",
     "jsonwebtoken": "^9.0.2",
+    "jspdf": "^2.5.2",
     "next": "14.2.5",
     "next-auth": "^5.0.0-beta.19",
     "next-intl": "^3.17.2",

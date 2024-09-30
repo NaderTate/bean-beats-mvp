@@ -23,3 +23,10 @@ interface MapLocation {
   lat: number;
   lng: number;
 }
+
+type timeInterval =
+  | "last7days"
+  | "last30days"
+  | "last3months"
+  | "last6months"
+  | "lastYear";
