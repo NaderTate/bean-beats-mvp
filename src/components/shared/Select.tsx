@@ -4,6 +4,7 @@ import React, { forwardRef, useState, useRef, useEffect } from "react";
 
 import { IoSearch } from "react-icons/io5";
 import { FaChevronDown } from "react-icons/fa6";
+import useGetLang from "@/hooks/use-get-lang";
 
 type Option = {
   value: string;
@@ -35,6 +36,9 @@ const Select = forwardRef<HTMLSelectElement, Props>(
     const [searchTerm, setSearchTerm] = useState("");
     const dropdownRef = useRef<HTMLDivElement>(null);
     const t = useTranslations();
+    const { lang } = useGetLang();
+
+    const isRTL = lang === "ar";
 
     useEffect(() => {
       setSelectedValue(value || "");
@@ -77,22 +81,33 @@ const Select = forwardRef<HTMLSelectElement, Props>(
     );
 
     return (
-      <div ref={dropdownRef}>
-        <label htmlFor={props.id || props.name}>{t(label)}</label>
+      <div ref={dropdownRef} className={isRTL ? "rtl" : "ltr"}>
+        <label
+          htmlFor={props.id || props.name}
+          className={isRTL ? "block text-right" : ""}
+        >
+          {t(label)}
+        </label>
         <div className="relative">
           <button
             type="button"
             onClick={toggleDropdown}
-            className="p-3 bg-white block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:placeholder-gray-400"
+            className={`p-3 bg-white block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:placeholder-gray-400 ${
+              isRTL ? "text-right" : "text-left"
+            }`}
           >
-            <div className="flex items-center justify-between">
+            <div
+              className={`flex items-center justify-between ${
+                isRTL ? "flex-row-reverse" : ""
+              }`}
+            >
               <span>
                 {selectedOption
                   ? t(selectedOption.title)
                   : t("Select") + " " + t(label)}
               </span>
               <motion.div
-                className="ms-2"
+                className={isRTL ? "me-2" : "ms-2"}
                 transition={{ duration: 0.2 }}
                 animate={{ rotate: isOpen ? 180 : 0 }}
               >
@@ -117,9 +132,15 @@ const Select = forwardRef<HTMLSelectElement, Props>(
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         placeholder={t("Search")}
-                        className="w-full p-2 pl-8 text-sm border rounded-md dark:bg-gray-600 dark:border-gray-500 dark:text-gray-200"
+                        className={`w-full p-2 ${
+                          isRTL ? "pr-8 text-right" : "pl-8"
+                        } text-sm border rounded-md dark:bg-gray-600 dark:border-gray-500 dark:text-gray-200`}
                       />
-                      <IoSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <IoSearch
+                        className={`absolute ${
+                          isRTL ? "right-3" : "left-3"
+                        } top-1/2 transform -translate-y-1/2 text-gray-400`}
+                      />
                     </div>
                   </div>
                 )}
@@ -129,7 +150,9 @@ const Select = forwardRef<HTMLSelectElement, Props>(
                       key={option.value}
                       type="button"
                       onClick={() => handleOptionChange(option.value)}
-                      className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                      className={`block w-full px-4 py-2 text-sm ${
+                        isRTL ? "text-right" : "text-left"
+                      } text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white`}
                     >
                       {t(option.title)}
                     </button>
@@ -140,7 +163,13 @@ const Select = forwardRef<HTMLSelectElement, Props>(
           </AnimatePresence>
         </div>
         {errMessage && (
-          <span className="text-red-500 text-sm">{t(errMessage)}</span>
+          <span
+            className={`text-red-500 text-sm ${
+              isRTL ? "block text-right" : ""
+            }`}
+          >
+            {t(errMessage)}
+          </span>
         )}
         <select
           ref={ref}

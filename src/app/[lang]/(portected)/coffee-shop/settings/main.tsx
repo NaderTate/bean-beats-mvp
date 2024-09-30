@@ -14,6 +14,7 @@ import FileUploader from "@/components/file-dropzone";
 
 import { updateShop } from "@/actions/shops";
 import LocationMap from "@/components/location-map";
+import { arabCountries } from "@/data/arab-countries";
 
 type Props = {
   shopAdminData: {
@@ -112,19 +113,21 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
   const selectedCountry = watch("country");
 
   useEffect(() => {
-    // Set up initial countries
+    // Filter and set up Arab countries
     const allCountries = Country.getAllCountries();
-    setCountries(
-      allCountries.map((country) => ({
+    const filteredCountries = allCountries
+      .filter((country) => arabCountries.includes(country.isoCode))
+      .map((country) => ({
         value: country.isoCode,
         title: country.name,
-      }))
-    );
+      }));
+    setCountries(filteredCountries);
   }, []);
 
   useEffect(() => {
     if (selectedCountry) {
       const countryStates = State.getStatesOfCountry(selectedCountry);
+      console.log(countryStates.map((state) => state.name));
       setCities(
         countryStates.map((state) => ({
           value: state.isoCode,
