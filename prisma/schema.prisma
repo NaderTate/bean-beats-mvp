@@ -168,6 +168,7 @@ model CoffeeShop {
   country        String?
   city           String?
   district       String?
+  phone          String?
   location       Json?
   playingQueue   QueueSong[]            @relation(name: "CoffeeShopQueueSongs")
   adminId        String                 @db.ObjectId

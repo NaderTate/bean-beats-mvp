@@ -13,13 +13,13 @@ type Props = {
     amount: number;
     tableNumber: number;
     createdAt: Date;
-    shop: {
-      name: string;
+    shop?: {
+      name?: string;
       logo?: string | null;
       country?: string | null;
       city?: string | null;
       songPrice?: number;
-      admin?: { phoneNumber: string | null };
+      phone?: string | null;
     };
     _count: {
       QueueSong: number;
@@ -48,11 +48,11 @@ const PaymentsTable = ({
 
   const shopOptions = useMemo(() => {
     const uniqueShops = Array.from(
-      new Set(transactions.map((t) => t.shop.name))
+      new Set(transactions.map((t) => t?.shop?.name))
     );
     return [
       { value: "all", title: "All Shops" },
-      ...uniqueShops.map((shop) => ({ value: shop, title: shop })),
+      ...uniqueShops.map((shop) => ({ value: shop || "", title: shop || "" })),
     ];
   }, [transactions]);
 
@@ -83,7 +83,7 @@ const PaymentsTable = ({
     return transactions.filter(
       (transaction) =>
         new Date(transaction.createdAt) >= filterDate &&
-        (selectedShop === "all" || transaction.shop.name === selectedShop)
+        (selectedShop === "all" || transaction?.shop?.name === selectedShop)
     );
   }, [transactions, timeRange, selectedShop]);
 
@@ -91,7 +91,7 @@ const PaymentsTable = ({
     if (selectedShop === "all") return null;
 
     const shopTransactions = filteredTransactions.filter(
-      (t) => t.shop.name === selectedShop
+      (t) => t.shop?.name === selectedShop
     );
     const totalSongsSold = shopTransactions.reduce(
       (sum, t) => sum + t._count.QueueSong,
@@ -103,17 +103,10 @@ const PaymentsTable = ({
     return {
       shopName: selectedShop,
       shopLogo: shopInfo?.logo || "",
-      // timeInterval: {
-      //   startDate:
-      //     filteredTransactions[
-      //       filteredTransactions.length - 1
-      //     ]?.createdAt.toLocaleDateString(),
-      //   endDate: filteredTransactions[0]?.createdAt.toLocaleDateString(),
-      // },
       timeInterval: timeRangeOptions.find((t) => t.value === timeRange)?.title,
       shopCountry: shopInfo?.country,
       shopCity: shopInfo?.city,
-      phoneNumber: shopInfo?.admin?.phoneNumber,
+      phoneNumber: shopInfo?.phone,
       totalSongsSold,
       totalRevenue,
       songPrice: shopInfo?.songPrice,
@@ -128,6 +121,7 @@ const PaymentsTable = ({
         filters={[
           <>
             <Select
+              width="fit"
               value={timeRange}
               options={timeRangeOptions}
               label={t("Select Time Range")}
@@ -135,6 +129,7 @@ const PaymentsTable = ({
             />
             {viewShopFilter && (
               <Select
+                width="fit"
                 enableSearch
                 value={selectedShop}
                 options={shopOptions}
@@ -150,7 +145,7 @@ const PaymentsTable = ({
         viewLink={viewLink}
         data={filteredTransactions.map((transaction) => ({
           ...transaction,
-          shop: transaction.shop.name,
+          shop: transaction.shop?.name,
           Songs: transaction._count.QueueSong,
           Date: new Date(transaction.createdAt).toLocaleDateString(),
         }))}

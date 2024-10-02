@@ -179,6 +179,7 @@ const Main = ({
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">{t("Revenue Over Time")}</h2>
             <Select
+              width="fit"
               value={timeRange}
               options={timeRangeOptions}
               label={t("Select Time Range")}

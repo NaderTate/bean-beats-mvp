@@ -21,7 +21,7 @@ export default async function page({ params: { lang } }: pageProps) {
           city: true,
           logo: true,
           songPrice: true,
-          admin: { select: { phoneNumber: true } },
+          phone: true,
         },
       },
       _count: { select: { QueueSong: true } },

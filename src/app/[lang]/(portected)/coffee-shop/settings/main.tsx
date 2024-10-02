@@ -39,6 +39,7 @@ type Props = {
     district: string | null | undefined;
     location: MapLocation | null | undefined;
     songPrice: number;
+    phone: string | null | undefined;
   };
 };
 
@@ -75,6 +76,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
     district: string;
     location: MapLocation | null | undefined;
     songPrice: number;
+    shopPhone: string;
   };
 
   const {
@@ -107,6 +109,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
       district: shopData.district || "",
       location: shopData.location || null,
       songPrice: shopData.songPrice,
+      shopPhone: shopData.phone || "",
     },
   });
   const selectedCountry = watch("country");
@@ -169,6 +172,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
           district: data.district,
           location: data.location as any,
           songPrice: Number(data.songPrice),
+          phone: data.shopPhone,
         },
       });
 
@@ -377,6 +381,22 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
 
           <Controller
             control={control}
+            name="shopPhone"
+            rules={{ required: t("This field is required") }}
+            render={({ field }) => (
+              <Input
+                id="phone"
+                label={t("Phone")}
+                placeholder={t("Phone")}
+                defaultValue={field.value}
+                onChange={(e) => field.onChange(e.target.value)}
+                errMessage={errors.shopPhone?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
             name="iban"
             rules={{ required: t("This field is required") }}
             render={({ field }) => (
@@ -422,6 +442,21 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
               />
             )}
           />
+          <Controller
+            name="district"
+            control={control}
+            rules={{ required: t("This field is required") }}
+            render={({ field }) => (
+              <Input
+                id="district"
+                label={t("District")}
+                placeholder={t("District")}
+                defaultValue={field.value}
+                onChange={(e) => field.onChange(e.target.value)}
+                errMessage={errors.district?.message}
+              />
+            )}
+          />
 
           <Controller
             name="country"
@@ -454,22 +489,6 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
                 value={watch("city")}
                 errMessage={errors.city?.message}
                 disabled={!selectedCountry}
-              />
-            )}
-          />
-          {/* district input */}
-          <Controller
-            name="district"
-            control={control}
-            rules={{ required: t("This field is required") }}
-            render={({ field }) => (
-              <Input
-                id="district"
-                label={t("District")}
-                placeholder={t("District")}
-                defaultValue={field.value}
-                onChange={(e) => field.onChange(e.target.value)}
-                errMessage={errors.district?.message}
               />
             )}
           />

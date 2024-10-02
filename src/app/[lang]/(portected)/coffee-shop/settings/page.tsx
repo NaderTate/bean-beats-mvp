@@ -34,6 +34,7 @@ const SettingsPage: NextPage = async ({}: SettingsPageProps) => {
           city: coffeeShop?.city,
           district: coffeeShop?.district,
           location: coffeeShop?.location as any,
+          phone: coffeeShop?.phone,
         }}
       />
     </>

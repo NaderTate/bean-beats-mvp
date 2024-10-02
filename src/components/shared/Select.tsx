@@ -16,6 +16,7 @@ interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
   errMessage?: string;
   enableSearch?: boolean;
+  width?: "full" | "fit";
 }
 
 const Select = forwardRef<HTMLSelectElement, Props>(
@@ -27,6 +28,7 @@ const Select = forwardRef<HTMLSelectElement, Props>(
       value,
       onChange,
       enableSearch = false,
+      width = "full",
       ...props
     },
     ref
@@ -34,7 +36,11 @@ const Select = forwardRef<HTMLSelectElement, Props>(
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(value || "");
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectWidth, setSelectWidth] = useState<number | undefined>(
+      undefined
+    );
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const measureRef = useRef<HTMLSpanElement>(null);
     const t = useTranslations();
     const { lang } = useGetLang();
 
@@ -43,6 +49,25 @@ const Select = forwardRef<HTMLSelectElement, Props>(
     useEffect(() => {
       setSelectedValue(value || "");
     }, [value]);
+
+    useEffect(() => {
+      const measureWidth = () => {
+        if (measureRef.current) {
+          let maxWidth = 0;
+          options.forEach((option) => {
+            measureRef.current!.textContent = t(option.title);
+            const optionWidth = measureRef.current!.offsetWidth;
+            if (optionWidth > maxWidth) {
+              maxWidth = optionWidth;
+            }
+          });
+          // Add some padding
+          setSelectWidth(maxWidth + 40); // 40px for padding and arrow
+        }
+      };
+
+      measureWidth();
+    }, [options, t]);
 
     const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -80,15 +105,24 @@ const Select = forwardRef<HTMLSelectElement, Props>(
       t(option.title).toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const containerStyle =
+      width === "fit" && selectWidth ? { width: `${selectWidth}px` } : {};
+
     return (
-      <div ref={dropdownRef} className={isRTL ? "rtl" : "ltr"}>
+      <div
+        ref={dropdownRef}
+        className={`${isRTL ? "rtl" : "ltr"} flex-shrink-0 ${
+          width === "full" ? "w-full" : ""
+        }`}
+        style={containerStyle}
+      >
         <label
           htmlFor={props.id || props.name}
-          className={isRTL ? "block text-right" : ""}
+          className={`block mb-2 ${isRTL ? "text-right" : ""}`}
         >
           {t(label)}
         </label>
-        <div className="relative">
+        <div className="relative w-full">
           <button
             type="button"
             onClick={toggleDropdown}
@@ -101,13 +135,13 @@ const Select = forwardRef<HTMLSelectElement, Props>(
                 isRTL ? "flex-row-reverse" : ""
               }`}
             >
-              <span>
+              <span className="truncate">
                 {selectedOption
                   ? t(selectedOption.title)
                   : t("Select") + " " + t(label)}
               </span>
               <motion.div
-                className={isRTL ? "me-2" : "ms-2"}
+                className={`${isRTL ? "me-2" : "ms-2"} flex-shrink-0`}
                 transition={{ duration: 0.2 }}
                 animate={{ rotate: isOpen ? 180 : 0 }}
               >
@@ -164,7 +198,7 @@ const Select = forwardRef<HTMLSelectElement, Props>(
         </div>
         {errMessage && (
           <span
-            className={`text-red-500 text-sm ${
+            className={`text-red-500 text-sm mt-1 ${
               isRTL ? "block text-right" : ""
             }`}
           >
@@ -187,6 +221,10 @@ const Select = forwardRef<HTMLSelectElement, Props>(
             </option>
           ))}
         </select>
+        <span
+          ref={measureRef}
+          className="absolute opacity-0 pointer-events-none whitespace-nowrap"
+        />
       </div>
     );
   }
