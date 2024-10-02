@@ -1,87 +1,86 @@
-"use client";
-
 import React from "react";
 import jsPDF from "jspdf";
-import { useTranslations } from "next-intl";
-
 import Button from "@/components/button";
-
 import { MdOutlineFileDownload } from "react-icons/md";
-
-type timeInterval =
-  | "last7days"
-  | "last30days"
-  | "last3months"
-  | "last6months"
-  | "lastYear";
+import { useTranslations } from "next-intl";
 
 type Props = {
   data: {
     shopName: string;
-    shopLogo?: string | null;
-    timeInterval: timeInterval;
+    timeInterval?: string | null;
     shopCountry?: string | null;
+    phoneNumber?: string | null;
     shopCity?: string | null;
+    songPrice?: number;
     totalSongsSold: number;
     totalRevenue: number;
+    receiptId: number;
   };
 };
 
 const PrintReceipt: React.FC<Props> = ({ data }) => {
   const t = useTranslations();
 
-  const getTimeIntervalText = (interval: timeInterval): string => {
-    switch (interval) {
-      case "last7days":
-        return "Last 7 Days";
-      case "last30days":
-        return "Last 30 Days";
-      case "last3months":
-        return "Last 3 Months";
-      case "last6months":
-        return "Last 6 Months";
-      case "lastYear":
-        return "Last Year";
-      default:
-        return "Custom Period";
-    }
-  };
-
   const generatePDF = () => {
-    const doc = new jsPDF();
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+    });
 
     // Set font
+    doc.setFont("helvetica", "normal");
+
+    // Add logo (simplified version)
+    doc.setFontSize(24);
     doc.setFont("helvetica", "bold");
-
-    // Add shop logo
-    // Note: This is a placeholder. You'll need to implement image loading properly.
-    data.shopLogo && doc.addImage(data.shopLogo, "PNG", 10, 10, 50, 50);
-
-    // Add shop name
-    doc.setFontSize(22);
-    doc.text(data.shopName, 70, 30);
-
-    // Add location
+    doc.text("BeanBeats", 105, 30, { align: "center" });
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
-    const location = [data.shopCity, data.shopCountry]
-      .filter(Boolean)
-      .join(", ");
-    if (location) {
-      doc.text(`Location: ${location}`, 70, 40);
-    }
+    doc.text("COMPANY", 105, 36, { align: "center" });
 
-    // Add time interval
-    const timeIntervalText = getTimeIntervalText(data.timeInterval);
-    doc.text(`Period: ${timeIntervalText}`, 10, 70);
+    // Add receipt ID
+    doc.text(`Receipt ID : #${data.receiptId}`, 105, 50, { align: "center" });
 
-    // Add sales information
-    doc.setFontSize(14);
-    doc.text(`Total Songs Sold: ${data.totalSongsSold}`, 10, 90);
-    doc.text(`Total Revenue: $${data.totalRevenue.toFixed(2)}`, 10, 100);
+    // Add store information with bold labels and reduced spacing
+    doc.setFont("helvetica", "bold");
+    doc.text("Store :", 20, 70);
+    doc.text("Location :", 20, 77);
+    doc.text("Phone :", 20, 84);
+    doc.text("Period :", 20, 91);
+
+    doc.setFont("helvetica", "normal");
+    doc.text(`${data.shopName}`, 40, 70);
+    doc.text(`${data.shopCity}, ${data.shopCountry}`, 40, 77);
+    doc.text(`${data.phoneNumber}`, 40, 84);
+    doc.text(`${data.timeInterval}`, 40, 91);
+
+    // Add summary
+    doc.setFont("helvetica", "bold");
+    doc.text("Summary", 20, 105);
+
+    // Add grey background to summary table with added bottom padding
+    doc.setFillColor(240, 240, 240);
+    doc.rect(20, 110, 170, 45, "F");
+
+    doc.setFont("helvetica", "normal");
+    doc.text("Total Sold Songs", 25, 120);
+    doc.text(data.totalSongsSold.toString(), 165, 120, { align: "right" });
+
+    doc.setDrawColor(200);
+    doc.line(20, 125, 190, 125);
+
+    doc.text("Song Price", 25, 135);
+    doc.text(`${data.songPrice} $`, 165, 135, { align: "right" });
+
+    doc.line(20, 140, 190, 140);
+
+    doc.setFont("helvetica", "bold");
+    doc.text("Total Revenue", 25, 150);
+    doc.text(`${data.totalRevenue.toFixed(2)} $`, 165, 150, { align: "right" });
 
     // Save the PDF
-    doc.save("sales_receipt.pdf");
+    doc.save("bean_beats_receipt.pdf");
   };
 
   return (

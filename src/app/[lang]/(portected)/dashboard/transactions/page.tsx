@@ -14,7 +14,16 @@ export default async function page({ params: { lang } }: pageProps) {
       amount: true,
       createdAt: true,
       tableNumber: true,
-      shop: { select: { name: true, country: true, city: true, logo: true } },
+      shop: {
+        select: {
+          name: true,
+          country: true,
+          city: true,
+          logo: true,
+          songPrice: true,
+          admin: { select: { phoneNumber: true } },
+        },
+      },
       _count: { select: { QueueSong: true } },
     },
   });

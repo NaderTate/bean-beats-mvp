@@ -18,6 +18,8 @@ type Props = {
       logo?: string | null;
       country?: string | null;
       city?: string | null;
+      songPrice?: number;
+      admin?: { phoneNumber: string | null };
     };
     _count: {
       QueueSong: number;
@@ -108,11 +110,14 @@ const PaymentsTable = ({
       //     ]?.createdAt.toLocaleDateString(),
       //   endDate: filteredTransactions[0]?.createdAt.toLocaleDateString(),
       // },
-      timeInterval: timeRange,
+      timeInterval: timeRangeOptions.find((t) => t.value === timeRange)?.title,
       shopCountry: shopInfo?.country,
       shopCity: shopInfo?.city,
+      phoneNumber: shopInfo?.admin?.phoneNumber,
       totalSongsSold,
       totalRevenue,
+      songPrice: shopInfo?.songPrice,
+      receiptId: Math.floor(Math.random() * 1000000),
     };
   }, [filteredTransactions, selectedShop, timeRange]);
 
