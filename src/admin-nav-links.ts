@@ -1,8 +1,8 @@
 import { AdminPermission } from "@prisma/client";
 import {
-  FcNext,
   FcShop,
   FcMusic,
+  FcAnswers,
   FcBarChart,
   FcMoneyTransfer,
   FcConferenceCall,
@@ -39,6 +39,12 @@ export const adminNavLinks = [
     icon: FcMoneyTransfer,
     href: "/dashboard/transactions",
     requiredPermission: AdminPermission.VIEW_TRANSACTIONS,
+  },
+  {
+    title: "Reports",
+    icon: FcAnswers,
+    href: "/dashboard/reports",
+    requiredPermission: AdminPermission.ALL,
   },
   {
     title: "Shops",

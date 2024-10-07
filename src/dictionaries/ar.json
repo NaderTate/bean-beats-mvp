@@ -15,7 +15,7 @@
   "Coffee Shops": "مقاهي",
   "Songs": "الأغاني",
   "Monthly stats": "إحصائيات شهرية",
-  "Shops": "متاجر",
+  "Shops": "المتاجر",
   "Revenue": "إيرادات",
   "Top Songs": "أفضل الأغاني",
   "Dashboard": "لوحة القيادة",
@@ -666,5 +666,8 @@
   "Select Shop": "اختر المتجر",
   "All Shops": "جميع المتاجر",
   "Export": "تحميل",
-  "View on Map": "عرض على الخريطة"
+  "View on Map": "عرض على الخريطة",
+  "Reports": "التقارير",
+  "Song": "الأغنية",
+  "Times Purchased": "عدد المرات التي تم شراؤها"
 }
