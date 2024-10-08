@@ -6,6 +6,8 @@ type SalesData = {
   date: string;
   count: number;
   totalAmount: number;
+  shopId: string;
+  shopName: string;
 };
 
 // type SalesByArea = Prisma.TransactionGroupByOutputType;
@@ -21,6 +23,8 @@ type PeakTimeData = {
   hour: number;
   transactionCount: number;
   totalAmount: number;
+  shopId: string;
+  shopName: string;
 };
 
 export const getMostSoldSongs = async (limit = 10) => {
@@ -52,16 +56,10 @@ export const getMostSoldSongs = async (limit = 10) => {
   }));
 };
 
-export const getSongSalesOverTime = async (): //   startDate: Date,
-//   endDate: Date,
-Promise<SalesData[]> => {
+export const getSongSalesOverTime = async (): Promise<SalesData[]> => {
   const sales = await prisma.transaction.groupBy({
-    by: ["createdAt"],
+    by: ["createdAt", "shopId"],
     where: {
-      //   createdAt: {
-      //     gte: startDate,
-      //     lte: endDate,
-      //   },
       status: "COMPLETED" as const,
     },
     _count: {
@@ -75,10 +73,18 @@ Promise<SalesData[]> => {
     },
   });
 
+  const shopsInfo = await prisma.coffeeShop.findMany({
+    select: { id: true, name: true },
+  });
+
+  const shopMap = new Map(shopsInfo.map((shop) => [shop.id, shop.name]));
+
   return sales.map((sale) => ({
-    date: sale.createdAt.toISOString(), // Convert Date to string
+    date: sale.createdAt.toISOString(),
     count: sale._count.id,
-    totalAmount: sale._sum.amount ?? 0, // Handle null by setting default to 0
+    totalAmount: sale._sum.amount ?? 0,
+    shopId: sale.shopId,
+    shopName: shopMap.get(sale.shopId) || "Unknown Shop",
   }));
 };
 
@@ -119,28 +125,44 @@ export const getSalesByArea = async (): Promise<EnrichedSalesByArea[]> => {
   return enrichedSalesByArea;
 };
 
-export const getPeakTimes = async (shopId: string): Promise<PeakTimeData[]> => {
+export const getPeakTimes = async (): Promise<PeakTimeData[]> => {
   const transactions = await prisma.transaction.findMany({
     where: {
-      //   shopId: shopId,
       status: "COMPLETED",
     },
     select: {
       createdAt: true,
       amount: true,
+      shopId: true,
+      shop: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 
-  const peakTimes: Record<number, PeakTimeData> = {};
+  const peakTimes: Record<string, PeakTimeData> = {};
 
   for (const transaction of transactions) {
     const hour = transaction.createdAt.getHours();
-    if (!(hour in peakTimes)) {
-      peakTimes[hour] = { hour, transactionCount: 0, totalAmount: 0 };
+    const key = `${transaction.shopId}-${hour}`;
+
+    if (!(key in peakTimes)) {
+      peakTimes[key] = {
+        hour,
+        transactionCount: 0,
+        totalAmount: 0,
+        shopId: transaction.shopId,
+        shopName: transaction.shop.name,
+      };
     }
-    peakTimes[hour].transactionCount += 1;
-    peakTimes[hour].totalAmount += transaction.amount ?? 0;
+
+    peakTimes[key].transactionCount += 1;
+    peakTimes[key].totalAmount += transaction.amount ?? 0;
   }
 
-  return Object.values(peakTimes).sort((a, b) => a.hour - b.hour);
+  return Object.values(peakTimes).sort(
+    (a, b) => a.shopName.localeCompare(b.shopName) || a.hour - b.hour
+  );
 };

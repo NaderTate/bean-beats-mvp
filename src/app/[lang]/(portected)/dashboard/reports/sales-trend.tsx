@@ -14,6 +14,7 @@ import {
 } from "chart.js";
 import Select from "@/components/shared/Select";
 import ExportBtn from "@/components/export-btn";
+import { useTranslations } from "next-intl";
 
 ChartJS.register(
   CategoryScale,
@@ -29,22 +30,39 @@ type SalesData = {
   date: string;
   count: number;
   totalAmount: number;
+  shopId: string;
+  shopName: string;
 };
 
-type SalesTrendProps = {
+type SongSalesTrendProps = {
   salesData: SalesData[];
 };
 
-const SalesTrend: React.FC<SalesTrendProps> = ({ salesData }) => {
+const SongSalesTrend: React.FC<SongSalesTrendProps> = ({ salesData }) => {
+  const t = useTranslations();
   const [timeRange, setTimeRange] = useState("last3months");
+  const [selectedShop, setSelectedShop] = useState("all");
 
   const timeRangeOptions = [
-    { value: "last7days", title: "Last 7 Days" },
-    { value: "last30days", title: "Last 30 Days" },
-    { value: "last3months", title: "Last 3 Months" },
-    { value: "last6months", title: "Last 6 Months" },
-    { value: "lastYear", title: "Last Year" },
+    { value: "last7days", title: t("Last 7 Days") },
+    { value: "last30days", title: t("Last 30 Days") },
+    { value: "last3months", title: t("Last 3 Months") },
+    { value: "last6months", title: t("Last 6 Months") },
+    { value: "lastYear", title: t("Last Year") },
   ];
+
+  const shopOptions = useMemo(() => {
+    const uniqueShops = Array.from(
+      new Set(salesData.map((data) => data.shopId))
+    );
+    return [
+      { value: "all", title: t("All Shops") },
+      ...uniqueShops.map((shopId) => ({
+        value: shopId,
+        title: salesData.find((data) => data.shopId === shopId)?.shopName || "",
+      })),
+    ];
+  }, [salesData, t]);
 
   const generateDateRange = (start: Date, end: Date, isMonthly: boolean) => {
     const dates = [];
@@ -92,7 +110,12 @@ const SalesTrend: React.FC<SalesTrendProps> = ({ salesData }) => {
 
       const dateRange = generateDateRange(startDate, now, isMonthly);
 
-      const aggregatedData = salesData.reduce((acc, curr) => {
+      const filteredSalesData =
+        selectedShop === "all"
+          ? salesData
+          : salesData.filter((data) => data.shopId === selectedShop);
+
+      const aggregatedData = filteredSalesData.reduce((acc, curr) => {
         const date = new Date(curr.date);
         const key = isMonthly
           ? `${date.getFullYear()}-${(date.getMonth() + 1)
@@ -122,7 +145,7 @@ const SalesTrend: React.FC<SalesTrendProps> = ({ salesData }) => {
       });
 
       return { dateRange, filteredAndAggregatedSalesData, isMonthly };
-    }, [salesData, timeRange]);
+    }, [salesData, timeRange, selectedShop]);
 
   const formatDate = (date: Date) => {
     if (isMonthly) {
@@ -142,7 +165,7 @@ const SalesTrend: React.FC<SalesTrendProps> = ({ salesData }) => {
     labels: dateRange.map(formatDate),
     datasets: [
       {
-        label: "Number of Sales",
+        label: t("Number of Songs Sold"),
         data: filteredAndAggregatedSalesData.map((item) => item.count),
         borderColor: "#8884d8",
         backgroundColor: "rgba(136, 132, 216, 0.5)",
@@ -150,7 +173,7 @@ const SalesTrend: React.FC<SalesTrendProps> = ({ salesData }) => {
         tension: 0.4,
       },
       {
-        label: "Total Amount",
+        label: t("Total Revenue"),
         data: filteredAndAggregatedSalesData.map((item) => item.totalAmount),
         borderColor: "#82ca9d",
         backgroundColor: "rgba(130, 202, 157, 0.5)",
@@ -182,7 +205,7 @@ const SalesTrend: React.FC<SalesTrendProps> = ({ salesData }) => {
         beginAtZero: true,
         title: {
           display: true,
-          text: "Number of Sales",
+          text: t("Number of Songs Sold"),
         },
       },
       y2: {
@@ -195,7 +218,7 @@ const SalesTrend: React.FC<SalesTrendProps> = ({ salesData }) => {
         },
         title: {
           display: true,
-          text: "Total Amount ($)",
+          text: t("Total Revenue") + " ($)",
         },
       },
     },
@@ -203,7 +226,7 @@ const SalesTrend: React.FC<SalesTrendProps> = ({ salesData }) => {
       tooltip: {
         callbacks: {
           label: (context: any) => {
-            if (context.dataset.label === "Total Amount") {
+            if (context.dataset.label === t("Total Revenue")) {
               return `${context.dataset.label}: $${context.raw.toFixed(2)}`;
             }
             return `${context.dataset.label}: ${context.raw}`;
@@ -216,35 +239,52 @@ const SalesTrend: React.FC<SalesTrendProps> = ({ salesData }) => {
     },
   };
 
+  // Prepare CSV data with translations
   const csvData = useMemo(() => {
     return filteredAndAggregatedSalesData.map((item) => ({
-      Date: item.date,
-      "Number of Sales": item.count,
-      "Total Amount ($)": item.totalAmount.toFixed(2),
+      [t("Date")]: item.date,
+      [t("Number of Songs Sold")]: item.count,
+      [t("Total Revenue")]: item.totalAmount.toFixed(2),
     }));
-  }, [filteredAndAggregatedSalesData]);
+  }, [filteredAndAggregatedSalesData, t]);
 
   return (
     <div className="bg-white shadow rounded-lg p-6">
       <div className="flex justify-between items-center mb-4 gap-4">
         <div className="flex items-center justify-between w-full">
-          <h2 className="text-xl font-semibold">Sales Trend</h2>
-          <ExportBtn
-            csvData={csvData}
-            filename={`sales_trend_${timeRange}.csv`}
-          />
+          <h2 className="text-xl font-semibold">{t("Song Sales Trend")}</h2>
+          <div className="flex items-end gap-x-4">
+            <Select
+              width="fit"
+              value={timeRange}
+              options={timeRangeOptions}
+              label={t("Select Time Range")}
+              onChange={(e) => setTimeRange(e.target.value)}
+            />
+            <Select
+              width="fit"
+              enableSearch
+              value={selectedShop}
+              options={shopOptions}
+              label={t("Select Shop")}
+              onChange={(e) => setSelectedShop(e.target.value)}
+            />
+            <ExportBtn
+              csvData={csvData}
+              filename={`song_sales_trend_${
+                // shop name
+                selectedShop === "all"
+                  ? "all"
+                  : shopOptions.find((shop) => shop.value === selectedShop)
+                      ?.title
+              }_${timeRange}.csv`}
+            />
+          </div>
         </div>
-        <Select
-          width="fit"
-          value={timeRange}
-          options={timeRangeOptions}
-          label="Select Time Range"
-          onChange={(e) => setTimeRange(e.target.value)}
-        />
       </div>
       <Line data={data} options={options} />
     </div>
   );
 };
 
-export default SalesTrend;
+export default SongSalesTrend;

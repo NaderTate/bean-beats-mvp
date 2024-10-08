@@ -669,5 +669,16 @@
   "View on Map": "عرض على الخريطة",
   "Reports": "التقارير",
   "Song": "الأغنية",
-  "Times Purchased": "عدد المرات التي تم شراؤها"
+  "Times Purchased": "عدد المرات التي تم شراؤها",
+  "Most Sold Songs": "الأغاني الأكثر مبيعًا",
+  "Sales Trend": "اتجاه المبيعات",
+  "Total Amount": "المبلغ الإجمالي",
+  "Number of Sales": "عدد المبيعات",
+  "Number of Transactions": "عدد المعاملات",
+  "Sales by Area": "المبيعات حسب المنطقة",
+  "Peak Times": "أوقات الذروة",
+  "Hour": "الساعة",
+  "Transaction Count": "عدد المعاملات",
+  "Percentage of Peak": "نسبة الذروة",
+  "Song Sales Trend": "اتجاه مبيعات الأغاني"
 }

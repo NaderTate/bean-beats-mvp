@@ -1,8 +1,11 @@
+"use client";
+
 import { CSVLink } from "react-csv";
 import { Data } from "react-csv/lib/core";
 
 import { TbFileExport } from "react-icons/tb";
 import Button from "./button";
+import { useTranslations } from "next-intl";
 
 interface ExportBtnProps {
   csvData: Data;
@@ -10,6 +13,8 @@ interface ExportBtnProps {
 }
 
 const ExportBtn = ({ csvData, filename }: ExportBtnProps) => {
+  const t = useTranslations();
+
   return (
     <CSVLink data={csvData} filename={filename ?? "data.csv"}>
       <Button
@@ -17,7 +22,7 @@ const ExportBtn = ({ csvData, filename }: ExportBtnProps) => {
         className="text-lightblue font-medium"
         radius="full"
       >
-        Export
+        {t("Export")}
       </Button>
     </CSVLink>
   );

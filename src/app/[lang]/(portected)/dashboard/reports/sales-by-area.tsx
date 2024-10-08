@@ -10,8 +10,10 @@ import {
   Title,
   Tooltip,
   Legend,
+  ChartOptions,
 } from "chart.js";
 import ExportBtn from "@/components/export-btn";
+import { useTranslations } from "next-intl";
 
 ChartJS.register(
   CategoryScale,
@@ -34,40 +36,61 @@ type SalesByAreaProps = {
 };
 
 const SalesByArea: React.FC<SalesByAreaProps> = ({ salesData }) => {
+  const t = useTranslations();
+
+  const roundedSalesData = salesData.map((item) => ({
+    ...item,
+    transactionCount: item.transactionCount
+      ? Number(item.transactionCount.toFixed(1))
+      : null,
+    totalAmount: item.totalAmount ? Number(item.totalAmount.toFixed(1)) : null,
+  }));
+
   const data = {
-    labels: salesData.map((item) => item.city),
+    labels: roundedSalesData.map((item) => item.city),
     datasets: [
       {
-        label: "Number of Transactions",
-        data: salesData.map((item) => item.transactionCount),
+        label: t("Number of Transactions"),
+        data: roundedSalesData.map((item) => item.transactionCount),
         backgroundColor: "#8884d8",
         yAxisID: "y",
       },
       {
-        label: "Total Amount",
-        data: salesData.map((item) => item.totalAmount),
+        label: t("Total Amount"),
+        data: roundedSalesData.map((item) => item.totalAmount),
         backgroundColor: "#82ca9d",
         yAxisID: "y",
       },
     ],
   };
 
-  const options = {
+  const options: ChartOptions<"bar"> = {
     responsive: true,
     scales: {
       y: {
         beginAtZero: true,
+        ticks: {
+          callback: function (value) {
+            return Number(value).toFixed(1);
+          },
+        },
       },
     },
     plugins: {
       tooltip: {
         callbacks: {
-          label: (context: any) => {
-            if (context.dataset.label === "Total Amount") {
-              const roundedValue = Number(context.raw).toFixed(1);
-              return `${context.dataset.label}: $${roundedValue}`;
+          label: function (context) {
+            let label = context.dataset.label || "";
+            if (label) {
+              label += ": ";
             }
-            return `${context.dataset.label}: ${context.raw}`;
+            if (context.parsed.y !== null) {
+              label +=
+                context.dataset.label === t("Total Amount")
+                  ? `$${context.parsed.y.toFixed(1)}`
+                  : context.parsed.y.toFixed(1);
+            }
+            return label;
           },
         },
       },
@@ -76,20 +99,18 @@ const SalesByArea: React.FC<SalesByAreaProps> = ({ salesData }) => {
 
   // Prepare CSV data for export
   const csvData = useMemo(() => {
-    return salesData.map((item) => ({
+    return roundedSalesData.map((item) => ({
       City: item.city || "Unknown",
       District: item.district || "Unknown",
-      "Number of Transactions": item.transactionCount || 0,
-      "Total Amount ($)": item.totalAmount
-        ? Number(item.totalAmount).toFixed(2)
-        : "0.00",
+      "Number of Transactions": item.transactionCount?.toFixed(1) || "0.0",
+      "Total Amount ($)": item.totalAmount?.toFixed(1) || "0.0",
     }));
-  }, [salesData]);
+  }, [roundedSalesData]);
 
   return (
     <div className="bg-white shadow rounded-lg p-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Sales by Area</h2>
+        <h2 className="text-xl font-semibold">{t("Sales by Area")}</h2>
         <ExportBtn csvData={csvData} filename="sales_by_area.csv" />
       </div>
       <Bar data={data} options={options} />
