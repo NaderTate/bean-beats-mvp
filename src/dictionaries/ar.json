@@ -680,5 +680,6 @@
   "Hour": "الساعة",
   "Transaction Count": "عدد المعاملات",
   "Percentage of Peak": "نسبة الذروة",
-  "Song Sales Trend": "اتجاه مبيعات الأغاني"
+  "Song Sales Trend": "اتجاه مبيعات الأغاني",
+  "Number of Songs Sold": "عدد الأغاني المباعة"
 }

@@ -47,7 +47,7 @@ const SalesByArea: React.FC<SalesByAreaProps> = ({ salesData }) => {
   }));
 
   const data = {
-    labels: roundedSalesData.map((item) => item.city),
+    labels: roundedSalesData.map((item) => t(item.city || "Unknown")),
     datasets: [
       {
         label: t("Number of Transactions"),
@@ -97,15 +97,15 @@ const SalesByArea: React.FC<SalesByAreaProps> = ({ salesData }) => {
     },
   };
 
-  // Prepare CSV data for export
+  // Prepare CSV data for export with translations
   const csvData = useMemo(() => {
     return roundedSalesData.map((item) => ({
-      City: item.city || "Unknown",
-      District: item.district || "Unknown",
-      "Number of Transactions": item.transactionCount?.toFixed(1) || "0.0",
-      "Total Amount ($)": item.totalAmount?.toFixed(1) || "0.0",
+      [t("City")]: t(item.city || "Unknown"),
+      [t("District")]: t(item.district || "Unknown"),
+      [t("Number of Transactions")]: item.transactionCount?.toFixed(1) || "0.0",
+      [t("Total Amount") + " ($)"]: item.totalAmount?.toFixed(1) || "0.0",
     }));
-  }, [roundedSalesData]);
+  }, [roundedSalesData, t]);
 
   return (
     <div className="bg-white shadow rounded-lg p-6">
