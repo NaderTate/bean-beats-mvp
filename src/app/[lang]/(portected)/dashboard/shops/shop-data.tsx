@@ -13,6 +13,7 @@ import {
   FaFileContract,
   FaUserCircle,
 } from "react-icons/fa";
+import { MdAccountBalanceWallet } from "react-icons/md";
 
 type Props = {
   data?: CoffeeShop & {
@@ -102,6 +103,11 @@ const ShopData = ({ data: shop }: Props) => {
               value={`$${shop.songPrice}`}
             />
             <InfoItem icon={FaCreditCard} label={t("IBAN")} value={shop.iban} />
+            <InfoItem
+              icon={MdAccountBalanceWallet}
+              label={t("Account number")}
+              value={shop.accountNumber}
+            />
             <InfoItem
               icon={FaBuilding}
               label={t("Bank")}

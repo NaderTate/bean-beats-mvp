@@ -40,6 +40,7 @@ type Props = {
     location: MapLocation | null | undefined;
     songPrice: number;
     phone: string | null | undefined;
+    taxNumber: string | null | undefined;
   };
 };
 
@@ -66,6 +67,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
     confirmPassword: string;
     // Shop Data
     shopName: string;
+    taxNumber: string;
     logo: string;
     iban: string;
     accountNumber: string;
@@ -110,6 +112,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
       location: shopData.location || null,
       songPrice: shopData.songPrice,
       shopPhone: shopData.phone || "",
+      taxNumber: shopData.taxNumber || "",
     },
   });
   const selectedCountry = watch("country");
@@ -283,22 +286,6 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
 
           <Controller
             control={control}
-            name="commercialRegistrationNumber"
-            rules={{ required: t("This field is required") }}
-            render={({ field }) => (
-              <Input
-                id="commercialRegistrationNumber"
-                label={t("Commercial Registration Number")}
-                placeholder={t("Commercial Registration Number")}
-                defaultValue={field.value}
-                onChange={(e) => field.onChange(e.target.value)}
-                errMessage={errors.commercialRegistrationNumber?.message}
-              />
-            )}
-          />
-
-          <Controller
-            control={control}
             name="website"
             render={({ field }) => (
               <Input
@@ -394,7 +381,37 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
               />
             )}
           />
+          <Controller
+            control={control}
+            name="commercialRegistrationNumber"
+            rules={{ required: t("This field is required") }}
+            render={({ field }) => (
+              <Input
+                id="commercialRegistrationNumber"
+                label={t("Commercial Registration Number")}
+                placeholder={t("Commercial Registration Number")}
+                defaultValue={field.value}
+                onChange={(e) => field.onChange(e.target.value)}
+                errMessage={errors.commercialRegistrationNumber?.message}
+              />
+            )}
+          />
 
+          <Controller
+            control={control}
+            name="taxNumber"
+            rules={{ required: t("This field is required") }}
+            render={({ field }) => (
+              <Input
+                id="taxNumber"
+                label={t("Tax Number")}
+                placeholder={t("Tax Number")}
+                defaultValue={field.value}
+                onChange={(e) => field.onChange(e.target.value)}
+                errMessage={errors.taxNumber?.message}
+              />
+            )}
+          />
           <Controller
             control={control}
             name="iban"
