@@ -176,6 +176,7 @@ const SettingsMain = ({ shopAdminData, shopData }: Props) => {
           location: data.location as any,
           songPrice: Number(data.songPrice),
           phone: data.shopPhone,
+          taxNumber: data.taxNumber,
         },
       });
 
