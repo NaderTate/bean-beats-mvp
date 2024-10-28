@@ -1,18 +1,19 @@
 import React from "react";
-import { CoffeeShop, User } from "@prisma/client";
-import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { CoffeeShop, User } from "@prisma/client";
 import {
-  FaMapMarkerAlt,
   FaPhone,
-  FaEnvelope,
   FaGlobe,
+  FaEnvelope,
+  FaBuilding,
   FaDollarSign,
   FaCreditCard,
-  FaBuilding,
-  FaFileContract,
   FaUserCircle,
+  FaFileContract,
+  FaMapMarkerAlt,
 } from "react-icons/fa";
+import { IoDocumentText } from "react-icons/io5";
 import { MdAccountBalanceWallet } from "react-icons/md";
 
 type Props = {
@@ -102,6 +103,11 @@ const ShopData = ({ data: shop }: Props) => {
               label={t("Song Price")}
               value={`$${shop.songPrice}`}
             />
+            <InfoItem
+              icon={FaBuilding}
+              label={t("Bank")}
+              value={shop.bankName}
+            />
             <InfoItem icon={FaCreditCard} label={t("IBAN")} value={shop.iban} />
             <InfoItem
               icon={MdAccountBalanceWallet}
@@ -109,9 +115,9 @@ const ShopData = ({ data: shop }: Props) => {
               value={shop.accountNumber}
             />
             <InfoItem
-              icon={FaBuilding}
-              label={t("Bank")}
-              value={shop.bankName}
+              icon={MdAccountBalanceWallet}
+              label={t("Tax Number")}
+              value={shop.taxNumber}
             />
           </div>
         </div>

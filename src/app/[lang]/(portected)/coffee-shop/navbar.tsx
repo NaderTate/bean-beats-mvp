@@ -30,7 +30,7 @@ const Navbar = ({ shopId }: { shopId: string }) => {
       <div className="py-2 sm:py-1 px-2 sm:p-8 flex items-center gap-x-5">
         <Link href="/" className="flex items-end justify-center ">
           <Image
-            className="hidden  sm:block w-14"
+            className="hidden  sm:block w-14 p-1"
             src="/images/only-logo.png"
             width={150}
             height={150}
