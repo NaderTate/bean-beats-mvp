@@ -41,6 +41,7 @@ model User {
   password                     String?
   commercialRegistrationNumber String?
   website                      String?
+  isVerified                   Boolean                @default(false)
   role                         UserRole               @default(SHOP_ADMIN)
   permissions                  AdminPermission[]      @default([ALL])
   accounts                     Account[]

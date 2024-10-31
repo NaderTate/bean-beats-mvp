@@ -683,5 +683,11 @@
   "Song Sales Trend": "اتجاه مبيعات الأغاني",
   "Number of Songs Sold": "عدد الأغاني المباعة",
   "Account number": "رقم الحساب",
-  "Tax Number": "الرقم الضريبي"
+  "Tax Number": "الرقم الضريبي",
+  "Account Pending Verification": "الحساب قيد التحقق",
+  "Your account is currently under review, Our administrators will verify your account soon, You will have access to all features once your account has been verified, Thank you for your patience": "حسابك قيد المراجعة حاليًا، سيقوم مسؤولونا بالتحقق من حسابك قريبًا، ستتمكن من الوصول إلى جميع الميزات بمجرد تحقق حسابك، شكرًا لصبرك",
+  "Sign Out": "تسجيل الخروج",
+  "Verification": "التحقق",
+  "Verified": "تم التحقق",
+  "Pending": "قيد الانتظار"
 }

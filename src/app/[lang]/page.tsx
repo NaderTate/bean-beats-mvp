@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 import CreatePassword from "./(public)/create-password";
+import NotVerified from "./(public)/not-verified-warning";
 
 import { getUser } from "@/utils/get-user";
 
@@ -18,12 +19,22 @@ export default async function Home({ params: { lang } }: HomePageProps) {
   const user = sessionUser
     ? await prisma.user.findUnique({
         where: { id: sessionUser?.id },
-        select: { role: true, password: true, id: true, permissions: true },
+        select: {
+          role: true,
+          password: true,
+          id: true,
+          permissions: true,
+          isVerified: true,
+        },
       })
     : null;
 
   if (user && !user.password) {
     return <CreatePassword userId={user.id} />;
+  }
+
+  if (user && user.role === "SHOP_ADMIN" && user.isVerified === false) {
+    return <NotVerified />;
   }
 
   if (user?.role === "PLATFORM_ADMIN") {

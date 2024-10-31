@@ -101,3 +101,11 @@ export const deleteUser = async (userId: string) => {
   await prisma.user.delete({ where: { id: userId } });
   revalidatePath("/coffee-shop/settings");
 };
+
+export const verifyUser = async (userId: string) => {
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: { isVerified: true },
+  });
+  revalidatePath("/coffee-shop/settings");
+};

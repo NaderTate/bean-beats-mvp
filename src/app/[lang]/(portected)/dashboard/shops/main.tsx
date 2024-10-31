@@ -9,6 +9,7 @@ import Table from "@/components/shared/table";
 import Modal from "@/components/shared/Modal";
 import ShopForm from "@/components/shared/Forms/shop";
 import ShopData from "./shop-data";
+import { verifyUser } from "@/actions/users";
 
 type Props = { shops: (CoffeeShop & { admin: User })[] };
 
@@ -27,6 +28,7 @@ const ShopsMain = ({ shops }: Props) => {
   return (
     <div className="w-full">
       <Table
+        verifyFn={verifyUser}
         viewModal={<ShopData />}
         editForm={<ShopForm onSubmit={toggleModal} />}
         addBtnLabel={t("Add New Shop")}
@@ -34,9 +36,11 @@ const ShopsMain = ({ shops }: Props) => {
         data={shops.map((shop, i) => ({
           ...shop,
           number: i + 1,
+          id: shop.admin.id,
           adminName: shop.admin.name,
           adminEmail: shop.admin.email,
           AdaminPhone: shop.admin.phoneNumber,
+          isVerified: shop.admin.isVerified ? "Verified" : "Pending",
         }))}
         fields={{
           number: "#",
@@ -44,6 +48,7 @@ const ShopsMain = ({ shops }: Props) => {
           adminName: "Admin Name",
           adminEmail: "Admin Email",
           AdaminPhone: "Admin Phone",
+          isVerified: "Verification",
         }}
       />
 

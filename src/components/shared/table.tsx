@@ -9,11 +9,12 @@ import ConfirmDelete from "./confirm-delete";
 
 import { MdEdit } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
+import { useTranslations } from "next-intl";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoMdAddCircle } from "react-icons/io";
-import { useTranslations } from "next-intl";
 import { AdminPermission } from "@prisma/client";
 import { getReadablePermission } from "@/utils/permission-to-text";
+import VerifyButton from "./verify-btn";
 
 interface TableProps {
   fields: any;
@@ -29,6 +30,7 @@ interface TableProps {
   hideSearch?: boolean;
   addBtnLabel?: string;
   filters?: React.ReactNode[];
+  verifyFn?: (id: string) => Promise<void>;
 }
 
 export default function Table({
@@ -45,11 +47,13 @@ export default function Table({
   hideSearch = false,
   addBtnLabel,
   filters,
+  verifyFn,
 }: TableProps) {
   const [modifiedData, setModifiedData] = useState(data);
   const [openEdit, setOpenEdit] = useState<number | null>(null);
   const [openView, setOpenView] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
 
   // Create an array of all AdminPermission values
   const allPermissions = Object.values(AdminPermission);
@@ -164,7 +168,11 @@ export default function Table({
                     )}
                   </td>
                 ))}
-                {(viewLink || editForm || viewModal || deleteFn) && (
+                {(viewLink ||
+                  editForm ||
+                  viewModal ||
+                  deleteFn ||
+                  verifyFn) && (
                   <td className="flex items-center gap-x-5 px-4 py-2 mt-4">
                     {viewLink && (
                       <Link href={`${viewLink}/${item?.id}`} prefetch>
@@ -217,6 +225,12 @@ export default function Table({
                         </Modal>
                       </>
                     )}
+                    {verifyFn &&
+                      (item.isVerified == "Pending" ? (
+                        <VerifyButton userId={item.id} />
+                      ) : (
+                        ""
+                      ))}
                   </td>
                 )}
               </tr>
