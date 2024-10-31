@@ -3,12 +3,14 @@
 import React, { useState } from "react";
 import { verifyUser } from "@/actions/users";
 import Button from "../button";
+import { useTranslations } from "next-intl";
 
 type Props = {
   userId: string;
 };
 
 const VerifyButton = ({ userId }: Props) => {
+  const t = useTranslations();
   const [isVerifying, setIsVerifying] = useState(false);
   return (
     <Button
@@ -22,7 +24,7 @@ const VerifyButton = ({ userId }: Props) => {
       }}
       isLoading={isVerifying}
     >
-      Verify
+      {t("Verify")}
     </Button>
   );
 };
